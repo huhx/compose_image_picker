@@ -1,6 +1,7 @@
 package com.huhx.picker.view
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,9 +13,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -26,6 +29,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -312,19 +316,23 @@ fun AssetImage(
     val context = LocalContext.current
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(backgroundColor)
-            .alpha(alpha),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopEnd,
     ) {
-        Image(
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop,
-            painter = painterResource(id = R.drawable.app_icon_background), contentDescription = ""
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(backgroundColor)
+                .alpha(alpha),
+        ) {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                painter = painterResource(id = R.drawable.app_icon_background), contentDescription = ""
+            )
+        }
 
-        AssetImageIndicator(index, selected.value) { isSelected ->
+        AssetImageIndicator(index, selected.value, assetSelected) { isSelected ->
             if (assetSelected.size == config.maxAssets && isSelected) {
                 context.showShortToast("已经达到最大值${config.maxAssets}了")
                 return@AssetImageIndicator
@@ -339,28 +347,33 @@ fun AssetImage(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssetImageIndicator(
     index: Int,
     selected: Boolean,
+    assetSelected: SnapshotStateList<String>,
     onClick: (Boolean) -> Unit
 ) {
-
-    if (selected) {
-        Text(
-            modifier = Modifier
-                .padding(6.dp)
-                .clickable { onClick(false) },
-            text = index.toString(),
-            color = Color.White,
-        )
-    } else {
-        Text(
-            modifier = Modifier
-                .padding(6.dp)
-                .clickable { onClick(true) },
-            text = "-1",
-            color = Color.White,
-        )
+    Surface(
+        onClick = { onClick(!selected) },
+        modifier = Modifier
+            .padding(6.dp)
+            .size(size = 28.dp)
+            .clickable { onClick(false) },
+        shape = CircleShape,
+        border = if (!selected) BorderStroke(width = 1.dp, color = Color.White) else null,
+        color = if (selected) Color(64, 151, 246) else Color(0f, 0f, 0f, 0.3F)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            if (selected) {
+                val num = assetSelected.indexOf("image_$index") + 1
+                Text(
+                    text = "${if (selected) num else null}",
+                    color = Color.White
+                )
+            }
+        }
     }
 }
+
