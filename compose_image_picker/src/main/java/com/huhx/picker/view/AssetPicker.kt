@@ -270,7 +270,7 @@ fun QQAssetContent(
     assetSelected: SnapshotStateList<String>
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
+        columns = GridCells.Fixed(config.gridCount),
         contentPadding = PaddingValues(horizontal = 2.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp),
         horizontalArrangement = Arrangement.spacedBy(2.dp),
@@ -304,14 +304,18 @@ fun AssetImage(
     assetSelected: SnapshotStateList<String>
 ) {
     val selected = remember { mutableStateOf(assetSelected.contains("image_$index")) }
-    val backgroundColor = if (selected.value) Color.Black else Color.Transparent
+    val (backgroundColor, alpha) = if (selected.value) {
+        Pair(Color.Black, 0.6F)
+    } else {
+        Pair(Color.Transparent, 1F)
+    }
     val context = LocalContext.current
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
-            .alpha(0.5F),
+            .alpha(alpha),
         contentAlignment = Alignment.TopEnd,
     ) {
         Image(
