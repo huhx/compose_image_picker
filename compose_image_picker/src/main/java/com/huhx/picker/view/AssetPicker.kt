@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,32 +18,46 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import com.huhx.picker.R
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QQAssetPicker() {
-    Scaffold(topBar = { TopAppBar() }, bottomBar = { BottomAppBar() }) { innerPadding ->
+    Scaffold(
+        topBar = { TopAppBar() },
+        bottomBar = { BottomAppBar() }
+    ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            QQAssetContent()
+            TabView()
         }
     }
 }
 
 @Composable
 fun TopAppBar() {
+    val folderName = remember { mutableStateOf("所有项目") }
+
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
         navigationIcon = {
@@ -54,8 +69,58 @@ fun TopAppBar() {
                 )
             }
         },
-        title = { Text("所有项目", fontSize = 16.sp) },
+        title = { Text(folderName.value, fontSize = 16.sp) },
     )
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun TabView() {
+    val tabs = listOf(
+        TabItem.All,
+        TabItem.Video,
+        TabItem.Image,
+    )
+    val pagerState = rememberPagerState()
+    Column {
+        Tab(tabs = tabs, pagerState = pagerState)
+        TabsContent(tabs = tabs, pagerState = pagerState)
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun Tab(
+    tabs: List<TabItem>,
+    pagerState: PagerState,
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        contentColor = Color.Black,
+        indicator = {},
+    ) {
+        tabs.forEachIndexed { index, tab ->
+            Tab(
+                selected = pagerState.currentPage == index,
+                text = { Text(text = stringResource(tab.resourceId)) },
+                selectedContentColor = Color.Black,
+                unselectedContentColor = Color.Gray,
+                onClick = {
+                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun TabsContent(tabs: List<TabItem>, pagerState: PagerState) {
+    HorizontalPager(state = pagerState, count = tabs.size) { page ->
+        tabs[page].screen()
+    }
 }
 
 @Composable
