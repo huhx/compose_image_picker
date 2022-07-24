@@ -1,6 +1,7 @@
 package com.huhx.picker.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,11 +28,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -39,6 +41,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.huhx.picker.R
+import com.huhx.picker.constant.showShortToast
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -132,11 +135,14 @@ fun BottomAppBar() {
 fun QQAssetContent() {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
-        contentPadding = PaddingValues(horizontal = 3.dp, vertical = 3.dp),
-        verticalArrangement = Arrangement.spacedBy(3.dp),
-        horizontalArrangement = Arrangement.spacedBy(3.dp),
+        contentPadding = PaddingValues(horizontal = 2.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
         userScrollEnabled = true
     ) {
+        item {
+            AssetCamera()
+        }
         items(100) { index ->
             AssetImage(index)
         }
@@ -144,36 +150,65 @@ fun QQAssetContent() {
 }
 
 @Composable
+fun AssetCamera() {
+    val context = LocalContext.current
+    Image(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { context.showShortToast("open the camera") },
+        contentScale = ContentScale.Crop,
+        painter = painterResource(id = R.drawable.app_icon_foreground), contentDescription = ""
+    )
+}
+
+@Composable
 fun AssetImage(index: Int) {
-    Box(contentAlignment = Alignment.TopEnd) {
+    val selected = remember { mutableStateOf(index % 2 == 0) }
+    val backgroundColor = if (selected.value) Color.Black else Color.Transparent
+    val context = LocalContext.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+            .alpha(0.5F),
+        contentAlignment = Alignment.TopEnd,
+    ) {
         Image(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
             painter = painterResource(id = R.drawable.app_icon_background), contentDescription = ""
         )
-        AssetImageIndicator(index)
+
+        AssetImageIndicator(index, selected.value) {
+            selected.value = !selected.value
+            context.showShortToast("selected is ${selected.value}")
+        }
     }
 }
 
 @Composable
-fun AssetImageIndicator(index: Int) {
-    val selected = remember { mutableStateOf(index % 2 == 0) }
+fun AssetImageIndicator(
+    index: Int,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
 
-    if (selected.value) {
+    if (selected) {
         Text(
             modifier = Modifier
                 .padding(6.dp)
-                .clickable { selected.value = !selected.value },
+                .clickable { onClick() },
             text = index.toString(),
-            textAlign = TextAlign.End
+            color = Color.White,
         )
     } else {
         Text(
             modifier = Modifier
                 .padding(6.dp)
-                .clickable { selected.value = !selected.value },
+                .clickable { onClick() },
             text = "0",
-            textAlign = TextAlign.End
+            color = Color.White,
         )
     }
 }
