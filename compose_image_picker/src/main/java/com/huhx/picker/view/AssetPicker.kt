@@ -1,6 +1,5 @@
 package com.huhx.picker.view
 
-import android.app.Activity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,9 +32,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -58,41 +59,48 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.huhx.picker.R
+import com.huhx.picker.constant.AssetPickerConfig
 import com.huhx.picker.constant.showShortToast
 import kotlinx.coroutines.launch
-import kotlin.math.exp
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun QQAssetPicker(
-    onPicked: (List<String>) -> Unit
+    assetPickerConfig: AssetPickerConfig,
+    onPicked: (List<String>) -> Unit,
 ) {
     val expanded = remember { mutableStateOf(false) }
     val folderName = remember { mutableStateOf("所有项目") }
     val navController = rememberAnimatedNavController()
     val isHome = currentRoute(navController) == "home"
+    val assetSelected = remember { mutableStateListOf<String>() }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 expanded = expanded,
                 folderName = folderName,
+                assetPickerConfig = assetPickerConfig,
+                assetSelected = assetSelected,
                 navigateUp = {
                     if (isHome) {
-                        onPicked(listOf("abc", "efg"))
+                        onPicked(assetSelected)
                     } else {
                         navController.navigateUp()
                     }
                 },
                 navigateToDropDown = {
                     navController.navigate("dropDown?directory=$it")
-                },
-                onPicked = { onPicked(it) }
-            )
+                }
+            ) { onPicked(it) }
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            AssetPickerRoute(navController = navController) {
+            AssetPickerRoute(
+                navController = navController,
+                assetPickerConfig = assetPickerConfig,
+                assetSelected = assetSelected,
+            ) {
                 navController.navigateUp()
                 expanded.value = !expanded.value
                 if (folderName.value != it) {
@@ -113,14 +121,16 @@ fun currentRoute(navController: NavHostController): String? {
 @Composable
 fun AssetPickerRoute(
     navController: NavHostController,
-    navigateBack: (String) -> Unit
+    assetPickerConfig: AssetPickerConfig,
+    assetSelected: SnapshotStateList<String>,
+    navigateBack: (String) -> Unit,
 ) {
     AnimatedNavHost(
         navController = navController,
         startDestination = "home"
     ) {
         composable("home") {
-            TabView()
+            TabView(assetPickerConfig, assetSelected)
         }
 
         composable(
@@ -138,13 +148,14 @@ fun AssetPickerRoute(
 fun TopAppBar(
     expanded: MutableState<Boolean>,
     folderName: MutableState<String>,
+    assetPickerConfig: AssetPickerConfig,
+    assetSelected: SnapshotStateList<String>,
     navigateUp: () -> Unit,
     navigateToDropDown: (String) -> Unit,
     onPicked: (List<String>) -> Unit
 ) {
-    val selectedCount = remember { mutableStateOf(2) }
-    val isEnable = selectedCount.value > 0
-    val text = if (isEnable) "确定(${selectedCount.value}/9)" else "确定"
+    val isEnable = assetSelected.size > 0
+    val text = if (isEnable) "确定(${assetSelected.size}/${assetPickerConfig.maxAssets})" else "确定"
 
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
@@ -182,7 +193,7 @@ fun TopAppBar(
                 enabled = isEnable,
                 shape = RoundedCornerShape(5.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                onClick = { onPicked(listOf("abc", "efg")) }
+                onClick = { onPicked(assetSelected) }
             ) {
                 Text(text)
             }
@@ -192,7 +203,10 @@ fun TopAppBar(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabView() {
+fun TabView(
+    assetPickerConfig: AssetPickerConfig,
+    assetSelected: SnapshotStateList<String>
+) {
     val tabs = listOf(
         TabItem.All,
         TabItem.Video,
@@ -201,7 +215,12 @@ fun TabView() {
     val pagerState = rememberPagerState()
     Column {
         Tab(tabs = tabs, pagerState = pagerState)
-        TabsContent(tabs = tabs, pagerState = pagerState)
+        TabsContent(
+            tabs = tabs,
+            pagerState = pagerState,
+            config = assetPickerConfig,
+            assetSelected = assetSelected
+        )
     }
 }
 
@@ -234,14 +253,22 @@ private fun Tab(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabsContent(tabs: List<TabItem>, pagerState: PagerState) {
+fun TabsContent(
+    tabs: List<TabItem>,
+    pagerState: PagerState,
+    config: AssetPickerConfig,
+    assetSelected: SnapshotStateList<String>
+) {
     HorizontalPager(state = pagerState, count = tabs.size) { page ->
-        tabs[page].screen()
+        tabs[page].screen(config, assetSelected)
     }
 }
 
 @Composable
-fun QQAssetContent() {
+fun QQAssetContent(
+    config: AssetPickerConfig,
+    assetSelected: SnapshotStateList<String>
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         contentPadding = PaddingValues(horizontal = 2.dp),
@@ -253,7 +280,7 @@ fun QQAssetContent() {
             AssetCamera()
         }
         items(100) { index ->
-            AssetImage(index)
+            AssetImage(index, config, assetSelected)
         }
     }
 }
@@ -271,8 +298,12 @@ fun AssetCamera() {
 }
 
 @Composable
-fun AssetImage(index: Int) {
-    val selected = remember { mutableStateOf(index % 2 == 0) }
+fun AssetImage(
+    index: Int,
+    config: AssetPickerConfig,
+    assetSelected: SnapshotStateList<String>
+) {
+    val selected = remember { mutableStateOf(assetSelected.contains("image_$index")) }
     val backgroundColor = if (selected.value) Color.Black else Color.Transparent
     val context = LocalContext.current
 
@@ -289,9 +320,17 @@ fun AssetImage(index: Int) {
             painter = painterResource(id = R.drawable.app_icon_background), contentDescription = ""
         )
 
-        AssetImageIndicator(index, selected.value) {
+        AssetImageIndicator(index, selected.value) { isSelected ->
+            if (assetSelected.size == config.maxAssets && isSelected) {
+                context.showShortToast("已经达到最大值${config.maxAssets}了")
+                return@AssetImageIndicator
+            }
             selected.value = !selected.value
-            context.showShortToast("selected is ${selected.value}")
+            if (isSelected) {
+                assetSelected += "image_$index"
+            } else {
+                assetSelected -= "image_$index"
+            }
         }
     }
 }
@@ -300,14 +339,14 @@ fun AssetImage(index: Int) {
 fun AssetImageIndicator(
     index: Int,
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: (Boolean) -> Unit
 ) {
 
     if (selected) {
         Text(
             modifier = Modifier
                 .padding(6.dp)
-                .clickable { onClick() },
+                .clickable { onClick(false) },
             text = index.toString(),
             color = Color.White,
         )
@@ -315,8 +354,8 @@ fun AssetImageIndicator(
         Text(
             modifier = Modifier
                 .padding(6.dp)
-                .clickable { onClick() },
-            text = "0",
+                .clickable { onClick(true) },
+            text = "-1",
             color = Color.White,
         )
     }
