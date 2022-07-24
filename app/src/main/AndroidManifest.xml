@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.huhx.picker">
+    package="com.huhx.app">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Compose_image_picker"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.huhx.picker.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Compose_image_picker">
             <intent-filter>
