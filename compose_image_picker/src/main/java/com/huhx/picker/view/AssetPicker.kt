@@ -263,7 +263,11 @@ fun TabsContent(
     config: AssetPickerConfig,
     assetSelected: SnapshotStateList<String>
 ) {
-    HorizontalPager(state = pagerState, count = tabs.size) { page ->
+    HorizontalPager(
+        state = pagerState,
+        count = tabs.size,
+        userScrollEnabled = false
+    ) { page ->
         tabs[page].screen(config, assetSelected)
     }
 }
@@ -275,9 +279,9 @@ fun QQAssetContent(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(config.gridCount),
-        contentPadding = PaddingValues(horizontal = 2.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp),
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        contentPadding = PaddingValues(horizontal = 1.dp),
+        verticalArrangement = Arrangement.spacedBy(1.dp),
+        horizontalArrangement = Arrangement.spacedBy(1.dp),
         userScrollEnabled = true
     ) {
         item {
@@ -359,7 +363,7 @@ fun AssetImageIndicator(
         onClick = { onClick(!selected) },
         modifier = Modifier
             .padding(6.dp)
-            .size(size = 28.dp)
+            .size(size = 24.dp)
             .clickable { onClick(false) },
         shape = CircleShape,
         border = if (!selected) BorderStroke(width = 1.dp, color = Color.White) else null,
