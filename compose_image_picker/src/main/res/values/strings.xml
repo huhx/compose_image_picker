@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_item_all">全部</string>
+    <string name="tab_item_video">视频</string>
+    <string name="tab_item_image">照片</string>
+</resources>
