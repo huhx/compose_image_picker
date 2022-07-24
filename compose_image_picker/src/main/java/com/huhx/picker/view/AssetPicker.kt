@@ -7,13 +7,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,8 +52,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun QQAssetPicker() {
     Scaffold(
-        topBar = { TopAppBar() },
-        bottomBar = { BottomAppBar() }
+        topBar = { TopAppBar() }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             TabView()
@@ -60,6 +63,11 @@ fun QQAssetPicker() {
 @Composable
 fun TopAppBar() {
     val folderName = remember { mutableStateOf("所有项目") }
+    val selectedCount = remember { mutableStateOf(2) }
+    val isEnable = selectedCount.value > 0
+    val text = if (isEnable) "确定(${selectedCount.value}/9)" else "确定"
+
+    val context = LocalContext.current
 
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
@@ -67,12 +75,23 @@ fun TopAppBar() {
             IconButton(onClick = { }) {
                 Icon(
                     Icons.Filled.Close,
+                    tint = Color.Black,
                     contentDescription = "",
-                    tint = Color.Black
                 )
             }
         },
         title = { Text(folderName.value, fontSize = 16.sp) },
+        actions = {
+            Button(
+                modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
+                enabled = isEnable,
+                shape = RoundedCornerShape(5.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                onClick = { context.showShortToast("finish selecting") }
+            ) {
+                Text(text)
+            }
+        }
     )
 }
 
@@ -124,11 +143,6 @@ fun TabsContent(tabs: List<TabItem>, pagerState: PagerState) {
     HorizontalPager(state = pagerState, count = tabs.size) { page ->
         tabs[page].screen()
     }
-}
-
-@Composable
-fun BottomAppBar() {
-
 }
 
 @Composable
