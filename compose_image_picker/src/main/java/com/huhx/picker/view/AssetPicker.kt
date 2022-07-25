@@ -219,7 +219,7 @@ fun TabsContent(
     HorizontalPager(
         state = pagerState,
         count = tabs.size,
-        userScrollEnabled = false
+        userScrollEnabled = true
     ) { page ->
         tabs[page].screen(viewModel)
     }

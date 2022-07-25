@@ -34,6 +34,7 @@ import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
 import com.huhx.picker.R
+import com.huhx.picker.constant.RequestType
 import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.AssetInfo
 import com.huhx.picker.data.AssetViewModel
@@ -42,27 +43,29 @@ import com.huhx.picker.data.AssetViewModel
 fun AssetAll(
     viewModel: AssetViewModel
 ) {
-    QQAssetContent(viewModel)
+    QQAssetContent(viewModel, RequestType.COMMON)
 }
 
 @Composable
 fun AssetVideo(
     viewModel: AssetViewModel
 ) {
-    QQAssetContent(viewModel)
+    QQAssetContent(viewModel, RequestType.VIDEO)
 }
 
 @Composable
 fun AssetImage(
     viewModel: AssetViewModel
 ) {
-    QQAssetContent(viewModel)
+    QQAssetContent(viewModel, RequestType.IMAGE)
 }
 
 @Composable
 fun QQAssetContent(
-    viewModel: AssetViewModel
+    viewModel: AssetViewModel,
+    requestType: RequestType
 ) {
+    val assets = viewModel.getAssets(requestType)
     LazyVerticalGrid(
         columns = GridCells.Fixed(viewModel.assetPickerConfig.gridCount),
         contentPadding = PaddingValues(horizontal = 1.dp),
@@ -74,7 +77,7 @@ fun QQAssetContent(
             AssetCamera()
         }
 
-        items(viewModel.assets) {
+        items(assets, key = { it.id }) {
             AssetImage(assetInfo = it, viewModel = viewModel)
         }
     }
@@ -132,7 +135,7 @@ fun AssetImage(
             )
             if (assetInfo.isVideo()) {
                 Text(
-                    modifier = Modifier.padding(bottom = 10.dp, end = 10.dp),
+                    modifier = Modifier.padding(bottom = 10.dp, end = 8.dp),
                     text = assetInfo.formatDuration(),
                     color = Color.White,
                     fontSize = 14.sp
