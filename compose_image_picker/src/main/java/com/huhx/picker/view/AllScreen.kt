@@ -31,21 +31,21 @@ import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.AssetViewModel
 
 @Composable
-fun AllScreen(
+fun AssetAll(
     viewModel: AssetViewModel
 ) {
     QQAssetContent(viewModel)
 }
 
 @Composable
-fun VideoScreen(
+fun AssetVideo(
     viewModel: AssetViewModel
 ) {
     QQAssetContent(viewModel)
 }
 
 @Composable
-fun ImageScreen(
+fun AssetImage(
     viewModel: AssetViewModel
 ) {
     QQAssetContent(viewModel)
