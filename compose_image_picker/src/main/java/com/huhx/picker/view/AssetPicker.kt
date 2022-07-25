@@ -24,9 +24,11 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,6 +39,8 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.huhx.picker.constant.AssetPickerConfig
+import com.huhx.picker.data.AssetInfo
+import com.huhx.picker.data.AssetPickerRepository
 import com.huhx.picker.data.AssetPickerRoute
 import com.huhx.picker.data.AssetViewModel
 import com.huhx.picker.data.AssetViewModelFactory
@@ -47,11 +51,16 @@ import kotlinx.coroutines.launch
 @Composable
 fun QQAssetPicker(
     assetPickerConfig: AssetPickerConfig,
-    onPicked: (List<String>) -> Unit,
+    onPicked: (List<AssetInfo>) -> Unit,
 ) {
+    val context = LocalContext.current
     val viewModel: AssetViewModel = viewModel(
-        factory = AssetViewModelFactory(assetPickerConfig)
+        factory = AssetViewModelFactory(AssetPickerRepository(context), assetPickerConfig)
     )
+
+    LaunchedEffect(Unit, block = {
+        viewModel.initAssets()
+    })
 
     val navController = rememberAnimatedNavController()
     val isHome = currentRoute(navController) == "home"
@@ -94,7 +103,7 @@ fun TopAppBar(
     viewModel: AssetViewModel,
     navigateUp: () -> Unit,
     navigateToDropDown: (String) -> Unit,
-    onPicked: (List<String>) -> Unit
+    onPicked: (List<AssetInfo>) -> Unit
 ) {
     val folderName = viewModel.folderName.value
     val expanded = viewModel.expanded

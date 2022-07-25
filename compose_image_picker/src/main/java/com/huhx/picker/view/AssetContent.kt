@@ -7,11 +7,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -26,8 +28,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.huhx.picker.R
 import com.huhx.picker.constant.showShortToast
+import com.huhx.picker.data.AssetInfo
 import com.huhx.picker.data.AssetViewModel
 
 @Composable
@@ -65,8 +69,9 @@ fun QQAssetContent(
         item {
             AssetCamera()
         }
-        items(100) { index ->
-            AssetImage(index, viewModel)
+
+        items(viewModel.assets) {
+            AssetImage(assetInfo = it, viewModel = viewModel)
         }
     }
 }
@@ -85,10 +90,10 @@ fun AssetCamera() {
 
 @Composable
 fun AssetImage(
-    index: Int,
+    assetInfo: AssetInfo,
     viewModel: AssetViewModel
 ) {
-    val selected = viewModel.isSelected(index)
+    val selected = viewModel.isSelected(assetInfo)
 
     val (backgroundColor, alpha) = if (selected) {
         Pair(Color.Black, 0.6F)
@@ -107,22 +112,25 @@ fun AssetImage(
                 .background(backgroundColor)
                 .alpha(alpha),
         ) {
-            Image(
-                modifier = Modifier.fillMaxSize(),
+            AsyncImage(
+                model = assetInfo.uri,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .aspectRatio(1.0F),
                 contentScale = ContentScale.Crop,
-                painter = painterResource(id = R.drawable.app_icon_background), contentDescription = ""
+                contentDescription = ""
             )
         }
 
-        AssetImageIndicator(index, selected, viewModel.selectedList) { isSelected ->
+        AssetImageIndicator(assetInfo, selected, viewModel.selectedList) { isSelected ->
             if (viewModel.isFullSelected() && isSelected) {
                 context.showShortToast("已经达到最大值${viewModel.assetPickerConfig.maxAssets}了")
                 return@AssetImageIndicator
             }
             if (isSelected) {
-                viewModel.add(index)
+                viewModel.add(assetInfo)
             } else {
-                viewModel.remove(index)
+                viewModel.remove(assetInfo)
             }
         }
     }
@@ -131,9 +139,9 @@ fun AssetImage(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssetImageIndicator(
-    index: Int,
+    assetInfo: AssetInfo,
     selected: Boolean,
-    assetSelected: SnapshotStateList<String>,
+    assetSelected: SnapshotStateList<AssetInfo>,
     onClick: (Boolean) -> Unit
 ) {
     Surface(
@@ -148,7 +156,7 @@ fun AssetImageIndicator(
     ) {
         Box(contentAlignment = Alignment.Center) {
             if (selected) {
-                val num = assetSelected.indexOf("image_$index") + 1
+                val num = assetSelected.indexOf(assetInfo) + 1
                 Text(
                     text = "${if (selected) num else null}",
                     color = Color.White
