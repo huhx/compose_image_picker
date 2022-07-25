@@ -13,8 +13,6 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -51,12 +49,10 @@ val mockList = listOf(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun FolderDropDown(
-    folderName: String,
+fun DirectoryDropDown(
+    directory: String,
     onClick: (String) -> Unit,
 ) {
-    val directory = remember { mutableStateOf(folderName) }
-
     LazyColumn {
         items(mockList) {
             ListItem(
@@ -74,18 +70,19 @@ fun FolderDropDown(
                         Text(text = "(${it.counts})")
                     }
                 },
-                trailing = if (directory.value == it.directory) {
-                    {
-                        Icon(
-                            imageVector = Icons.Default.Done,
-                            contentDescription = "",
-                            tint = Color.Blue
-                        )
-                    }
-                } else {
-                    null
-                }
+                trailing = { TrailingIcon(directory, it.directory) }
             )
         }
+    }
+}
+
+@Composable
+fun TrailingIcon(source: String, target: String) {
+    if (source == target) {
+        Icon(
+            imageVector = Icons.Default.Done,
+            contentDescription = "",
+            tint = Color.Blue
+        )
     }
 }

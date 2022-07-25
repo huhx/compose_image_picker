@@ -69,8 +69,9 @@ fun QQAssetPicker(
                 },
                 navigateToDropDown = {
                     navController.navigate("dropDown?directory=$it")
-                }
-            ) { onPicked(it) }
+                },
+                onPicked = { onPicked(it) }
+            )
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {

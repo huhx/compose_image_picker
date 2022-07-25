@@ -9,7 +9,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import com.huhx.picker.view.FolderDropDown
+import com.huhx.picker.view.DirectoryDropDown
 import com.huhx.picker.view.TabView
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -33,7 +33,7 @@ fun AssetPickerRoute(
         ) { backStackEntry ->
             val arguments = backStackEntry.arguments!!
             val directory = arguments.getString("directory")!!
-            FolderDropDown(directory) { navigateBack(it) }
+            DirectoryDropDown(directory) { navigateBack(it) }
         }
     }
 }

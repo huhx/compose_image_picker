@@ -10,14 +10,14 @@ sealed class TabItem(
     val screen: @Composable (AssetViewModel) -> Unit
 ) {
     object All : TabItem(R.string.tab_item_all, { viewModel ->
-        AllScreen(viewModel)
+        AssetAll(viewModel)
     })
 
     object Video : TabItem(R.string.tab_item_video, { viewModel ->
-        VideoScreen(viewModel)
+        AssetVideo(viewModel)
     })
 
     object Image : TabItem(R.string.tab_item_image, { viewModel ->
-        ImageScreen(viewModel)
+        AssetImage(viewModel)
     })
 }
