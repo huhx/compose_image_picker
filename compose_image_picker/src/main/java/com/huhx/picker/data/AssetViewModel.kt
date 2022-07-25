@@ -12,23 +12,31 @@ import kotlinx.coroutines.launch
 class AssetViewModel constructor(
     private val assetPickerRepository: AssetPickerRepository,
     val assetPickerConfig: AssetPickerConfig,
-    val navController: NavController,
+    private val navController: NavController,
 ) : ViewModel() {
 
-    val assets = mutableStateListOf<AssetInfo>()
+    private val assets = mutableStateListOf<AssetInfo>()
     val selectedList = mutableStateListOf<AssetInfo>()
     val expanded = mutableStateOf(false)
     val folderName = mutableStateOf("所有项目")
 
     fun initAssets() {
         viewModelScope.launch {
-            getAssets(RequestType.COMMON)
+            initAssets(RequestType.COMMON)
         }
     }
 
-    private suspend fun getAssets(requestType: RequestType) {
+    private suspend fun initAssets(requestType: RequestType) {
         assets.clear()
         assets.addAll(assetPickerRepository.getAssets(requestType))
+    }
+
+    fun getAssets(requestType: RequestType): List<AssetInfo> {
+        return when (requestType) {
+            RequestType.COMMON -> assets
+            RequestType.IMAGE -> assets.filter(AssetInfo::isImage)
+            RequestType.VIDEO -> assets.filter(AssetInfo::isVideo)
+        }
     }
 
     fun isFullSelected(): Boolean {

@@ -13,6 +13,10 @@ data class AssetInfo(
     val duration: Long?,
     val date: Long,
 ) {
+    fun isImage(): Boolean {
+        return mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString()
+    }
+
     fun isVideo(): Boolean {
         return mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString()
     }
