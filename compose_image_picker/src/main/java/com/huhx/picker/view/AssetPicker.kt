@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -70,22 +71,7 @@ fun QQAssetPicker(
     val isHome = currentRoute(navController) == "home"
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                viewModel = viewModel,
-                navigateUp = {
-                    if (isHome) {
-                        onPicked(viewModel.selectedList)
-                    } else {
-                        navController.navigateUp()
-                    }
-                },
-                navigateToDropDown = {
-                    navController.navigate("dropDown?directory=$it")
-                },
-                onPicked = { onPicked(it) }
-            )
-        }
+        topBar = { AssetTopBar(viewModel, isHome, onPicked, navController) }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             AssetPickerRoute(
@@ -101,6 +87,33 @@ fun QQAssetPicker(
         }
     }
 }
+
+@Composable
+private fun AssetTopBar(
+    viewModel: AssetViewModel,
+    isHome: Boolean,
+    onPicked: (List<AssetInfo>) -> Unit,
+    navController: NavHostController
+) {
+    val isPreview = currentRoute(navController)?.startsWith("preview")
+    if (isPreview != true) {
+        TopAppBar(
+            viewModel = viewModel,
+            navigateUp = {
+                if (isHome) {
+                    onPicked(viewModel.selectedList)
+                } else {
+                    navController.navigateUp()
+                }
+            },
+            navigateToDropDown = {
+                navController.navigate("dropDown?directory=$it")
+            },
+            onPicked = { onPicked(it) }
+        )
+    }
+}
+
 
 @Composable
 fun TopAppBar(
