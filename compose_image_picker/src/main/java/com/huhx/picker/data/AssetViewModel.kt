@@ -20,7 +20,7 @@ class AssetViewModel constructor(
 
     fun initAssets() {
         viewModelScope.launch {
-            getAssets(RequestType.IMAGE)
+            getAssets(RequestType.COMMON)
         }
     }
 

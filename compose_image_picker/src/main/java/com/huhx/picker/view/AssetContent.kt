@@ -24,11 +24,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.decode.VideoFrameDecoder
+import coil.request.ImageRequest
 import com.huhx.picker.R
 import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.AssetInfo
@@ -111,15 +115,29 @@ fun AssetImage(
                 .fillMaxSize()
                 .background(backgroundColor)
                 .alpha(alpha),
+            contentAlignment = Alignment.BottomEnd,
         ) {
             AsyncImage(
-                model = assetInfo.uri,
+                model = ImageRequest.Builder(context)
+                    .data(assetInfo.uri)
+                    .decoderFactory(VideoFrameDecoder.Factory())
+                    .build(),
                 modifier = Modifier
                     .fillMaxSize()
-                    .aspectRatio(1.0F),
+                    .aspectRatio(1.0F)
+                    .clickable { context.showShortToast("detail -> ${assetInfo.filename}") },
+                filterQuality = FilterQuality.None,
                 contentScale = ContentScale.Crop,
                 contentDescription = ""
             )
+            if (assetInfo.isVideo()) {
+                Text(
+                    modifier = Modifier.padding(bottom = 10.dp, end = 10.dp),
+                    text = assetInfo.formatDuration(),
+                    color = Color.White,
+                    fontSize = 14.sp
+                )
+            }
         }
 
         AssetImageIndicator(assetInfo, selected, viewModel.selectedList) { isSelected ->
