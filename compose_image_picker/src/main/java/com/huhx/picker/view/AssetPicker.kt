@@ -54,15 +54,19 @@ fun QQAssetPicker(
     onPicked: (List<AssetInfo>) -> Unit,
 ) {
     val context = LocalContext.current
+    val navController = rememberAnimatedNavController()
     val viewModel: AssetViewModel = viewModel(
-        factory = AssetViewModelFactory(AssetPickerRepository(context), assetPickerConfig)
+        factory = AssetViewModelFactory(
+            assetPickerRepository = AssetPickerRepository(context),
+            assetPickerConfig = assetPickerConfig,
+            navController = navController
+        )
     )
 
     LaunchedEffect(Unit, block = {
         viewModel.initAssets()
     })
 
-    val navController = rememberAnimatedNavController()
     val isHome = currentRoute(navController) == "home"
 
     Scaffold(

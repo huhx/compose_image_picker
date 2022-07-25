@@ -125,7 +125,7 @@ fun AssetImage(
                 modifier = Modifier
                     .fillMaxSize()
                     .aspectRatio(1.0F)
-                    .clickable { context.showShortToast("detail -> ${assetInfo.filename}") },
+                    .clickable { viewModel.navigateToPreview(assetInfo) },
                 filterQuality = FilterQuality.None,
                 contentScale = ContentScale.Crop,
                 contentDescription = ""
