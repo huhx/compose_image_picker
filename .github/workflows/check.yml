@@ -1,0 +1,45 @@
+on:
+  push:
+    branches:
+      - main
+      - cicd/github_action
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      # check out the code
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+
+      # validate gradle wrapper
+      - name: Gradle Wrapper Validation
+        uses: gradle/wrapper-validation-action@v1.0.4
+
+      # setup java11 env
+      - name: Setup java env
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+          cache: gradle
+
+      # check code style
+      - name: check koltin code style
+        uses: gradle/gradle-build-action@v2
+        with:
+          args: ktlintCheck
+
+      # gradle run tests
+      - name: check the test
+        run: ./gradlew test
+
+      # collect Tests Result of failed tests
+      - name: collect tests result
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: tests-result
+          path: ${{ github.workspace }}/build/reports/tests
