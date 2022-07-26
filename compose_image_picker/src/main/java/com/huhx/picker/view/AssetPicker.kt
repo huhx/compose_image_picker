@@ -120,7 +120,7 @@ fun TopAppBar(
     navigateToDropDown: (String) -> Unit,
     onPicked: (List<AssetInfo>) -> Unit
 ) {
-    val folderName = viewModel.folderName.value
+    val directory = viewModel.directory.value
     val expanded = viewModel.expanded
 
     CenterAlignedTopAppBar(
@@ -138,10 +138,10 @@ fun TopAppBar(
             Row(
                 modifier = Modifier.clickable {
                     expanded.value = !expanded.value
-                    if (expanded.value) navigateToDropDown(folderName) else navigateUp()
+                    if (expanded.value) navigateToDropDown(directory) else navigateUp()
                 }
             ) {
-                Text(folderName, fontSize = 18.sp)
+                Text(directory, fontSize = 18.sp)
                 if (expanded.value) {
                     Icon(Icons.Default.KeyboardArrowUp, "")
                 } else {

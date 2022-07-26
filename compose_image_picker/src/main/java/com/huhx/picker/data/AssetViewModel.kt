@@ -23,11 +23,11 @@ class AssetViewModel constructor(
 
     val selectedList = mutableStateListOf<AssetInfo>()
     val expanded = mutableStateOf(false)
-    val folderName = mutableStateOf("所有项目")
+    val directory = mutableStateOf("所有项目")
 
-    fun updateDirectory(directory: String) {
-        if (directory != folderName.value) {
-            folderName.value = directory
+    fun updateDirectory(value: String) {
+        if (directory.value != value) {
+            directory.value = value
         }
     }
 
@@ -55,7 +55,7 @@ class AssetViewModel constructor(
     }
 
     fun getAssets(requestType: RequestType): List<AssetInfo> {
-        val assetList = _directoryGroup.first { it.directory == folderName.value }.assets
+        val assetList = _directoryGroup.first { it.directory == directory.value }.assets
 
         return when (requestType) {
             RequestType.COMMON -> assetList
