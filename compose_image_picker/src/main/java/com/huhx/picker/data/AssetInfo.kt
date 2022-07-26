@@ -2,6 +2,7 @@ package com.huhx.picker.data
 
 import android.net.Uri
 import android.provider.MediaStore
+import com.huhx.picker.constant.prefixZero
 
 data class AssetInfo(
     val id: Long,
@@ -26,21 +27,8 @@ data class AssetInfo(
             return ""
         }
         val minutes = duration / 1000 / 60
-        val minutesString = if (minutes < 9) {
-            "0$minutes"
-        } else {
-            "$minutes"
-        }
         val seconds = duration / 1000 % 60
-        val secondsString = if (seconds < 9) {
-            "0$seconds"
-        } else {
-            "$seconds"
-        }
-        return "$minutesString:$secondsString"
-    }
-}
 
-fun main() {
-    println(17153 / 1000)
+        return "${minutes.prefixZero()}:${seconds.prefixZero()}"
+    }
 }
