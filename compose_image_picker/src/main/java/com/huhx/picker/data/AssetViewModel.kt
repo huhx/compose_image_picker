@@ -45,7 +45,7 @@ class AssetViewModel constructor(
     }
 
     fun getAssets(requestType: RequestType): List<AssetInfo> {
-        val assetList = _directoryGroup.find { it.directory == folderName.value }!!.assets
+        val assetList = _directoryGroup.first { it.directory == folderName.value }.assets
 
         return when (requestType) {
             RequestType.COMMON -> assetList
@@ -67,9 +67,7 @@ class AssetViewModel constructor(
     }
 
     fun isSelected(assetInfo: AssetInfo): Boolean {
-        return selectedList.any {
-            it.id == assetInfo.id
-        }
+        return selectedList.any { it.id == assetInfo.id }
     }
 
     val isEnable = selectedList.size > 0
