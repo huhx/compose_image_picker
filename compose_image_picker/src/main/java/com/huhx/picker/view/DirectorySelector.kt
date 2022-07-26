@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
+import com.huhx.picker.R
 import com.huhx.picker.data.AssetViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -38,7 +39,7 @@ fun DirectorySelector(
                 icon = {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(it.cover)
+                            .data(it.cover ?: R.drawable.app_icon_background)
                             .decoderFactory(VideoFrameDecoder.Factory())
                             .build(),
                         modifier = Modifier
