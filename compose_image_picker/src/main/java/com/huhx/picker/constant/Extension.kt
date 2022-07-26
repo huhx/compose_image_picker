@@ -8,5 +8,5 @@ fun Context.showShortToast(msg: String) {
 }
 
 fun Long.prefixZero(): String {
-    return if (this < 9) "0$this" else "$this"
+    return if (this < 10) "0$this" else "$this"
 }
