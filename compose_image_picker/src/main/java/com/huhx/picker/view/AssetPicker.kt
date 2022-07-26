@@ -65,7 +65,6 @@ fun QQAssetPicker(
     )
 
     LaunchedEffect(Unit, block = {
-        viewModel.initAssets()
         viewModel.initDirectories()
     })
 

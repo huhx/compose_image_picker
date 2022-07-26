@@ -25,30 +25,19 @@ class AssetViewModel constructor(
     val expanded = mutableStateOf(false)
     val folderName = mutableStateOf("所有项目")
 
-    fun initAssets() {
-        viewModelScope.launch {
-            initAssets(RequestType.COMMON)
-        }
-    }
-
     fun initDirectories() {
         viewModelScope.launch {
-            initDirectories(RequestType.COMMON)
+            initAssets(RequestType.COMMON)
+            val directoryList = assets.groupBy {
+                it.directory
+            }.map {
+                AssetDirectory(directory = it.key, assets = it.value)
+            }
+            _directoryGroup.clear()
+            _directoryGroup.add(AssetDirectory(directory = "所有项目", assets = assets))
+            _directoryGroup.addAll(directoryList)
         }
     }
-
-    private fun initDirectories(requestType: RequestType) {
-        val assetList = getAssets(requestType)
-        val directoryList = assetList.groupBy {
-            it.directory
-        }.map {
-            AssetDirectory(directory = it.key, assets = it.value)
-        }
-        _directoryGroup.clear()
-        _directoryGroup.add(AssetDirectory(directory = "所有项目", assets = assetList))
-        _directoryGroup.addAll(directoryList)
-    }
-
 
     private suspend fun initAssets(requestType: RequestType) {
         assets.clear()
@@ -56,10 +45,12 @@ class AssetViewModel constructor(
     }
 
     fun getAssets(requestType: RequestType): List<AssetInfo> {
+        val assetList = _directoryGroup.find { it.directory == folderName.value }!!.assets
+
         return when (requestType) {
-            RequestType.COMMON -> assets
-            RequestType.IMAGE -> assets.filter(AssetInfo::isImage)
-            RequestType.VIDEO -> assets.filter(AssetInfo::isVideo)
+            RequestType.COMMON -> assetList
+            RequestType.IMAGE -> assetList.filter(AssetInfo::isImage)
+            RequestType.VIDEO -> assetList.filter(AssetInfo::isVideo)
         }
     }
 
