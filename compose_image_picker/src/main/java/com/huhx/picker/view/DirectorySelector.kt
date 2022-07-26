@@ -26,7 +26,7 @@ import com.huhx.picker.data.AssetViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DirectoryDropDown(
+fun DirectorySelector(
     directory: String,
     viewModel: AssetViewModel,
     onClick: (String) -> Unit,

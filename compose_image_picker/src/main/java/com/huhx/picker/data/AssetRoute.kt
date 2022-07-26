@@ -11,7 +11,7 @@ import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.huhx.picker.view.AssetPreview
-import com.huhx.picker.view.DirectoryDropDown
+import com.huhx.picker.view.DirectorySelector
 import com.huhx.picker.view.TabView
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -35,7 +35,7 @@ fun AssetPickerRoute(
         ) { backStackEntry ->
             val arguments = backStackEntry.arguments!!
             val directory = arguments.getString("directory")!!
-            DirectoryDropDown(directory, viewModel) { navigateBack(it) }
+            DirectorySelector(directory, viewModel) { navigateBack(it) }
         }
 
         composable(
