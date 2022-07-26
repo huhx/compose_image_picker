@@ -60,7 +60,7 @@ class AssetViewModel constructor(
     val isEnable = selectedList.size > 0
 
     fun navigateToPreview(assetInfo: AssetInfo) {
-        navController.navigate("preview?uri=${assetInfo.uri}&isVideo=${assetInfo.isVideo()}")
+        navController.navigate("preview?uri=${assetInfo.uriString}&isVideo=${assetInfo.isVideo()}")
     }
 
     val selectedText: String

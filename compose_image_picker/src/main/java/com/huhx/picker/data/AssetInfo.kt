@@ -1,25 +1,24 @@
 package com.huhx.picker.data
 
-import android.net.Uri
 import android.provider.MediaStore
 import com.huhx.picker.constant.prefixZero
 
 data class AssetInfo(
     val id: Long,
-    val uri: Uri,
+    val uriString: String,
     val filename: String,
     val directory: String,
-    val mediaType: String,
+    val mediaType: Int,
     val mimeType: String,
     val duration: Long?,
     val date: Long,
 ) {
     fun isImage(): Boolean {
-        return mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString()
+        return mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
     }
 
     fun isVideo(): Boolean {
-        return mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString()
+        return mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
     }
 
     fun formatDuration(): String {

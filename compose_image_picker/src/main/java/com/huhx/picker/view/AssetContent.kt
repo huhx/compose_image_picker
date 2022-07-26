@@ -122,7 +122,7 @@ fun AssetImage(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(context)
-                    .data(assetInfo.uri)
+                    .data(assetInfo.uriString)
                     .decoderFactory(VideoFrameDecoder.Factory())
                     .build(),
                 modifier = Modifier

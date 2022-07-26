@@ -32,8 +32,8 @@ object AssetLoader {
 
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(indexId)
-                val mediaType = cursor.getString(indexMediaType)
-                val contentUri = if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString()) {
+                val mediaType = cursor.getInt(indexMediaType)
+                val contentUri = if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
                     ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
                 } else {
                     ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id)
@@ -42,7 +42,7 @@ object AssetLoader {
                 assets.add(
                     AssetInfo(
                         id = id,
-                        uri = contentUri,
+                        uriString = contentUri.toString(),
                         filename = cursor.getString(indexFilename),
                         date = cursor.getLong(indexDate),
                         mediaType = mediaType,
