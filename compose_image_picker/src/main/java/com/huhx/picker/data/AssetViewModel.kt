@@ -16,6 +16,11 @@ class AssetViewModel constructor(
 ) : ViewModel() {
 
     private val assets = mutableStateListOf<AssetInfo>()
+    private val _directoryGroup = mutableStateListOf<AssetDirectory>()
+
+    val directoryGroup: List<AssetDirectory>
+        get() = _directoryGroup
+
     val selectedList = mutableStateListOf<AssetInfo>()
     val expanded = mutableStateOf(false)
     val folderName = mutableStateOf("所有项目")
@@ -25,6 +30,25 @@ class AssetViewModel constructor(
             initAssets(RequestType.COMMON)
         }
     }
+
+    fun initDirectories() {
+        viewModelScope.launch {
+            initDirectories(RequestType.COMMON)
+        }
+    }
+
+    private fun initDirectories(requestType: RequestType) {
+        val assetList = getAssets(requestType)
+        val directoryList = assetList.groupBy {
+            it.directory
+        }.map {
+            AssetDirectory(directory = it.key, assets = it.value)
+        }
+        _directoryGroup.clear()
+        _directoryGroup.add(AssetDirectory(directory = "所有项目", assets = assetList))
+        _directoryGroup.addAll(directoryList)
+    }
+
 
     private suspend fun initAssets(requestType: RequestType) {
         assets.clear()

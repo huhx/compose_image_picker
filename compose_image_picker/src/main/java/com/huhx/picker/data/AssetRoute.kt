@@ -35,7 +35,7 @@ fun AssetPickerRoute(
         ) { backStackEntry ->
             val arguments = backStackEntry.arguments!!
             val directory = arguments.getString("directory")!!
-            DirectoryDropDown(directory) { navigateBack(it) }
+            DirectoryDropDown(directory, viewModel) { navigateBack(it) }
         }
 
         composable(
