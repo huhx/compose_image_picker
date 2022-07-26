@@ -79,10 +79,8 @@ fun QQAssetPicker(
                 viewModel = viewModel,
             ) {
                 navController.navigateUp()
-                viewModel.expanded.value = !viewModel.expanded.value
-                if (viewModel.folderName.value != it) {
-                    viewModel.folderName.value = it
-                }
+                viewModel.toggle()
+                viewModel.updateDirectory(it)
             }
         }
     }

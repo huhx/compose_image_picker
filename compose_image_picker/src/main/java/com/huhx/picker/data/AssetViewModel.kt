@@ -25,6 +25,16 @@ class AssetViewModel constructor(
     val expanded = mutableStateOf(false)
     val folderName = mutableStateOf("所有项目")
 
+    fun updateDirectory(directory: String) {
+        if (directory != folderName.value) {
+            folderName.value = directory
+        }
+    }
+
+    fun toggle() {
+        expanded.value = !expanded.value
+    }
+
     fun initDirectories() {
         viewModelScope.launch {
             initAssets(RequestType.COMMON)
