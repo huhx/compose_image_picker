@@ -80,12 +80,10 @@ class AssetViewModel constructor(
         return selectedList.any { it.id == assetInfo.id }
     }
 
-    val isEnable = selectedList.size > 0
-
     fun navigateToPreview(assetInfo: AssetInfo) {
         navController.navigate("preview?uri=${assetInfo.uriString}&isVideo=${assetInfo.isVideo()}")
     }
 
     val selectedText: String
-        get() = if (isEnable) "确定(${selectedList.size}/${assetPickerConfig.maxAssets})" else "确定"
+        get() = if (selectedList.size > 0) "确定(${selectedList.size}/${assetPickerConfig.maxAssets})" else "确定"
 }

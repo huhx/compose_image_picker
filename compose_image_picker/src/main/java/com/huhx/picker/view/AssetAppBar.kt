@@ -90,7 +90,7 @@ fun TopAppBar(
         actions = {
             Button(
                 modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
-                enabled = viewModel.isEnable,
+                enabled = viewModel.selectedList.size > 0,
                 shape = RoundedCornerShape(5.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                 onClick = { onPicked(viewModel.selectedList) }
