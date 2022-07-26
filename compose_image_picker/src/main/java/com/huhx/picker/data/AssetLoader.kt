@@ -21,18 +21,18 @@ object AssetLoader {
     fun load(context: Context, requestType: RequestType): List<AssetInfo> {
         val assets = ArrayList<AssetInfo>()
         val cursor = createCursor(context, requestType)
-        if (cursor != null) {
-            val indexId = cursor.getColumnIndex(projection[0])
-            val indexFilename = cursor.getColumnIndex(projection[1])
-            val indexDate = cursor.getColumnIndex(projection[2])
-            val indexMediaType = cursor.getColumnIndex(projection[3])
-            val indexMimeType = cursor.getColumnIndex(projection[4])
-            val indexDuration = cursor.getColumnIndex(projection[5])
-            val indexDirectory = cursor.getColumnIndex(projection[6])
+        cursor?.use { it ->
+            val indexId = it.getColumnIndex(projection[0])
+            val indexFilename = it.getColumnIndex(projection[1])
+            val indexDate = it.getColumnIndex(projection[2])
+            val indexMediaType = it.getColumnIndex(projection[3])
+            val indexMimeType = it.getColumnIndex(projection[4])
+            val indexDuration = it.getColumnIndex(projection[5])
+            val indexDirectory = it.getColumnIndex(projection[6])
 
-            while (cursor.moveToNext()) {
-                val id = cursor.getLong(indexId)
-                val mediaType = cursor.getInt(indexMediaType)
+            while (it.moveToNext()) {
+                val id = it.getLong(indexId)
+                val mediaType = it.getInt(indexMediaType)
                 val contentUri = if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
                     ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
                 } else {
@@ -43,17 +43,16 @@ object AssetLoader {
                     AssetInfo(
                         id = id,
                         uriString = contentUri.toString(),
-                        filename = cursor.getString(indexFilename),
-                        date = cursor.getLong(indexDate),
+                        filename = it.getString(indexFilename),
+                        date = it.getLong(indexDate),
                         mediaType = mediaType,
-                        mimeType = cursor.getString(indexMimeType),
-                        duration = cursor.getLong(indexDuration),
-                        directory = cursor.getString(indexDirectory),
+                        mimeType = it.getString(indexMimeType),
+                        duration = it.getLong(indexDuration),
+                        directory = it.getString(indexDirectory),
                     )
                 )
             }
         }
-        cursor?.close()
         return assets
     }
 

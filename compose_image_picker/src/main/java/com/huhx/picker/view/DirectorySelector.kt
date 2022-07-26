@@ -53,7 +53,7 @@ fun DirectorySelector(
                 text = {
                     Row {
                         Text(text = it.directory)
-                        Text(text = "(${it.counts})")
+                        Text(text = "(${it.counts})", color = Color.Gray)
                     }
                 },
                 trailing = { TrailingIcon(directory, it.directory) }
