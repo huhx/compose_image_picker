@@ -58,53 +58,41 @@ object AssetLoader {
     }
 
     private fun createCursor(context: Context, requestType: RequestType): Cursor? {
-        return when (requestType) {
-            RequestType.COMMON -> createMediaCursor(context)
-            RequestType.IMAGE -> createImageCursor(context)
-            RequestType.VIDEO -> createVideoCursor(context)
+        val mediaType = MediaStore.Files.FileColumns.MEDIA_TYPE
+        val image = MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
+        val video = MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
+
+        val selection = when (requestType) {
+            RequestType.COMMON -> Selection(
+                selection = "$mediaType=? OR $mediaType=?",
+                arguments = listOf(image.toString(), video.toString())
+            )
+            RequestType.IMAGE -> Selection(
+                selection = "$mediaType=?",
+                arguments = listOf(image.toString())
+            )
+            RequestType.VIDEO -> Selection(
+                selection = "$mediaType=?",
+                arguments = listOf(video.toString())
+            )
         }
+        return createMediaCursor(context, selection)
     }
 
-    private fun createMediaCursor(context: Context): Cursor? {
-        val mediaType = MediaStore.Files.FileColumns.MEDIA_TYPE
-        val image = MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
-        val video = MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
-
+    private fun createMediaCursor(context: Context, selection: Selection): Cursor? {
         return context.contentResolver.query(
             MediaStore.Files.getContentUri("external"),
             projection,
-            "$mediaType=? OR $mediaType=?",
-            arrayOf(image.toString(), video.toString()),
+            selection.selection,
+            selection.arguments.toTypedArray(),
             "${MediaStore.Files.FileColumns.DATE_ADDED} DESC",
             null
         )
     }
 
-    private fun createImageCursor(context: Context): Cursor? {
-        val mediaType = MediaStore.Files.FileColumns.MEDIA_TYPE
-        val image = MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
-
-        return context.contentResolver.query(
-            MediaStore.Files.getContentUri("external"),
-            projection,
-            "$mediaType=?",
-            arrayOf(image.toString()),
-            "${MediaStore.Files.FileColumns.DATE_ADDED} DESC",
-            null
-        )
-    }
-
-    private fun createVideoCursor(context: Context): Cursor? {
-        val mediaType = MediaStore.Files.FileColumns.MEDIA_TYPE
-        val video = MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
-
-        return context.contentResolver.query(
-            MediaStore.Files.getContentUri("external"),
-            projection,
-            "$mediaType=?",
-            arrayOf(video.toString()),
-            "${MediaStore.Files.FileColumns.DATE_ADDED} DESC",
-            null
-        )
-    }
+    private data class Selection(
+        val selection: String,
+        val arguments: List<String>
+    )
 }
+
