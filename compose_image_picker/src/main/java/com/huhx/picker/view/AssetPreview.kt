@@ -1,8 +1,8 @@
 package com.huhx.picker.view
 
 import android.net.Uri
+import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -15,6 +15,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -38,10 +41,11 @@ fun AssetPreview(
             VideoPlayer(uri)
         } else {
             AsyncImage(
-                model = uri,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .aspectRatio(1.0F),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(uri)
+                    .decoderFactory(if (SDK_INT >= 28) ImageDecoderDecoder.Factory() else GifDecoder.Factory())
+                    .build(),
+                modifier = Modifier.fillMaxSize(),
                 filterQuality = FilterQuality.None,
                 contentScale = ContentScale.Crop,
                 contentDescription = ""
