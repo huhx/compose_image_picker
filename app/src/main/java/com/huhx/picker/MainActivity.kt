@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.huhx.picker.constant.AssetPickerConfig
 import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.ui.theme.Compose_image_pickerTheme
@@ -91,4 +95,27 @@ fun IndicatorPreview() {
         size = 32.dp,
         stroke = 1.dp
     )
+}
+
+@Preview
+@Composable
+fun GifTextPreview() {
+    Box {
+        Box(
+            modifier = Modifier
+                .padding(bottom = 4.dp, end = 6.dp)
+                .background(
+                    color = Color(0F, 0F, 0F, 0.4F),
+                    shape = RoundedCornerShape(6.dp)
+                )
+        ) {
+            Text(
+                modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp),
+                text = "GIF",
+                color = Color.White,
+                fontSize = 8.sp
+            )
+        }
+    }
+
 }
