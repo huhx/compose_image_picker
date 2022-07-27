@@ -141,6 +141,16 @@ fun AssetImage(
                     fontSize = 14.sp
                 )
             }
+            if (assetInfo.isGif()) {
+                Box(modifier = Modifier.background(Color(0F, 0F, 0F, 0.4F))) {
+                    Text(
+                        modifier = Modifier.padding(bottom = 4.dp, end = 6.dp),
+                        text = "GIF",
+                        color = Color.White,
+                        fontSize = 12.sp
+                    )
+                }
+            }
         }
 
         AssetImageIndicator(assetInfo, selected, viewModel.selectedList) { isSelected ->

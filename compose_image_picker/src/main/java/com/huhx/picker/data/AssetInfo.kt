@@ -17,6 +17,10 @@ data class AssetInfo(
         return mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
     }
 
+    fun isGif(): Boolean {
+        return mimeType == "image/gif"
+    }
+
     fun isVideo(): Boolean {
         return mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
     }
