@@ -1,6 +1,5 @@
 package com.huhx.picker.data
 
-import android.net.Uri
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,6 +9,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.huhx.picker.constant.RequestType
 import com.huhx.picker.view.AssetPreview
 import com.huhx.picker.view.DirectorySelector
 import com.huhx.picker.view.TabView
@@ -39,16 +39,17 @@ fun AssetPickerRoute(
         }
 
         composable(
-            "preview?uri={uri}&isVideo={isVideo}",
+            "preview?index={index}&requestType={requestType}",
             arguments = listOf(
-                navArgument("uri") { type = NavType.StringType },
-                navArgument("isVideo") { type = NavType.BoolType },
+                navArgument("index") { type = NavType.IntType },
+                navArgument("requestType") { type = NavType.StringType },
             )
         ) { backStackEntry ->
             val arguments = backStackEntry.arguments!!
-            val uri = arguments.getString("uri")!!
-            val isVideo = arguments.getBoolean("isVideo")
-            AssetPreview(Uri.parse(uri), isVideo) { navController.navigateUp() }
+            val index = arguments.getInt("index")
+            val requestType = arguments.getString("requestType")
+            val assets = viewModel.getAssets(RequestType.valueOf(requestType!!))
+            AssetPreview(index, assets)
         }
     }
 }
