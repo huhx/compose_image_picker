@@ -74,9 +74,7 @@ fun QQAssetContent(
         horizontalArrangement = Arrangement.spacedBy(1.dp),
         userScrollEnabled = true
     ) {
-        item {
-            AssetCamera()
-        }
+        item { AssetCamera() }
 
         items(assets, key = { it.id }) {
             AssetImage(assetInfo = it, viewModel = viewModel)
@@ -92,7 +90,8 @@ fun AssetCamera() {
             .fillMaxSize()
             .clickable { context.showShortToast("open the camera") },
         contentScale = ContentScale.Crop,
-        painter = painterResource(id = R.drawable.app_icon_foreground), contentDescription = ""
+        painter = painterResource(id = R.drawable.app_icon_foreground),
+        contentDescription = ""
     )
 }
 
