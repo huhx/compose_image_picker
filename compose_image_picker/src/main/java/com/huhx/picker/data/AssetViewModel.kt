@@ -80,8 +80,8 @@ class AssetViewModel constructor(
         return selectedList.any { it.id == assetInfo.id }
     }
 
-    fun navigateToPreview(assetInfo: AssetInfo) {
-        navController.navigate("preview?uri=${assetInfo.uriString}&isVideo=${assetInfo.isVideo()}")
+    fun navigateToPreview(index: Int, requestType: RequestType) {
+        navController.navigate("preview?index=$index&requestType=${requestType.name}")
     }
 
     val selectedText: String

@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -78,8 +78,13 @@ fun QQAssetContent(
             AssetCamera()
         }
 
-        items(assets, key = { it.id }) {
-            AssetImage(assetInfo = it, viewModel = viewModel)
+        itemsIndexed(assets, key = { _, it -> it.id }) { index, it ->
+            AssetImage(
+                assetInfo = it,
+                index = index,
+                requestType = requestType,
+                viewModel = viewModel
+            )
         }
     }
 }
@@ -99,6 +104,8 @@ fun AssetCamera() {
 @Composable
 fun AssetImage(
     assetInfo: AssetInfo,
+    index: Int,
+    requestType: RequestType,
     viewModel: AssetViewModel
 ) {
     val selected = viewModel.isSelected(assetInfo)
@@ -129,7 +136,7 @@ fun AssetImage(
                 modifier = Modifier
                     .fillMaxSize()
                     .aspectRatio(1.0F)
-                    .clickable { viewModel.navigateToPreview(assetInfo) },
+                    .clickable { viewModel.navigateToPreview(index, requestType) },
                 filterQuality = FilterQuality.None,
                 contentScale = ContentScale.Crop,
                 contentDescription = ""
