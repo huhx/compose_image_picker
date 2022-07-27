@@ -17,7 +17,6 @@ import com.huhx.picker.data.AssetPickerRepository
 import com.huhx.picker.data.AssetPickerRoute
 import com.huhx.picker.data.AssetViewModel
 import com.huhx.picker.data.AssetViewModelFactory
-import com.huhx.picker.data.currentRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
@@ -39,10 +38,14 @@ fun QQAssetPicker(
         viewModel.initDirectories()
     })
 
-    val isHome = currentRoute(navController) == "home"
-
     Scaffold(
-        topBar = { AssetTopBar(viewModel, isHome, onPicked, navController) }
+        topBar = {
+            AssetTopBar(
+                viewModel = viewModel,
+                onPicked = onPicked,
+                navController = navController
+            )
+        }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             AssetPickerRoute(
