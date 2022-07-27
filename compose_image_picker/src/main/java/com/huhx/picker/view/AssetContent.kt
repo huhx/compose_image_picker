@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -142,12 +143,19 @@ fun AssetImage(
                 )
             }
             if (assetInfo.isGif()) {
-                Box(modifier = Modifier.background(Color(0F, 0F, 0F, 0.4F))) {
+                Box(
+                    modifier = Modifier
+                        .padding(bottom = 4.dp, end = 6.dp)
+                        .background(
+                            color = Color(0F, 0F, 0F, 0.4F),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                ) {
                     Text(
-                        modifier = Modifier.padding(bottom = 4.dp, end = 6.dp),
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.dp),
                         text = "GIF",
                         color = Color.White,
-                        fontSize = 12.sp
+                        fontSize = 10.sp
                     )
                 }
             }
