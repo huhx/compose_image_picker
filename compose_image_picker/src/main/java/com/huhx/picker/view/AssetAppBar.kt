@@ -84,18 +84,25 @@ fun HomeTopAppBar(
                 Icon(Icons.Default.KeyboardArrowDown, "")
             }
         },
-        actions = {
-            Button(
-                modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
-                enabled = viewModel.selectedList.size > 0,
-                shape = RoundedCornerShape(5.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                onClick = { onPicked(viewModel.selectedList) }
-            ) {
-                Text(viewModel.selectedText)
-            }
-        }
+        actions = { AppBarButton(viewModel, onPicked) }
     )
+}
+
+@Composable
+fun AppBarButton(
+    viewModel: AssetViewModel,
+    onPicked: (List<AssetInfo>) -> Unit
+) {
+    Button(
+        modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
+        enabled = viewModel.selectedList.size > 0,
+        shape = RoundedCornerShape(5.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        onClick = { onPicked(viewModel.selectedList) }
+    ) {
+        Text(viewModel.selectedText)
+    }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,17 +131,7 @@ fun DirectoryTopAppBar(
                 Icon(Icons.Default.KeyboardArrowUp, "")
             }
         },
-        actions = {
-            Button(
-                modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
-                enabled = viewModel.selectedList.size > 0,
-                shape = RoundedCornerShape(5.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                onClick = { onPicked(viewModel.selectedList) }
-            ) {
-                Text(viewModel.selectedText)
-            }
-        }
+        actions = { AppBarButton(viewModel, onPicked) }
     )
 }
 
