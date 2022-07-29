@@ -13,9 +13,11 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,6 +57,7 @@ internal fun AssetTopBar(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopAppBar(
     viewModel: AssetViewModel,
@@ -95,6 +98,7 @@ fun HomeTopAppBar(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DirectoryTopAppBar(
     viewModel: AssetViewModel,
@@ -134,16 +138,20 @@ fun DirectoryTopAppBar(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreviewTopAppBar(navigateUp: () -> Unit) {
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
         title = {},
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = Color.Black
+        ),
         navigationIcon = {
             IconButton(onClick = { navigateUp() }) {
                 Icon(
-                    Icons.Filled.ArrowBack,
-                    tint = Color.Black,
+                    Icons.Default.ArrowBack,
+                    tint = Color.White,
                     contentDescription = "",
                 )
             }
