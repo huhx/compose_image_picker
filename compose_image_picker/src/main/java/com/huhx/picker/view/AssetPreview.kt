@@ -87,7 +87,6 @@ fun VideoPlayer(uriString: String) {
                 .createMediaSource(MediaItem.fromUri(uriString))
 
             setMediaSource(source)
-            playWhenReady = true
             prepare()
         }
     }
