@@ -26,8 +26,7 @@ import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerScope
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
-import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.pager.PagerState
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -40,18 +39,17 @@ import kotlin.math.absoluteValue
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun AssetPreview(
-    index: Int,
     assets: List<AssetInfo>,
+    pagerState: PagerState
 ) {
-    val pageState = rememberPagerState(initialPage = index)
     Box {
         HorizontalPager(
             count = assets.size,
-            state = pageState,
+            state = pagerState,
             contentPadding = PaddingValues(horizontal = 0.dp),
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            ImageItem(assets[page], page, this)
+            ImageItem(assets[page], this)
         }
     }
 }
@@ -60,12 +58,11 @@ fun AssetPreview(
 @Composable
 fun ImageItem(
     assetInfo: AssetInfo,
-    index: Int,
     pagerScope: PagerScope
 ) {
     var scale by remember { mutableStateOf(1f) }
-    var xOffset by remember { mutableStateOf(0f) }
-    var yOffset by remember { mutableStateOf(0f) }
+    val xOffset by remember { mutableStateOf(0f) }
+    val yOffset by remember { mutableStateOf(0f) }
 
     val state = rememberTransformableState(onTransformation = { zoomChange, _, _ ->
         scale = (zoomChange * scale).coerceAtLeast(1f)
@@ -92,7 +89,7 @@ fun ImageItem(
                     scaleY = scale
                     translationX = xOffset
                     translationY = yOffset
-                    val pageOffset = pagerScope.calculateCurrentOffsetForPage(page = index).absoluteValue
+                    val pageOffset = pagerScope.currentPageOffset.absoluteValue
                     if (pageOffset == 1.0f) {
                         scale = 1.0f
                     }
@@ -111,11 +108,9 @@ fun VideoPlayer(uriString: String) {
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
             val dataSourceFactory: DataSource.Factory = DefaultDataSource.Factory(context)
-
-            val source = ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(MediaItem.fromUri(uriString))
-
+            val source = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(uriString))
             setMediaSource(source)
+
             prepare()
         }
     }
