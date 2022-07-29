@@ -51,6 +51,7 @@ fun QQAssetPicker(
             AssetPickerRoute(
                 navController = navController,
                 viewModel = viewModel,
+                onPicked = onPicked,
             ) {
                 navController.navigateUp()
                 viewModel.toggle()

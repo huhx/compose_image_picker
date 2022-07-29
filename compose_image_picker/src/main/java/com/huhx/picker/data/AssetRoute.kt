@@ -10,7 +10,7 @@ import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.huhx.picker.constant.RequestType
-import com.huhx.picker.view.AssetPreview
+import com.huhx.picker.view.AssetPreviewView
 import com.huhx.picker.view.DirectorySelector
 import com.huhx.picker.view.TabView
 
@@ -19,6 +19,7 @@ import com.huhx.picker.view.TabView
 fun AssetPickerRoute(
     navController: NavHostController,
     viewModel: AssetViewModel,
+    onPicked: (List<AssetInfo>) -> Unit,
     navigateBack: (String) -> Unit,
 ) {
     AnimatedNavHost(
@@ -49,7 +50,10 @@ fun AssetPickerRoute(
             val index = arguments.getInt("index")
             val requestType = arguments.getString("requestType")
             val assets = viewModel.getAssets(RequestType.valueOf(requestType!!))
-            AssetPreview(index, assets)
+            AssetPreviewView(index, assets, viewModel) {
+                navController.navigateUp()
+                onPicked(viewModel.selectedList)
+            }
         }
     }
 }
