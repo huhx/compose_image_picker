@@ -65,12 +65,8 @@ fun ImageItem(
     val yOffset by remember { mutableStateOf(0f) }
 
     val state = rememberTransformableState(onTransformation = { zoomChange, _, _ ->
-        scale = (zoomChange * scale).coerceAtLeast(1f)
-        scale = if (scale > 5f) {
-            5f
-        } else {
-            scale
-        }
+        val tempScale = (zoomChange * scale).coerceAtLeast(1f)
+        scale = (if (tempScale > 5f) 5f else tempScale)
     })
 
     if (assetInfo.isVideo()) {

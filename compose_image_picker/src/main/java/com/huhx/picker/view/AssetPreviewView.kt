@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
@@ -77,6 +78,8 @@ private fun SelectorBottomBar(
         Row(verticalAlignment = Alignment.CenterVertically) {
             AssetImageIndicator(
                 assetInfo = assetInfo,
+                size = 20.dp,
+                fontSize = 14.sp,
                 selected = viewModel.selectedList.any { it == assetInfo },
                 assetSelected = viewModel.selectedList,
             ) { isSelected ->

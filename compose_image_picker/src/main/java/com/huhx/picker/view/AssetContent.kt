@@ -29,6 +29,8 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -167,7 +169,11 @@ fun AssetImage(
             }
         }
 
-        AssetImageIndicator(assetInfo, selected, viewModel.selectedList) { isSelected ->
+        AssetImageIndicator(
+            assetInfo = assetInfo,
+            selected = selected,
+            assetSelected = viewModel.selectedList
+        ) { isSelected ->
             if (viewModel.isFullSelected() && isSelected) {
                 context.showShortToast("已经达到最大值${viewModel.assetPickerConfig.maxAssets}了")
                 return@AssetImageIndicator
@@ -186,6 +192,8 @@ fun AssetImage(
 fun AssetImageIndicator(
     assetInfo: AssetInfo,
     selected: Boolean,
+    size: Dp = 24.dp,
+    fontSize: TextUnit = 16.sp,
     assetSelected: SnapshotStateList<AssetInfo>,
     onClick: (Boolean) -> Unit
 ) {
@@ -193,7 +201,7 @@ fun AssetImageIndicator(
         onClick = { onClick(!selected) },
         modifier = Modifier
             .padding(6.dp)
-            .size(size = 24.dp)
+            .size(size = size)
             .clickable { onClick(false) },
         shape = CircleShape,
         border = if (!selected) BorderStroke(width = 1.dp, color = Color.White) else null,
@@ -203,6 +211,7 @@ fun AssetImageIndicator(
             if (selected) {
                 val num = assetSelected.indexOf(assetInfo) + 1
                 Text(
+                    fontSize = fontSize,
                     text = "${if (selected) num else null}",
                     color = Color.White
                 )
