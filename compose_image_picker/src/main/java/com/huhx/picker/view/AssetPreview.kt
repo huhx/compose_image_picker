@@ -4,12 +4,10 @@ import android.os.Build
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
@@ -23,7 +21,6 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -50,14 +47,6 @@ fun AssetPreview(
         ) { page ->
             BrowserItem(assets[page])
         }
-        HorizontalPagerIndicator(
-            pagerState = pageState,
-            activeColor = Color.Red,
-            inactiveColor = Color.White,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(60.dp)
-        )
     }
 }
 

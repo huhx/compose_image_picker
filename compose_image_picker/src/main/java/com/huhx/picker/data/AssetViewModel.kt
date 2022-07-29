@@ -22,7 +22,7 @@ class AssetViewModel constructor(
         get() = _directoryGroup
 
     val selectedList = mutableStateListOf<AssetInfo>()
-    val expanded = mutableStateOf(false)
+    private val expanded = mutableStateOf(false)
     val directory = mutableStateOf("所有项目")
 
     fun updateDirectory(value: String) {
