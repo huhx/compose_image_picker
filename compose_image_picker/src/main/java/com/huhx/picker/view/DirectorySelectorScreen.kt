@@ -54,7 +54,11 @@ fun DirectorySelectorScreen(
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
-            DirectorySelector(directory = directory, viewModel = viewModel, onClick = { onClick(it) })
+            DirectorySelector(
+                directory = directory,
+                viewModel = viewModel,
+                onClick = { onClick(it) }
+            )
         }
 
     }

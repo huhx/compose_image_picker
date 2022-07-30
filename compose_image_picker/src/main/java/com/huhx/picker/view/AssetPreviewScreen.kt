@@ -232,7 +232,8 @@ fun VideoPlayer(uriString: String) {
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
             val dataSourceFactory: DataSource.Factory = DefaultDataSource.Factory(context)
-            val source = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(uriString))
+            val source = ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(MediaItem.fromUri(uriString))
             setMediaSource(source)
 
             prepare()

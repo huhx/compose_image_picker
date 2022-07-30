@@ -2,6 +2,7 @@ package com.huhx.picker.view
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,13 +34,15 @@ fun QQAssetPicker(
         viewModel.initDirectories()
     })
 
-    AssetPickerRoute(
-        navController = navController,
-        viewModel = viewModel,
-        onPicked = onPicked,
-    ) {
-        navController.navigateUp()
-        viewModel.toggle()
-        viewModel.updateDirectory(it)
+    CompositionLocalProvider(LocalAssetConfig provides assetPickerConfig) {
+        AssetPickerRoute(
+            navController = navController,
+            viewModel = viewModel,
+            onPicked = onPicked,
+        ) {
+            navController.navigateUp()
+            viewModel.toggle()
+            viewModel.updateDirectory(it)
+        }
     }
 }

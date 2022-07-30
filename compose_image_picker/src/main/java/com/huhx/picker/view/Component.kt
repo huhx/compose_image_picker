@@ -19,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +28,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.huhx.picker.constant.AssetPickerConfig
 import com.huhx.picker.data.AssetInfo
+
+val LocalAssetConfig = compositionLocalOf { AssetPickerConfig() }
 
 @Composable
 fun NavigationIcon(navigateUp: () -> Unit) {
@@ -46,6 +50,7 @@ fun AppBarButton(
     onPicked: () -> Unit
 ) {
     val isEnabled = size > 0
+    val assetPickerConfig = LocalAssetConfig.current
     Button(
         modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
         enabled = isEnabled,
@@ -53,7 +58,7 @@ fun AppBarButton(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         onClick = { onPicked() }
     ) {
-        Text(if (isEnabled) "确定($size/9)" else "确定")
+        Text(if (isEnabled) "确定($size/${assetPickerConfig.maxAssets})" else "确定")
     }
 }
 
@@ -67,7 +72,6 @@ fun TrailingIcon(source: String, target: String) {
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
