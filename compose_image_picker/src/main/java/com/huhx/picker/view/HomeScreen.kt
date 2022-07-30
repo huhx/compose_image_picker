@@ -1,7 +1,6 @@
 package com.huhx.picker.view
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +34,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,7 +52,7 @@ import com.huhx.picker.data.AssetInfo
 import com.huhx.picker.data.AssetViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(
     viewModel: AssetViewModel,
@@ -63,7 +61,7 @@ fun HomeScreen(
 ) {
     Scaffold(
         topBar = {
-            val directory = viewModel.directory.value
+            val directory = viewModel.directory
             HomeTopAppBar(
                 directory = directory,
                 selectedList = viewModel.selectedList,
@@ -74,7 +72,17 @@ fun HomeScreen(
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
-            TabView(viewModel)
+            val tabs = listOf(TabItem.All, TabItem.Video, TabItem.Image)
+            val pagerState = rememberPagerState()
+
+            Column {
+                AssetTab(tabs = tabs, pagerState = pagerState)
+                TabsContent(
+                    tabs = tabs,
+                    pagerState = pagerState,
+                    viewModel = viewModel
+                )
+            }
         }
     }
 }
@@ -104,23 +112,6 @@ fun HomeTopAppBar(
             )
         }
     )
-}
-
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun TabView(
-    viewModel: AssetViewModel,
-) {
-    val tabs = listOf(TabItem.All, TabItem.Video, TabItem.Image)
-    val pagerState = rememberPagerState()
-    Column {
-        AssetTab(tabs = tabs, pagerState = pagerState)
-        TabsContent(
-            tabs = tabs,
-            pagerState = pagerState,
-            viewModel = viewModel
-        )
-    }
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -211,19 +202,6 @@ fun QQAssetContent(
             )
         }
     }
-}
-
-@Composable
-fun AssetCamera() {
-    val context = LocalContext.current
-    Image(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable { context.showShortToast("open the camera") },
-        contentScale = ContentScale.Crop,
-        painter = painterResource(id = R.drawable.app_icon_foreground),
-        contentDescription = ""
-    )
 }
 
 @Composable

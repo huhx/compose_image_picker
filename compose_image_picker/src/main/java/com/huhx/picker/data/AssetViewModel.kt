@@ -1,7 +1,9 @@
 package com.huhx.picker.data
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -22,17 +24,12 @@ class AssetViewModel constructor(
         get() = _directoryGroup
 
     val selectedList = mutableStateListOf<AssetInfo>()
-    private val expanded = mutableStateOf(false)
-    val directory = mutableStateOf("所有项目")
+    var directory by mutableStateOf("所有项目")
 
     fun updateDirectory(value: String) {
-        if (directory.value != value) {
-            directory.value = value
+        if (directory != value) {
+            directory = value
         }
-    }
-
-    fun toggle() {
-        expanded.value = !expanded.value
     }
 
     fun initDirectories() {
@@ -55,7 +52,7 @@ class AssetViewModel constructor(
     }
 
     fun getAssets(requestType: RequestType): List<AssetInfo> {
-        val assetList = _directoryGroup.first { it.directory == directory.value }.assets
+        val assetList = _directoryGroup.first { it.directory == directory }.assets
 
         return when (requestType) {
             RequestType.COMMON -> assetList
@@ -68,14 +65,6 @@ class AssetViewModel constructor(
         return selectedList.size == assetPickerConfig.maxAssets
     }
 
-    fun add(assetInfo: AssetInfo) {
-        selectedList += assetInfo
-    }
-
-    fun remove(assetInfo: AssetInfo) {
-        selectedList -= assetInfo
-    }
-
     fun isSelected(assetInfo: AssetInfo): Boolean {
         return selectedList.any { it.id == assetInfo.id }
     }
@@ -83,7 +72,4 @@ class AssetViewModel constructor(
     fun navigateToPreview(index: Int, requestType: RequestType) {
         navController.navigate("preview?index=$index&requestType=${requestType.name}")
     }
-
-    val selectedText: String
-        get() = if (selectedList.size > 0) "确定(${selectedList.size}/${assetPickerConfig.maxAssets})" else "确定"
 }

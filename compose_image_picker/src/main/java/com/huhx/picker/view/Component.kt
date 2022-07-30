@@ -1,10 +1,12 @@
 package com.huhx.picker.view
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -24,11 +26,16 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.huhx.picker.R
 import com.huhx.picker.constant.AssetPickerConfig
+import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.AssetInfo
 
 val LocalAssetConfig = compositionLocalOf { AssetPickerConfig() }
@@ -71,6 +78,19 @@ fun TrailingIcon(source: String, target: String) {
             tint = Color.Blue
         )
     }
+}
+
+@Composable
+fun AssetCamera() {
+    val context = LocalContext.current
+    Image(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { context.showShortToast("open the camera") },
+        contentScale = ContentScale.Crop,
+        painter = painterResource(id = R.drawable.app_icon_foreground),
+        contentDescription = ""
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
