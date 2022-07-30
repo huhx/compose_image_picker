@@ -25,7 +25,11 @@ fun AssetPickerRoute(
         startDestination = "home"
     ) {
         composable("home") {
-            HomeScreen(viewModel, navController, onPicked)
+            HomeScreen(
+                viewModel = viewModel,
+                navController = navController,
+                onPicked = onPicked
+            )
         }
 
         composable(
@@ -34,7 +38,14 @@ fun AssetPickerRoute(
         ) { backStackEntry ->
             val arguments = backStackEntry.arguments!!
             val directory = arguments.getString("directory")!!
-            DirectorySelectorScreen(directory, viewModel, navController, onPicked) { navigateBack(it) }
+            DirectorySelectorScreen(
+                directory = directory,
+                selectedList = viewModel.selectedList,
+                assetDirectories = viewModel.directoryGroup,
+                navController = navController,
+                onPicked = onPicked,
+                onClick = navigateBack
+            )
         }
 
         composable(
@@ -48,10 +59,16 @@ fun AssetPickerRoute(
             val index = arguments.getInt("index")
             val requestType = arguments.getString("requestType")
             val assets = viewModel.getAssets(RequestType.valueOf(requestType!!))
-            AssetPreviewScreen(index, assets, navController, viewModel) {
-                navController.navigateUp()
-                onPicked(viewModel.selectedList)
-            }
+            AssetPreviewScreen(
+                index = index,
+                assets = assets,
+                navController = navController,
+                viewModel = viewModel,
+                previewBack = {
+                    navController.navigateUp()
+                    onPicked(viewModel.selectedList)
+                }
+            )
         }
     }
 }

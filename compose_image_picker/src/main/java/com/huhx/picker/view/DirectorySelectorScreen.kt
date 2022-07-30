@@ -31,14 +31,15 @@ import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
 import com.huhx.picker.R
+import com.huhx.picker.data.AssetDirectory
 import com.huhx.picker.data.AssetInfo
-import com.huhx.picker.data.AssetViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DirectorySelectorScreen(
     directory: String,
-    viewModel: AssetViewModel,
+    selectedList: List<AssetInfo>,
+    assetDirectories: List<AssetDirectory>,
     navController: NavHostController,
     onPicked: (List<AssetInfo>) -> Unit,
     onClick: (String) -> Unit,
@@ -47,17 +48,17 @@ fun DirectorySelectorScreen(
         topBar = {
             DirectoryTopAppBar(
                 directory = directory,
-                selectedList = viewModel.selectedList,
+                selectedList = selectedList,
                 navigateUp = { navController.navigateUp() },
-                onPicked = { onPicked(it) },
+                onPicked = onPicked,
             )
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             DirectorySelector(
                 directory = directory,
-                viewModel = viewModel,
-                onClick = { onClick(it) }
+                assetDirectories = assetDirectories,
+                onClick = onClick
             )
         }
 
@@ -76,7 +77,7 @@ fun DirectoryTopAppBar(
         modifier = Modifier.statusBarsPadding(),
         navigationIcon = { NavigationIcon(navigateUp) },
         title = {
-            Row(modifier = Modifier.clickable { navigateUp() }) {
+            Row(modifier = Modifier.clickable(onClick = navigateUp)) {
                 Text(directory, fontSize = 18.sp)
                 Icon(Icons.Default.KeyboardArrowUp, "")
             }
@@ -94,13 +95,14 @@ fun DirectoryTopAppBar(
 @Composable
 fun DirectorySelector(
     directory: String,
-    viewModel: AssetViewModel,
+    assetDirectories: List<AssetDirectory>,
     onClick: (String) -> Unit,
 ) {
     LazyColumn {
-        items(viewModel.directoryGroup) {
+        items(assetDirectories) {
+            val itemDirectory = it.directory
             ListItem(
-                modifier = Modifier.clickable { onClick(it.directory) },
+                modifier = Modifier.clickable { onClick(itemDirectory) },
                 icon = {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -117,11 +119,11 @@ fun DirectorySelector(
                 },
                 text = {
                     Row {
-                        Text(text = it.directory)
+                        Text(text = itemDirectory)
                         Text(text = "(${it.counts})", color = Color.Gray)
                     }
                 },
-                trailing = { TrailingIcon(directory, it.directory) }
+                trailing = { TrailingIcon(directory, itemDirectory) }
             )
         }
     }
