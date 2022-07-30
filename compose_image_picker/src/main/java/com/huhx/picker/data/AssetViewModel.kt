@@ -26,12 +26,6 @@ class AssetViewModel constructor(
     val selectedList = mutableStateListOf<AssetInfo>()
     var directory by mutableStateOf("所有项目")
 
-    fun updateDirectory(value: String) {
-        if (directory != value) {
-            directory = value
-        }
-    }
-
     fun initDirectories() {
         viewModelScope.launch {
             initAssets(RequestType.COMMON)

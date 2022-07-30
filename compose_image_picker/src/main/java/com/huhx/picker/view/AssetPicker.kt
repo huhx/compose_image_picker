@@ -39,9 +39,6 @@ fun QQAssetPicker(
             navController = navController,
             viewModel = viewModel,
             onPicked = onPicked,
-        ) {
-            navController.navigateUp()
-            viewModel.updateDirectory(it)
-        }
+        )
     }
 }

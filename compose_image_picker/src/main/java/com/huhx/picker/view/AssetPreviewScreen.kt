@@ -70,16 +70,22 @@ fun AssetPreviewScreen(
     assets: List<AssetInfo>,
     navController: NavHostController,
     viewModel: AssetViewModel,
-    previewBack: () -> Unit,
+    onPicked: (List<AssetInfo>) -> Unit,
 ) {
     val pageState = rememberPagerState(initialPage = index)
 
     Scaffold(
         topBar = { PreviewTopAppBar(navigateUp = { navController.navigateUp() }) },
         bottomBar = {
-            SelectorBottomBar(pageState, assets, viewModel) {
-                previewBack()
-            }
+            SelectorBottomBar(
+                pagerState = pageState,
+                assets = assets,
+                viewModel = viewModel,
+                onClick = {
+                    navController.navigateUp()
+                    onPicked(viewModel.selectedList)
+                }
+            )
         }
     ) { innerPadding ->
         Box(

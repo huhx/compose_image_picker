@@ -18,7 +18,6 @@ fun AssetPickerRoute(
     navController: NavHostController,
     viewModel: AssetViewModel,
     onPicked: (List<AssetInfo>) -> Unit,
-    navigateBack: (String) -> Unit,
 ) {
     AnimatedNavHost(
         navController = navController,
@@ -43,9 +42,12 @@ fun AssetPickerRoute(
                 selectedList = viewModel.selectedList,
                 assetDirectories = viewModel.directoryGroup,
                 navController = navController,
+                onClick = { name ->
+                    navController.navigateUp()
+                    viewModel.directory = name
+                },
                 onPicked = onPicked,
-                onClick = navigateBack
-            )
+                )
         }
 
         composable(
@@ -64,10 +66,7 @@ fun AssetPickerRoute(
                 assets = assets,
                 navController = navController,
                 viewModel = viewModel,
-                previewBack = {
-                    navController.navigateUp()
-                    onPicked(viewModel.selectedList)
-                }
+                onPicked = onPicked
             )
         }
     }
