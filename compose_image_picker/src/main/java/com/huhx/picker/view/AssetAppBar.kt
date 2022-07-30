@@ -23,116 +23,87 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.huhx.picker.data.AssetInfo
-import com.huhx.picker.data.AssetViewModel
-import com.huhx.picker.data.currentRoute
-
-@Composable
-internal fun AssetTopBar(
-    viewModel: AssetViewModel,
-    onPicked: (List<AssetInfo>) -> Unit,
-    navController: NavHostController
-) {
-    val currentRoute = currentRoute(navController)
-    if (currentRoute == "home") {
-        HomeTopAppBar(
-            viewModel = viewModel,
-            navigateUp = { onPicked(viewModel.selectedList) },
-            onPicked = { onPicked(it) },
-            navigateToDropDown = { navController.navigate("dropDown?directory=$it") }
-        )
-    }
-
-    if (currentRoute?.startsWith("dropDown") == true) {
-        DirectoryTopAppBar(
-            viewModel = viewModel,
-            navigateUp = { navController.navigateUp() },
-            onPicked = { onPicked(it) },
-        )
-    }
-
-    if (currentRoute?.startsWith("preview") == true) {
-        PreviewTopAppBar(navigateUp = { navController.navigateUp() })
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopAppBar(
-    viewModel: AssetViewModel,
+    directory: String,
+    selectedList: List<AssetInfo>,
     navigateUp: () -> Unit,
-    navigateToDropDown: (String) -> Unit,
+    navigateToDropDown: () -> Unit,
     onPicked: (List<AssetInfo>) -> Unit
 ) {
-    val directory = viewModel.directory.value
-
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
-        navigationIcon = {
-            IconButton(onClick = { navigateUp() }) {
-                Icon(
-                    Icons.Filled.Close,
-                    tint = Color.Black,
-                    contentDescription = "",
-                )
-            }
-        },
+        navigationIcon = { NavigationIcon(navigateUp) },
         title = {
-            Row(modifier = Modifier.clickable { navigateToDropDown(directory) }) {
+            Row(modifier = Modifier.clickable { navigateToDropDown() }) {
                 Text(directory, fontSize = 18.sp)
                 Icon(Icons.Default.KeyboardArrowDown, "")
             }
         },
-        actions = { AppBarButton(viewModel, onPicked) }
+        actions = {
+            AppBarButton(
+                size = selectedList.size,
+                onPicked = { onPicked(selectedList) }
+            )
+        }
     )
 }
 
 @Composable
-fun AppBarButton(
-    viewModel: AssetViewModel,
-    onPicked: (List<AssetInfo>) -> Unit
-) {
-    Button(
-        modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
-        enabled = viewModel.selectedList.size > 0,
-        shape = RoundedCornerShape(5.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        onClick = { onPicked(viewModel.selectedList) }
-    ) {
-        Text(viewModel.selectedText)
+private fun NavigationIcon(navigateUp: () -> Unit) {
+    IconButton(onClick = navigateUp) {
+        Icon(
+            Icons.Filled.Close,
+            tint = Color.Black,
+            contentDescription = "",
+        )
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DirectoryTopAppBar(
-    viewModel: AssetViewModel,
+    directory: String,
+    selectedList: List<AssetInfo>,
     navigateUp: () -> Unit,
     onPicked: (List<AssetInfo>) -> Unit
 ) {
-    val directory = viewModel.directory.value
-
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
-        navigationIcon = {
-            IconButton(onClick = { navigateUp() }) {
-                Icon(
-                    Icons.Filled.Close,
-                    tint = Color.Black,
-                    contentDescription = "",
-                )
-            }
-        },
+        navigationIcon = { NavigationIcon(navigateUp) },
         title = {
             Row(modifier = Modifier.clickable { navigateUp() }) {
                 Text(directory, fontSize = 18.sp)
                 Icon(Icons.Default.KeyboardArrowUp, "")
             }
         },
-        actions = { AppBarButton(viewModel, onPicked) }
+        actions = {
+            AppBarButton(
+                size = selectedList.size,
+                onPicked = { onPicked(selectedList) }
+            )
+        }
     )
+}
+
+@Composable
+private fun AppBarButton(
+    size: Int,
+    onPicked: () -> Unit
+) {
+    val isEnabled = size > 0
+    Button(
+        modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
+        enabled = isEnabled,
+        shape = RoundedCornerShape(5.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        onClick = { onPicked() }
+    ) {
+        Text(if (isEnabled) "确定($size/9)" else "确定")
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -145,7 +116,7 @@ fun PreviewTopAppBar(navigateUp: () -> Unit) {
             containerColor = Color.Black
         ),
         navigationIcon = {
-            IconButton(onClick = { navigateUp() }) {
+            IconButton(onClick = navigateUp) {
                 Icon(
                     Icons.Default.ArrowBack,
                     tint = Color.White,

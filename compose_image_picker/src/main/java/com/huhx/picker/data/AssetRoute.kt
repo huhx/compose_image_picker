@@ -2,17 +2,15 @@ package com.huhx.picker.data
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.huhx.picker.constant.RequestType
 import com.huhx.picker.view.AssetPreviewView
-import com.huhx.picker.view.DirectorySelector
-import com.huhx.picker.view.TabView
+import com.huhx.picker.view.DirectorySelectorScreen
+import com.huhx.picker.view.HomeView
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -27,7 +25,7 @@ fun AssetPickerRoute(
         startDestination = "home"
     ) {
         composable("home") {
-            TabView(viewModel)
+            HomeView(viewModel, navController, onPicked)
         }
 
         composable(
@@ -36,7 +34,7 @@ fun AssetPickerRoute(
         ) { backStackEntry ->
             val arguments = backStackEntry.arguments!!
             val directory = arguments.getString("directory")!!
-            DirectorySelector(directory, viewModel) { navigateBack(it) }
+            DirectorySelectorScreen(directory, viewModel, navController, onPicked) { navigateBack(it) }
         }
 
         composable(
@@ -50,16 +48,10 @@ fun AssetPickerRoute(
             val index = arguments.getInt("index")
             val requestType = arguments.getString("requestType")
             val assets = viewModel.getAssets(RequestType.valueOf(requestType!!))
-            AssetPreviewView(index, assets, viewModel) {
+            AssetPreviewView(index, assets, navController, viewModel) {
                 navController.navigateUp()
                 onPicked(viewModel.selectedList)
             }
         }
     }
-}
-
-@Composable
-fun currentRoute(navController: NavHostController): String? {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    return navBackStackEntry?.destination?.route
 }

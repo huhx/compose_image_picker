@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
@@ -34,12 +35,14 @@ import com.huhx.picker.data.AssetViewModel
 fun AssetPreviewView(
     index: Int,
     assets: List<AssetInfo>,
+    navController: NavHostController,
     viewModel: AssetViewModel,
     previewBack: () -> Unit,
 ) {
     val pageState = rememberPagerState(initialPage = index)
 
     Scaffold(
+        topBar = { PreviewTopAppBar(navigateUp = { navController.navigateUp() }) },
         bottomBar = {
             SelectorBottomBar(pageState, assets, viewModel) {
                 previewBack()
@@ -88,9 +91,9 @@ private fun SelectorBottomBar(
                     return@AssetImageIndicator
                 }
                 if (isSelected) {
-                    viewModel.add(assetInfo)
+                    viewModel.selectedList.add(assetInfo)
                 } else {
-                    viewModel.remove(assetInfo)
+                    viewModel.selectedList.remove(assetInfo)
                 }
             }
             Spacer(modifier = Modifier.width(4.dp))

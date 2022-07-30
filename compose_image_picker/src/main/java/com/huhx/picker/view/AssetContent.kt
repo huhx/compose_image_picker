@@ -179,9 +179,9 @@ fun AssetImage(
                 return@AssetImageIndicator
             }
             if (isSelected) {
-                viewModel.add(assetInfo)
+                viewModel.selectedList.add(assetInfo)
             } else {
-                viewModel.remove(assetInfo)
+                viewModel.selectedList.remove(assetInfo)
             }
         }
     }
