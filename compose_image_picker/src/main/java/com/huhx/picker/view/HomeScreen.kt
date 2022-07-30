@@ -1,26 +1,33 @@
 package com.huhx.picker.view
 
-import androidx.compose.foundation.BorderStroke
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -29,18 +36,135 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import com.huhx.picker.R
 import com.huhx.picker.constant.RequestType
 import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.AssetInfo
 import com.huhx.picker.data.AssetViewModel
+import kotlinx.coroutines.launch
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(
+    viewModel: AssetViewModel,
+    navController: NavHostController,
+    onPicked: (List<AssetInfo>) -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            val directory = viewModel.directory.value
+            HomeTopAppBar(
+                directory = directory,
+                selectedList = viewModel.selectedList,
+                navigateUp = { },
+                onPicked = onPicked,
+                navigateToDropDown = { navController.navigate("dropDown?directory=$directory") }
+            )
+        }
+    ) { padding ->
+        Box(modifier = Modifier.padding(padding)) {
+            TabView(viewModel)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeTopAppBar(
+    directory: String,
+    selectedList: List<AssetInfo>,
+    navigateUp: () -> Unit,
+    navigateToDropDown: () -> Unit,
+    onPicked: (List<AssetInfo>) -> Unit
+) {
+    CenterAlignedTopAppBar(
+        modifier = Modifier.statusBarsPadding(),
+        navigationIcon = { NavigationIcon(navigateUp) },
+        title = {
+            Row(modifier = Modifier.clickable { navigateToDropDown() }) {
+                Text(directory, fontSize = 18.sp)
+                Icon(Icons.Default.KeyboardArrowDown, "")
+            }
+        },
+        actions = {
+            AppBarButton(
+                size = selectedList.size,
+                onPicked = { onPicked(selectedList) }
+            )
+        }
+    )
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun TabView(
+    viewModel: AssetViewModel,
+) {
+    val tabs = listOf(TabItem.All, TabItem.Video, TabItem.Image)
+    val pagerState = rememberPagerState()
+    Column {
+        AssetTab(tabs = tabs, pagerState = pagerState)
+        TabsContent(
+            tabs = tabs,
+            pagerState = pagerState,
+            viewModel = viewModel
+        )
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun AssetTab(
+    tabs: List<TabItem>,
+    pagerState: PagerState,
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        contentColor = Color.Black,
+        indicator = {},
+    ) {
+        tabs.forEachIndexed { index, tab ->
+            Tab(
+                selected = pagerState.currentPage == index,
+                text = { Text(text = stringResource(tab.resourceId)) },
+                selectedContentColor = Color.Black,
+                unselectedContentColor = Color.Gray,
+                onClick = {
+                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun TabsContent(
+    tabs: List<TabItem>,
+    pagerState: PagerState,
+    viewModel: AssetViewModel
+) {
+    HorizontalPager(
+        state = pagerState,
+        count = tabs.size,
+        userScrollEnabled = true
+    ) { page ->
+        tabs[page].screen(viewModel)
+    }
+}
 
 @Composable
 fun AssetAll(
@@ -187,35 +311,19 @@ fun AssetImage(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AssetImageIndicator(
-    assetInfo: AssetInfo,
-    selected: Boolean,
-    size: Dp = 24.dp,
-    fontSize: TextUnit = 16.sp,
-    assetSelected: SnapshotStateList<AssetInfo>,
-    onClick: (Boolean) -> Unit
+sealed class TabItem(
+    @StringRes val resourceId: Int,
+    val screen: @Composable (AssetViewModel) -> Unit
 ) {
-    Surface(
-        onClick = { onClick(!selected) },
-        modifier = Modifier
-            .padding(6.dp)
-            .size(size = size)
-            .clickable { onClick(false) },
-        shape = CircleShape,
-        border = if (!selected) BorderStroke(width = 1.dp, color = Color.White) else null,
-        color = if (selected) Color(64, 151, 246) else Color(0f, 0f, 0f, 0.3F)
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            if (selected) {
-                val num = assetSelected.indexOf(assetInfo) + 1
-                Text(
-                    fontSize = fontSize,
-                    text = "${if (selected) num else null}",
-                    color = Color.White
-                )
-            }
-        }
-    }
+    object All : TabItem(R.string.tab_item_all, { viewModel ->
+        AssetAll(viewModel)
+    })
+
+    object Video : TabItem(R.string.tab_item_video, { viewModel ->
+        AssetVideo(viewModel)
+    })
+
+    object Image : TabItem(R.string.tab_item_image, { viewModel ->
+        AssetImage(viewModel)
+    })
 }

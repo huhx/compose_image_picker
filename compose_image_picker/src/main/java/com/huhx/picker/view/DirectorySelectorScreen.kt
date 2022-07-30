@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -23,6 +25,7 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
@@ -57,6 +60,31 @@ fun DirectorySelectorScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DirectoryTopAppBar(
+    directory: String,
+    selectedList: List<AssetInfo>,
+    navigateUp: () -> Unit,
+    onPicked: (List<AssetInfo>) -> Unit
+) {
+    CenterAlignedTopAppBar(
+        modifier = Modifier.statusBarsPadding(),
+        navigationIcon = { NavigationIcon(navigateUp) },
+        title = {
+            Row(modifier = Modifier.clickable { navigateUp() }) {
+                Text(directory, fontSize = 18.sp)
+                Icon(Icons.Default.KeyboardArrowUp, "")
+            }
+        },
+        actions = {
+            AppBarButton(
+                size = selectedList.size,
+                onPicked = { onPicked(selectedList) }
+            )
+        }
+    )
+}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -92,16 +120,5 @@ fun DirectorySelector(
                 trailing = { TrailingIcon(directory, it.directory) }
             )
         }
-    }
-}
-
-@Composable
-fun TrailingIcon(source: String, target: String) {
-    if (source == target) {
-        Icon(
-            imageVector = Icons.Default.Done,
-            contentDescription = "",
-            tint = Color.Blue
-        )
     }
 }

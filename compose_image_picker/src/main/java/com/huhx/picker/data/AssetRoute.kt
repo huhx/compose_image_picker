@@ -8,9 +8,9 @@ import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.huhx.picker.constant.RequestType
-import com.huhx.picker.view.AssetPreviewView
+import com.huhx.picker.view.AssetPreviewScreen
 import com.huhx.picker.view.DirectorySelectorScreen
-import com.huhx.picker.view.HomeView
+import com.huhx.picker.view.HomeScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -25,7 +25,7 @@ fun AssetPickerRoute(
         startDestination = "home"
     ) {
         composable("home") {
-            HomeView(viewModel, navController, onPicked)
+            HomeScreen(viewModel, navController, onPicked)
         }
 
         composable(
@@ -48,7 +48,7 @@ fun AssetPickerRoute(
             val index = arguments.getInt("index")
             val requestType = arguments.getString("requestType")
             val assets = viewModel.getAssets(RequestType.valueOf(requestType!!))
-            AssetPreviewView(index, assets, navController, viewModel) {
+            AssetPreviewScreen(index, assets, navController, viewModel) {
                 navController.navigateUp()
                 onPicked(viewModel.selectedList)
             }
