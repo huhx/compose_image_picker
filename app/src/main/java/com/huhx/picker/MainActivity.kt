@@ -52,21 +52,16 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
 
             Compose_image_pickerTheme {
-                QQAssetPicker(assetPickerConfig = AssetPickerConfig(gridCount = 3)) {
-                    context.showShortToast("picked size = ${it.size}")
-                }
+                QQAssetPicker(
+                    assetPickerConfig = AssetPickerConfig(gridCount = 3),
+                    onPicked = {
+                        context.showShortToast("picked size = ${it.size}")
+                    },
+                    onClose = {
+                        context.showShortToast("close size = ${it.size}")
+                    }
+                )
             }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    val context = LocalContext.current
-    Compose_image_pickerTheme {
-        QQAssetPicker(assetPickerConfig = AssetPickerConfig(gridCount = 3)) {
-            context.showShortToast("picked size = ${it.size}")
         }
     }
 }

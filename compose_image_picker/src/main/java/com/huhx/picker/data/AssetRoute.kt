@@ -18,6 +18,7 @@ fun AssetPickerRoute(
     navController: NavHostController,
     viewModel: AssetViewModel,
     onPicked: (List<AssetInfo>) -> Unit,
+    onClose: (List<AssetInfo>) -> Unit,
 ) {
     AnimatedNavHost(
         navController = navController,
@@ -27,7 +28,8 @@ fun AssetPickerRoute(
             HomeScreen(
                 viewModel = viewModel,
                 navController = navController,
-                onPicked = onPicked
+                onPicked = onPicked,
+                onClose = onClose,
             )
         }
 

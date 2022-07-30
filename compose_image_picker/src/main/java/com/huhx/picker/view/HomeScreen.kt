@@ -17,10 +17,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -58,6 +60,7 @@ fun HomeScreen(
     viewModel: AssetViewModel,
     navController: NavHostController,
     onPicked: (List<AssetInfo>) -> Unit,
+    onClose: (List<AssetInfo>) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -65,7 +68,7 @@ fun HomeScreen(
             HomeTopAppBar(
                 directory = directory,
                 selectedList = viewModel.selectedList,
-                navigateUp = { },
+                navigateUp = onClose,
                 onPicked = onPicked,
                 navigateToDropDown = { navController.navigate("dropDown?directory=$directory") }
             )
@@ -92,13 +95,21 @@ fun HomeScreen(
 fun HomeTopAppBar(
     directory: String,
     selectedList: List<AssetInfo>,
-    navigateUp: () -> Unit,
+    navigateUp: (List<AssetInfo>) -> Unit,
     navigateToDropDown: () -> Unit,
     onPicked: (List<AssetInfo>) -> Unit
 ) {
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
-        navigationIcon = { NavigationIcon(navigateUp) },
+        navigationIcon = {
+            IconButton(onClick = { navigateUp(selectedList) }) {
+                Icon(
+                    Icons.Filled.Close,
+                    tint = Color.Black,
+                    contentDescription = "",
+                )
+            }
+        },
         title = {
             Row(modifier = Modifier.clickable { navigateToDropDown() }) {
                 Text(directory, fontSize = 18.sp)

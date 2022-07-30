@@ -19,6 +19,7 @@ import com.huhx.picker.data.AssetViewModelFactory
 fun QQAssetPicker(
     assetPickerConfig: AssetPickerConfig,
     onPicked: (List<AssetInfo>) -> Unit,
+    onClose: (List<AssetInfo>) -> Unit,
 ) {
     val context = LocalContext.current
     val navController = rememberAnimatedNavController()
@@ -39,6 +40,7 @@ fun QQAssetPicker(
             navController = navController,
             viewModel = viewModel,
             onPicked = onPicked,
+            onClose = onClose,
         )
     }
 }

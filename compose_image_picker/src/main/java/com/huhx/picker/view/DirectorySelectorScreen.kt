@@ -12,10 +12,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -75,7 +77,15 @@ fun DirectoryTopAppBar(
 ) {
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
-        navigationIcon = { NavigationIcon(navigateUp) },
+        navigationIcon = {
+            IconButton(onClick = navigateUp) {
+                Icon(
+                    Icons.Filled.Close,
+                    tint = Color.Black,
+                    contentDescription = "",
+                )
+            }
+        },
         title = {
             Row(modifier = Modifier.clickable(onClick = navigateUp)) {
                 Text(directory, fontSize = 18.sp)

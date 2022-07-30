@@ -12,12 +12,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,17 +37,6 @@ import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.AssetInfo
 
 val LocalAssetConfig = compositionLocalOf { AssetPickerConfig() }
-
-@Composable
-fun NavigationIcon(navigateUp: () -> Unit) {
-    IconButton(onClick = navigateUp) {
-        Icon(
-            Icons.Filled.Close,
-            tint = Color.Black,
-            contentDescription = "",
-        )
-    }
-}
 
 @Composable
 fun AppBarButton(
