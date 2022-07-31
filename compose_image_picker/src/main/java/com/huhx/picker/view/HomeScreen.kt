@@ -169,27 +169,6 @@ fun TabsContent(
 }
 
 @Composable
-fun AssetAll(
-    viewModel: AssetViewModel
-) {
-    QQAssetContent(viewModel, RequestType.COMMON)
-}
-
-@Composable
-fun AssetVideo(
-    viewModel: AssetViewModel
-) {
-    QQAssetContent(viewModel, RequestType.VIDEO)
-}
-
-@Composable
-fun AssetImage(
-    viewModel: AssetViewModel
-) {
-    QQAssetContent(viewModel, RequestType.IMAGE)
-}
-
-@Composable
 fun QQAssetContent(
     viewModel: AssetViewModel,
     requestType: RequestType
@@ -305,14 +284,14 @@ sealed class TabItem(
     val screen: @Composable (AssetViewModel) -> Unit
 ) {
     object All : TabItem(R.string.tab_item_all, { viewModel ->
-        AssetAll(viewModel)
+        QQAssetContent(viewModel, RequestType.COMMON)
     })
 
     object Video : TabItem(R.string.tab_item_video, { viewModel ->
-        AssetVideo(viewModel)
+        QQAssetContent(viewModel, RequestType.VIDEO)
     })
 
     object Image : TabItem(R.string.tab_item_image, { viewModel ->
-        AssetImage(viewModel)
+        QQAssetContent(viewModel, RequestType.IMAGE)
     })
 }
