@@ -78,7 +78,9 @@ fun HomeScreen(
         bottomBar = {
             if (viewModel.selectedList.isEmpty()) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     TextButton(
@@ -98,7 +100,7 @@ fun HomeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {

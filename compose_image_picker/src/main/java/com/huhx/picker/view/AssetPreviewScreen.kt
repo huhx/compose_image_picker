@@ -153,15 +153,15 @@ private fun SelectorBottomBar(
                 }
             }
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = "选择", color = Color.White)
+            Text(text = "选择", color = Color.White, fontSize = 14.sp)
         }
         Button(
             modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
             shape = RoundedCornerShape(5.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
             onClick = onClick
         ) {
-            Text("确定", color = Color.White)
+            Text("确定", color = Color.White, fontSize = 15.sp)
         }
     }
 }
