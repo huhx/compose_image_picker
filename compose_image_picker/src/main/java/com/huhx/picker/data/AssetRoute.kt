@@ -41,15 +41,13 @@ fun AssetPickerRoute(
             val directory = arguments.getString("directory")!!
             DirectorySelectorScreen(
                 directory = directory,
-                selectedList = viewModel.selectedList,
                 assetDirectories = viewModel.directoryGroup,
                 navController = navController,
                 onClick = { name ->
                     navController.navigateUp()
                     viewModel.directory = name
                 },
-                onPicked = onPicked,
-                )
+            )
         }
 
         composable(
@@ -68,7 +66,6 @@ fun AssetPickerRoute(
                 assets = assets,
                 navController = navController,
                 viewModel = viewModel,
-                onPicked = onPicked
             )
         }
     }

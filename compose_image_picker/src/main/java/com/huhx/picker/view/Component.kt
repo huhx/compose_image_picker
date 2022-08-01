@@ -43,16 +43,15 @@ fun AppBarButton(
     size: Int,
     onPicked: () -> Unit
 ) {
-    val isEnabled = size > 0
     val assetPickerConfig = LocalAssetConfig.current
     Button(
         modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
-        enabled = isEnabled,
+        enabled = true,
         shape = RoundedCornerShape(5.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp),
         onClick = { onPicked() }
     ) {
-        Text(if (isEnabled) "确定($size/${assetPickerConfig.maxAssets})" else "确定")
+        Text("下一步($size/${assetPickerConfig.maxAssets})", fontSize = 14.sp)
     }
 }
 

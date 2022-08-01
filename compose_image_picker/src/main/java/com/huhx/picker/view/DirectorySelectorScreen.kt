@@ -34,25 +34,20 @@ import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
 import com.huhx.picker.R
 import com.huhx.picker.data.AssetDirectory
-import com.huhx.picker.data.AssetInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DirectorySelectorScreen(
     directory: String,
-    selectedList: List<AssetInfo>,
     assetDirectories: List<AssetDirectory>,
     navController: NavHostController,
-    onPicked: (List<AssetInfo>) -> Unit,
     onClick: (String) -> Unit,
 ) {
     Scaffold(
         topBar = {
             DirectoryTopAppBar(
                 directory = directory,
-                selectedList = selectedList,
                 navigateUp = { navController.navigateUp() },
-                onPicked = onPicked,
             )
         }
     ) { padding ->
@@ -63,7 +58,6 @@ fun DirectorySelectorScreen(
                 onClick = onClick
             )
         }
-
     }
 }
 
@@ -71,9 +65,7 @@ fun DirectorySelectorScreen(
 @Composable
 fun DirectoryTopAppBar(
     directory: String,
-    selectedList: List<AssetInfo>,
     navigateUp: () -> Unit,
-    onPicked: (List<AssetInfo>) -> Unit
 ) {
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
@@ -91,12 +83,6 @@ fun DirectoryTopAppBar(
                 Text(directory, fontSize = 18.sp)
                 Icon(Icons.Default.KeyboardArrowUp, "")
             }
-        },
-        actions = {
-            AppBarButton(
-                size = selectedList.size,
-                onPicked = { onPicked(selectedList) }
-            )
         }
     )
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -27,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -62,6 +64,7 @@ fun HomeScreen(
     onPicked: (List<AssetInfo>) -> Unit,
     onClose: (List<AssetInfo>) -> Unit,
 ) {
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             val directory = viewModel.directory
@@ -69,9 +72,43 @@ fun HomeScreen(
                 directory = directory,
                 selectedList = viewModel.selectedList,
                 navigateUp = onClose,
-                onPicked = onPicked,
                 navigateToDropDown = { navController.navigate("dropDown?directory=$directory") }
             )
+        },
+        bottomBar = {
+            if (viewModel.selectedList.isEmpty()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    TextButton(
+                        onClick = { context.showShortToast("open the camera") },
+                        content = {
+                            Text(text = "拍摄", fontSize = 16.sp, color = Color.Gray)
+                        }
+                    )
+                    TextButton(
+                        onClick = {},
+                        content = {
+                            Text(text = "相册", fontSize = 16.sp)
+                        }
+                    )
+                }
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "可同时选取图片与视频", fontSize = 12.sp, color = Color.Gray)
+                    AppBarButton(
+                        size = viewModel.selectedList.size,
+                        onPicked = { onPicked(viewModel.selectedList) }
+                    )
+                }
+            }
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
@@ -97,7 +134,6 @@ fun HomeTopAppBar(
     selectedList: List<AssetInfo>,
     navigateUp: (List<AssetInfo>) -> Unit,
     navigateToDropDown: () -> Unit,
-    onPicked: (List<AssetInfo>) -> Unit
 ) {
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
@@ -116,12 +152,6 @@ fun HomeTopAppBar(
                 Icon(Icons.Default.KeyboardArrowDown, "")
             }
         },
-        actions = {
-            AppBarButton(
-                size = selectedList.size,
-                onPicked = { onPicked(selectedList) }
-            )
-        }
     )
 }
 
@@ -182,8 +212,6 @@ fun QQAssetContent(
         horizontalArrangement = Arrangement.spacedBy(1.dp),
         userScrollEnabled = true
     ) {
-        item { AssetCamera() }
-
         itemsIndexed(assets, key = { _, it -> it.id }) { index, it ->
             AssetImage(
                 assetInfo = it,

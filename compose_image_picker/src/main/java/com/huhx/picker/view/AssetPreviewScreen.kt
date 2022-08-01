@@ -70,7 +70,6 @@ fun AssetPreviewScreen(
     assets: List<AssetInfo>,
     navController: NavHostController,
     viewModel: AssetViewModel,
-    onPicked: (List<AssetInfo>) -> Unit,
 ) {
     val pageState = rememberPagerState(initialPage = index)
 
@@ -81,10 +80,7 @@ fun AssetPreviewScreen(
                 pagerState = pageState,
                 assets = assets,
                 viewModel = viewModel,
-                onClick = {
-                    navController.navigateUp()
-                    onPicked(viewModel.selectedList)
-                }
+                onClick = { navController.navigateUp() }
             )
         }
     ) { innerPadding ->
@@ -163,7 +159,7 @@ private fun SelectorBottomBar(
             modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
             shape = RoundedCornerShape(5.dp),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            onClick = { onClick() }
+            onClick = onClick
         ) {
             Text("确定", color = Color.White)
         }
