@@ -54,23 +54,22 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
 
             Compose_image_pickerTheme {
-                PickerPermission(
-                    permissions = listOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE),
-                    content = {
-                        QQAssetPicker(
-                            assetPickerConfig = AssetPickerConfig(gridCount = 3),
-                            onPicked = {
-                                context.showShortToast("picked size = ${it.size}")
-                            },
-                            onClose = {
-                                context.showShortToast("close size = ${it.size}")
-                            }
-                        )
-                    },
-                )
+                PickerPermission(permission = Manifest.permission.READ_EXTERNAL_STORAGE) {
+                    QQAssetPicker(
+                        assetPickerConfig = AssetPickerConfig(gridCount = 3),
+                        onPicked = {
+                            context.showShortToast("picked size = ${it.size}")
+                        },
+                        onClose = {
+                            context.showShortToast("close size = ${it.size}")
+                        }
+                    )
+
+                }
             }
         }
     }
+
 }
 
 
