@@ -64,12 +64,10 @@ class MainActivity : ComponentActivity() {
                             context.showShortToast("close size = ${it.size}")
                         }
                     )
-
                 }
             }
         }
     }
-
 }
 
 

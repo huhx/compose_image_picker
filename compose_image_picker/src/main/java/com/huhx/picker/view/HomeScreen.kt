@@ -175,6 +175,7 @@ fun QQAssetContent(
 ) {
     val assets = viewModel.getAssets(requestType)
     LazyVerticalGrid(
+        modifier = Modifier.fillMaxSize(),
         columns = GridCells.Fixed(viewModel.assetPickerConfig.gridCount),
         contentPadding = PaddingValues(horizontal = 1.dp),
         verticalArrangement = Arrangement.spacedBy(1.dp),
