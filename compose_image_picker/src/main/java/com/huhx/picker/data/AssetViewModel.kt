@@ -1,5 +1,6 @@
 package com.huhx.picker.data
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +20,7 @@ class AssetViewModel constructor(
 
     private val assets = mutableStateListOf<AssetInfo>()
     private val _directoryGroup = mutableStateListOf<AssetDirectory>()
+    private var cameraUri: Uri? = null
 
     val directoryGroup: List<AssetDirectory>
         get() = _directoryGroup
@@ -65,5 +67,14 @@ class AssetViewModel constructor(
 
     fun navigateToPreview(index: Int, requestType: RequestType) {
         navController.navigate("preview?index=$index&requestType=${requestType.name}")
+    }
+
+    fun getCameraImage(): AssetInfo? {
+        return assetPickerRepository.findByUri(cameraUri)
+    }
+
+    fun getCameraUri(): Uri? {
+        cameraUri = assetPickerRepository.insertImage()
+        return cameraUri
     }
 }

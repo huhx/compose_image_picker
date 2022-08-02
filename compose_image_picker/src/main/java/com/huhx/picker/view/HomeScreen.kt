@@ -1,5 +1,7 @@
 package com.huhx.picker.view
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -97,7 +99,11 @@ private fun HomeBottomBar(
     viewModel: AssetViewModel,
     onPicked: (List<AssetInfo>) -> Unit
 ) {
-    val context = LocalContext.current
+    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            viewModel.getCameraImage()?.let { viewModel.initDirectories() }
+        }
+    }
 
     if (viewModel.selectedList.isEmpty()) {
         Row(
@@ -107,7 +113,7 @@ private fun HomeBottomBar(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             TextButton(
-                onClick = { context.showShortToast("open the camera") },
+                onClick = { cameraLauncher.launch(viewModel.getCameraUri()) },
                 content = {
                     Text(text = stringResource(R.string.label_camera), fontSize = 16.sp, color = Color.Gray)
                 }
