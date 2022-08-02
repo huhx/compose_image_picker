@@ -28,6 +28,10 @@ object AssetLoader {
         return context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
     }
 
+    fun deleteByUri(context: Context, uri: Uri) {
+        context.contentResolver.delete(uri, null, null)
+    }
+
     fun findByUri(context: Context, uri: Uri): AssetInfo? {
         val cursor = context.contentResolver.query(uri, projection, null, null, null, null)
         cursor?.use { it ->

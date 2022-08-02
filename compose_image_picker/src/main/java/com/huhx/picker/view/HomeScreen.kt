@@ -102,6 +102,8 @@ private fun HomeBottomBar(
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             viewModel.getCameraImage()?.let { viewModel.initDirectories() }
+        } else {
+            viewModel.deleteImage()
         }
     }
 

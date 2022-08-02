@@ -73,6 +73,10 @@ class AssetViewModel constructor(
         return assetPickerRepository.findByUri(cameraUri)
     }
 
+    fun deleteImage() {
+        assetPickerRepository.deleteByUri(cameraUri)
+    }
+
     fun getCameraUri(): Uri? {
         cameraUri = assetPickerRepository.insertImage()
         return cameraUri

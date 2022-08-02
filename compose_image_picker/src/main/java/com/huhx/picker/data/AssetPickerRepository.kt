@@ -7,7 +7,7 @@ import com.huhx.picker.constant.RequestType
 class AssetPickerRepository(
     private val context: Context
 ) {
-    fun getAssets(requestType: RequestType): List<AssetInfo> {
+    suspend fun getAssets(requestType: RequestType): List<AssetInfo> {
         return AssetLoader.load(context, requestType)
     }
 
@@ -18,6 +18,12 @@ class AssetPickerRepository(
     fun findByUri(uri: Uri?): AssetInfo? {
         return uri?.let {
             AssetLoader.findByUri(context, it)
+        }
+    }
+
+    fun deleteByUri(uri: Uri?) {
+        uri?.let {
+            AssetLoader.deleteByUri(context, it)
         }
     }
 }
