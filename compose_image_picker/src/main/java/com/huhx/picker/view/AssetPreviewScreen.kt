@@ -44,7 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
@@ -67,19 +66,19 @@ import com.huhx.picker.data.AssetInfo
 fun AssetPreviewScreen(
     index: Int,
     assets: List<AssetInfo>,
-    navController: NavHostController,
+    navigateUp: () -> Unit,
     selectedList: SnapshotStateList<AssetInfo>,
 ) {
     val pageState = rememberPagerState(initialPage = index)
 
     Scaffold(
-        topBar = { PreviewTopAppBar(navigateUp = { navController.navigateUp() }) },
+        topBar = { PreviewTopAppBar(navigateUp = navigateUp) },
         bottomBar = {
             SelectorBottomBar(
                 selectedList = selectedList,
                 assetInfo = assets[pageState.currentPage]
             ) {
-                navController.navigateUp()
+                navigateUp()
                 if (selectedList.isEmpty()) {
                     selectedList.add(it)
                 }

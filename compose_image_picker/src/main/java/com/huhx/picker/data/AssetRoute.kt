@@ -42,7 +42,7 @@ fun AssetPickerRoute(
             DirectorySelectorScreen(
                 directory = directory,
                 assetDirectories = viewModel.directoryGroup,
-                navController = navController,
+                navigateUp = { navController.navigateUp() },
                 onClick = { name ->
                     navController.navigateUp()
                     viewModel.directory = name
@@ -64,8 +64,8 @@ fun AssetPickerRoute(
             AssetPreviewScreen(
                 index = index,
                 assets = assets,
-                navController = navController,
                 selectedList = viewModel.selectedList,
+                navigateUp = { navController.navigateUp() },
             )
         }
     }

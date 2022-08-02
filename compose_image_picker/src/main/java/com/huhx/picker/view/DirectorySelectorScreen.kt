@@ -29,7 +29,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
@@ -41,14 +40,14 @@ import com.huhx.picker.data.AssetDirectory
 fun DirectorySelectorScreen(
     directory: String,
     assetDirectories: List<AssetDirectory>,
-    navController: NavHostController,
+    navigateUp: () -> Unit,
     onClick: (String) -> Unit,
 ) {
     Scaffold(
         topBar = {
             DirectoryTopAppBar(
                 directory = directory,
-                navigateUp = { navController.navigateUp() },
+                navigateUp = navigateUp,
             )
         }
     ) { padding ->
