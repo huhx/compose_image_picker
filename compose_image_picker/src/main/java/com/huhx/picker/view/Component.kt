@@ -39,14 +39,14 @@ fun AppBarButton(
     size: Int,
     onPicked: () -> Unit
 ) {
-    val assetPickerConfig = LocalAssetConfig.current
-    val buttonText = stringResource(R.string.text_select_button, size, assetPickerConfig.maxAssets)
+    val maxAssets = LocalAssetConfig.current.maxAssets
+    val buttonText = stringResource(R.string.text_select_button, size, maxAssets)
     Button(
         modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
         enabled = true,
         shape = RoundedCornerShape(5.dp),
         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp),
-        onClick = { onPicked() }
+        onClick = onPicked,
     ) {
         Text(buttonText, fontSize = 14.sp, color = Color.White)
     }
@@ -108,11 +108,10 @@ fun AssetImageIndicator(
     ) {
         Box(contentAlignment = Alignment.Center) {
             if (selected) {
-                val num = assetSelected.indexOf(assetInfo) + 1
                 Text(
+                    text = "${assetSelected.indexOf(assetInfo) + 1}",
+                    color = Color.White,
                     fontSize = fontSize,
-                    text = "${if (selected) num else null}",
-                    color = Color.White
                 )
             }
         }
