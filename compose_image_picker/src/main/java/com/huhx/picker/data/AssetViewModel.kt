@@ -56,10 +56,6 @@ class AssetViewModel constructor(
         }
     }
 
-    fun isFullSelected(): Boolean {
-        return selectedList.size == assetPickerConfig.maxAssets
-    }
-
     fun isSelected(assetInfo: AssetInfo): Boolean {
         return selectedList.any { it.id == assetInfo.id }
     }

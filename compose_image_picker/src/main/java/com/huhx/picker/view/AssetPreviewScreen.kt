@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -79,11 +80,14 @@ fun AssetPreviewScreen(
         topBar = { PreviewTopAppBar(navigateUp = { navController.navigateUp() }) },
         bottomBar = {
             SelectorBottomBar(
-                pagerState = pageState,
-                assets = assets,
-                viewModel = viewModel,
-                onClick = { navController.navigateUp() }
-            )
+                selectedList = viewModel.selectedList,
+                assetInfo = assets[pageState.currentPage]
+            ) {
+                navController.navigateUp()
+                if (viewModel.selectedList.isEmpty()) {
+                    viewModel.selectedList.add(it)
+                }
+            }
         }
     ) { innerPadding ->
         Box(
@@ -117,16 +121,14 @@ fun PreviewTopAppBar(navigateUp: () -> Unit) {
     )
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun SelectorBottomBar(
-    pagerState: PagerState,
-    assets: List<AssetInfo>,
-    viewModel: AssetViewModel,
-    onClick: () -> Unit,
+    assetInfo: AssetInfo,
+    selectedList: SnapshotStateList<AssetInfo>,
+    onClick: (AssetInfo) -> Unit,
 ) {
     val context = LocalContext.current
-    val assetInfo = assets[pagerState.currentPage]
+    val maxAssets = LocalAssetConfig.current.maxAssets
 
     Row(
         modifier = Modifier
@@ -136,24 +138,24 @@ private fun SelectorBottomBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val errorMessage = stringResource(R.string.message_selected_exceed, viewModel.assetPickerConfig.maxAssets)
+        val errorMessage = stringResource(R.string.message_selected_exceed, maxAssets)
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             AssetImageIndicator(
                 assetInfo = assetInfo,
                 size = 20.dp,
                 fontSize = 14.sp,
-                selected = viewModel.selectedList.any { it == assetInfo },
-                assetSelected = viewModel.selectedList,
+                selected = selectedList.any { it == assetInfo },
+                assetSelected = selectedList,
             ) { isSelected ->
-                if (viewModel.isFullSelected() && isSelected) {
+                if (selectedList.size == maxAssets && isSelected) {
                     context.showShortToast(errorMessage)
                     return@AssetImageIndicator
                 }
                 if (isSelected) {
-                    viewModel.selectedList.add(assetInfo)
+                    selectedList.add(assetInfo)
                 } else {
-                    viewModel.selectedList.remove(assetInfo)
+                    selectedList.remove(assetInfo)
                 }
             }
             Spacer(modifier = Modifier.width(4.dp))
@@ -164,7 +166,7 @@ private fun SelectorBottomBar(
             shape = RoundedCornerShape(5.dp),
             enabled = true,
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp),
-            onClick = onClick
+            onClick = { onClick(assetInfo) }
         ) {
             Text(stringResource(R.string.text_done), color = Color.White, fontSize = 15.sp)
         }

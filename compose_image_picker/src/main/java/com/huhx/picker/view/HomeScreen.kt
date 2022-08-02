@@ -322,7 +322,7 @@ fun AssetImage(
             selected = selected,
             assetSelected = viewModel.selectedList
         ) { isSelected ->
-            if (viewModel.isFullSelected() && isSelected) {
+            if (viewModel.selectedList.size == viewModel.assetPickerConfig.maxAssets && isSelected) {
                 context.showShortToast(errorMessage)
                 return@AssetImageIndicator
             }
