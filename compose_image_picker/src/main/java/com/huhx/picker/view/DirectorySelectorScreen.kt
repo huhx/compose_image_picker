@@ -18,6 +18,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -73,7 +74,6 @@ fun DirectoryTopAppBar(
             IconButton(onClick = navigateUp) {
                 Icon(
                     Icons.Filled.Close,
-                    tint = Color.Black,
                     contentDescription = "",
                 )
             }
@@ -115,7 +115,7 @@ fun DirectorySelector(
                 },
                 text = {
                     Row {
-                        Text(text = itemDirectory)
+                        Text(text = itemDirectory, color = MaterialTheme.colorScheme.onSurface)
                         Text(text = "(${it.counts})", color = Color.Gray)
                     }
                 },

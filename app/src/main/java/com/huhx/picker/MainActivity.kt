@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
 
-            Compose_image_pickerTheme {
+            Compose_image_pickerTheme(darkTheme = true) {
                 PickerPermissions(permissions = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
                     QQAssetPicker(
                         assetPickerConfig = AssetPickerConfig(gridCount = 3),

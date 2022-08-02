@@ -27,6 +27,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -168,7 +169,6 @@ fun HomeTopAppBar(
             IconButton(onClick = { navigateUp(selectedList) }) {
                 Icon(
                     Icons.Filled.Close,
-                    tint = Color.Black,
                     contentDescription = "",
                 )
             }
@@ -192,14 +192,13 @@ private fun AssetTab(
 
     TabRow(
         selectedTabIndex = pagerState.currentPage,
-        contentColor = Color.Black,
         indicator = {},
     ) {
         tabs.forEachIndexed { index, tab ->
             Tab(
                 selected = pagerState.currentPage == index,
                 text = { Text(text = stringResource(tab.resourceId)) },
-                selectedContentColor = Color.Black,
+                selectedContentColor = MaterialTheme.colorScheme.onSurface,
                 unselectedContentColor = Color.Gray,
                 onClick = {
                     coroutineScope.launch { pagerState.animateScrollToPage(index) }

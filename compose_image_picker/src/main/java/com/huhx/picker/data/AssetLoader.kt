@@ -102,7 +102,6 @@ object AssetLoader {
                 )
             }
         }
-        println(assets)
         return assets
     }
 
