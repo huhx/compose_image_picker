@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.huhx.picker.constant.goSetting
@@ -36,6 +37,36 @@ fun PickerPermission(
         } else if (permissionRequested && permissionState.status.shouldShowRationale) {
             SideEffect {
                 permissionState.launchPermissionRequest()
+            }
+        } else {
+            context.goSetting()
+        }
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun PickerPermissions(
+    permissions: List<String>,
+    content: @Composable () -> Unit,
+) {
+    val context = LocalContext.current
+    var permissionRequested by rememberSaveable { mutableStateOf(false) }
+
+    val permissionState = rememberMultiplePermissionsState(permissions) {
+        permissionRequested = true
+    }
+
+    if (permissionState.allPermissionsGranted) {
+        content()
+    } else {
+        if (!permissionRequested && !permissionState.shouldShowRationale) {
+            SideEffect {
+                permissionState.launchMultiplePermissionRequest()
+            }
+        } else if (permissionRequested && permissionState.shouldShowRationale) {
+            SideEffect {
+                permissionState.launchMultiplePermissionRequest()
             }
         } else {
             context.goSetting()
