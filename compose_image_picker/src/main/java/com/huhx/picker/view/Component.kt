@@ -47,7 +47,7 @@ fun AppBarButton(
         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp),
         onClick = { onPicked() }
     ) {
-        Text(buttonText, fontSize = 14.sp)
+        Text(buttonText, fontSize = 14.sp, color = Color.White)
     }
 }
 
