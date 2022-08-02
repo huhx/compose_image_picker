@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -58,6 +59,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.huhx.picker.R
 import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.AssetInfo
 import com.huhx.picker.data.AssetViewModel
@@ -134,6 +136,8 @@ private fun SelectorBottomBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        val errorMessage = stringResource(R.string.message_selected_exceed, viewModel.assetPickerConfig.maxAssets)
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             AssetImageIndicator(
                 assetInfo = assetInfo,
@@ -143,7 +147,7 @@ private fun SelectorBottomBar(
                 assetSelected = viewModel.selectedList,
             ) { isSelected ->
                 if (viewModel.isFullSelected() && isSelected) {
-                    context.showShortToast("已经达到最大值${viewModel.assetPickerConfig.maxAssets}了")
+                    context.showShortToast(errorMessage)
                     return@AssetImageIndicator
                 }
                 if (isSelected) {
@@ -153,7 +157,7 @@ private fun SelectorBottomBar(
                 }
             }
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = "选择", color = Color.White, fontSize = 14.sp)
+            Text(text = stringResource(R.string.text_asset_select), color = Color.White, fontSize = 14.sp)
         }
         Button(
             modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
@@ -161,7 +165,7 @@ private fun SelectorBottomBar(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
             onClick = onClick
         ) {
-            Text("确定", color = Color.White, fontSize = 15.sp)
+            Text(stringResource(R.string.text_done), color = Color.White, fontSize = 15.sp)
         }
     }
 }

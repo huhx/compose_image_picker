@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_item_all">All</string>
+    <string name="tab_item_video">Videos</string>
+    <string name="tab_item_image">Photos</string>
+
+    <string name="message_selected_exceed">Select up to %d photos or videos</string>
+
+    <string name="text_select_tip">Select both photos and videos</string>
+    <string name="text_done">Done</string>
+    <string name="text_asset_select">Select</string>
+    <string name="text_select_button">Next(%d/%d)</string>
+
+    <string name="label_camera">Camera</string>
+    <string name="label_album">Album</string>
+</resources>

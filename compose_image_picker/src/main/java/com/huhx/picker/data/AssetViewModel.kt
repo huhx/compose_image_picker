@@ -24,7 +24,7 @@ class AssetViewModel constructor(
         get() = _directoryGroup
 
     val selectedList = mutableStateListOf<AssetInfo>()
-    var directory by mutableStateOf("所有项目")
+    var directory by mutableStateOf("Photos/Videos")
 
     fun initDirectories() {
         viewModelScope.launch {
@@ -35,7 +35,7 @@ class AssetViewModel constructor(
                 AssetDirectory(directory = it.key, assets = it.value)
             }
             _directoryGroup.clear()
-            _directoryGroup.add(AssetDirectory(directory = "所有项目", assets = assets))
+            _directoryGroup.add(AssetDirectory(directory = "Photos/Videos", assets = assets))
             _directoryGroup.addAll(directoryList)
         }
     }

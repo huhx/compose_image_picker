@@ -109,13 +109,13 @@ private fun HomeBottomBar(
             TextButton(
                 onClick = { context.showShortToast("open the camera") },
                 content = {
-                    Text(text = "拍摄", fontSize = 16.sp, color = Color.Gray)
+                    Text(text = stringResource(R.string.label_camera), fontSize = 16.sp, color = Color.Gray)
                 }
             )
             TextButton(
                 onClick = {},
                 content = {
-                    Text(text = "相册", fontSize = 16.sp)
+                    Text(text = stringResource(R.string.label_album), fontSize = 16.sp)
                 }
             )
         }
@@ -127,7 +127,7 @@ private fun HomeBottomBar(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "可同时选取图片与视频", fontSize = 12.sp, color = Color.Gray)
+            Text(text = stringResource(R.string.text_select_tip), fontSize = 12.sp, color = Color.Gray)
             AppBarButton(
                 size = viewModel.selectedList.size,
                 onPicked = { onPicked(viewModel.selectedList) }
@@ -299,13 +299,14 @@ fun AssetImage(
             }
         }
 
+        val errorMessage = stringResource(R.string.message_selected_exceed, viewModel.assetPickerConfig.maxAssets)
         AssetImageIndicator(
             assetInfo = assetInfo,
             selected = selected,
             assetSelected = viewModel.selectedList
         ) { isSelected ->
             if (viewModel.isFullSelected() && isSelected) {
-                context.showShortToast("已经达到最大值${viewModel.assetPickerConfig.maxAssets}了")
+                context.showShortToast(errorMessage)
                 return@AssetImageIndicator
             }
             if (isSelected) {
