@@ -64,7 +64,6 @@ fun HomeScreen(
     onPicked: (List<AssetInfo>) -> Unit,
     onClose: (List<AssetInfo>) -> Unit,
 ) {
-    val context = LocalContext.current
     Scaffold(
         topBar = {
             val directory = viewModel.directory
@@ -75,43 +74,7 @@ fun HomeScreen(
                 navigateToDropDown = { navController.navigate("dropDown?directory=$directory") }
             )
         },
-        bottomBar = {
-            if (viewModel.selectedList.isEmpty()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    TextButton(
-                        onClick = { context.showShortToast("open the camera") },
-                        content = {
-                            Text(text = "拍摄", fontSize = 16.sp, color = Color.Gray)
-                        }
-                    )
-                    TextButton(
-                        onClick = {},
-                        content = {
-                            Text(text = "相册", fontSize = 16.sp)
-                        }
-                    )
-                }
-            } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "可同时选取图片与视频", fontSize = 12.sp, color = Color.Gray)
-                    AppBarButton(
-                        size = viewModel.selectedList.size,
-                        onPicked = { onPicked(viewModel.selectedList) }
-                    )
-                }
-            }
-        }
+        bottomBar = { HomeBottomBar(viewModel, onPicked) }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             val tabs = listOf(TabItem.All, TabItem.Video, TabItem.Image)
@@ -125,6 +88,50 @@ fun HomeScreen(
                     viewModel = viewModel
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun HomeBottomBar(
+    viewModel: AssetViewModel,
+    onPicked: (List<AssetInfo>) -> Unit
+) {
+    val context = LocalContext.current
+
+    if (viewModel.selectedList.isEmpty()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            TextButton(
+                onClick = { context.showShortToast("open the camera") },
+                content = {
+                    Text(text = "拍摄", fontSize = 16.sp, color = Color.Gray)
+                }
+            )
+            TextButton(
+                onClick = {},
+                content = {
+                    Text(text = "相册", fontSize = 16.sp)
+                }
+            )
+        }
+    } else {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "可同时选取图片与视频", fontSize = 12.sp, color = Color.Gray)
+            AppBarButton(
+                size = viewModel.selectedList.size,
+                onPicked = { onPicked(viewModel.selectedList) }
+            )
         }
     }
 }
