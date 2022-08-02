@@ -1,5 +1,6 @@
 package com.huhx.picker.view
 
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
@@ -32,7 +33,11 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -99,11 +104,13 @@ private fun HomeBottomBar(
     viewModel: AssetViewModel,
     onPicked: (List<AssetInfo>) -> Unit
 ) {
+    var cameraUri: Uri? by remember { mutableStateOf(null) }
+
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
-            viewModel.getCameraImage()?.let { viewModel.initDirectories() }
+            cameraUri?.let { viewModel.initDirectories() }
         } else {
-            viewModel.deleteImage()
+            viewModel.deleteImage(cameraUri)
         }
     }
 
@@ -115,7 +122,10 @@ private fun HomeBottomBar(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             TextButton(
-                onClick = { cameraLauncher.launch(viewModel.getCameraUri()) },
+                onClick = {
+                    cameraUri = viewModel.getUri()
+                    cameraLauncher.launch(cameraUri)
+                },
                 content = {
                     Text(text = stringResource(R.string.label_camera), fontSize = 16.sp, color = Color.Gray)
                 }

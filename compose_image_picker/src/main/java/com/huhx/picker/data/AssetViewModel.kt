@@ -20,7 +20,6 @@ class AssetViewModel constructor(
 
     private val assets = mutableStateListOf<AssetInfo>()
     private val _directoryGroup = mutableStateListOf<AssetDirectory>()
-    private var cameraUri: Uri? = null
 
     val directoryGroup: List<AssetDirectory>
         get() = _directoryGroup
@@ -69,16 +68,11 @@ class AssetViewModel constructor(
         navController.navigate("preview?index=$index&requestType=${requestType.name}")
     }
 
-    fun getCameraImage(): AssetInfo? {
-        return assetPickerRepository.findByUri(cameraUri)
-    }
-
-    fun deleteImage() {
+    fun deleteImage(cameraUri: Uri?) {
         assetPickerRepository.deleteByUri(cameraUri)
     }
 
-    fun getCameraUri(): Uri? {
-        cameraUri = assetPickerRepository.insertImage()
-        return cameraUri
+    fun getUri(): Uri? {
+        return assetPickerRepository.insertImage()
     }
 }
