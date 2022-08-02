@@ -1,7 +1,6 @@
 package com.huhx.picker.view
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
@@ -22,6 +21,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huhx.picker.R
 import com.huhx.picker.constant.AssetPickerConfig
+import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.AssetInfo
 
 val LocalAssetConfig = compositionLocalOf { AssetPickerConfig() }
@@ -70,19 +71,37 @@ fun AssetImageIndicator(
     size: Dp = 24.dp,
     fontSize: TextUnit = 16.sp,
     assetSelected: SnapshotStateList<AssetInfo>,
-    onClick: (Boolean) -> Unit
+    onClicks: ((Boolean) -> Unit)? = null
 ) {
+    val context = LocalContext.current
+    val maxAssets = LocalAssetConfig.current.maxAssets
+    val errorMessage = stringResource(R.string.message_selected_exceed, maxAssets)
+
     val (border, color) = if (selected) {
         Pair(null, Color(64, 151, 246))
     } else {
         Pair(BorderStroke(width = 1.dp, color = Color.White), Color.Black.copy(alpha = 0.3F))
     }
     Surface(
-        onClick = { onClick(!selected) },
+        onClick = {
+            val isSelected = !selected
+            if (onClicks != null) {
+                onClicks(isSelected)
+                return@Surface
+            }
+            if (assetSelected.size == maxAssets && isSelected) {
+                context.showShortToast(errorMessage)
+                return@Surface
+            }
+            if (isSelected) {
+                assetSelected.add(assetInfo)
+            } else {
+                assetSelected.remove(assetInfo)
+            }
+        },
         modifier = Modifier
             .padding(6.dp)
-            .size(size = size)
-            .clickable { onClick(false) },
+            .size(size = size),
         shape = CircleShape,
         border = border,
         color = color

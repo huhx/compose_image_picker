@@ -39,6 +39,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -59,7 +60,6 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.huhx.picker.R
 import com.huhx.picker.constant.RequestType
-import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.AssetInfo
 import com.huhx.picker.data.AssetViewModel
 import kotlinx.coroutines.launch
@@ -243,7 +243,8 @@ fun QQAssetContent(
                 assetInfo = it,
                 index = index,
                 requestType = requestType,
-                viewModel = viewModel
+                viewModel = viewModel,
+                selectedList = viewModel.selectedList
             )
         }
     }
@@ -252,11 +253,12 @@ fun QQAssetContent(
 @Composable
 fun AssetImage(
     assetInfo: AssetInfo,
+    selectedList: SnapshotStateList<AssetInfo>,
     index: Int,
     requestType: RequestType,
     viewModel: AssetViewModel
 ) {
-    val selected = viewModel.isSelected(assetInfo)
+    val selected = selectedList.any { it.id == assetInfo.id }
 
     val (backgroundColor, alpha) = if (selected) {
         Pair(Color.Black, 0.6F)
@@ -315,23 +317,7 @@ fun AssetImage(
                 }
             }
         }
-
-        val errorMessage = stringResource(R.string.message_selected_exceed, viewModel.assetPickerConfig.maxAssets)
-        AssetImageIndicator(
-            assetInfo = assetInfo,
-            selected = selected,
-            assetSelected = viewModel.selectedList
-        ) { isSelected ->
-            if (viewModel.selectedList.size == viewModel.assetPickerConfig.maxAssets && isSelected) {
-                context.showShortToast(errorMessage)
-                return@AssetImageIndicator
-            }
-            if (isSelected) {
-                viewModel.selectedList.add(assetInfo)
-            } else {
-                viewModel.selectedList.remove(assetInfo)
-            }
-        }
+        AssetImageIndicator(assetInfo = assetInfo, selected = selected, assetSelected = selectedList)
     }
 }
 

@@ -56,10 +56,6 @@ class AssetViewModel constructor(
         }
     }
 
-    fun isSelected(assetInfo: AssetInfo): Boolean {
-        return selectedList.any { it.id == assetInfo.id }
-    }
-
     fun navigateToPreview(index: Int, requestType: RequestType) {
         navController.navigate("preview?index=$index&requestType=${requestType.name}")
     }

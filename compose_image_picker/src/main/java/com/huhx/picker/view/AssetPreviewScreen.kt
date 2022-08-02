@@ -61,7 +61,6 @@ import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.huhx.picker.R
-import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.AssetInfo
 import com.huhx.picker.data.AssetViewModel
 import kotlin.math.absoluteValue
@@ -127,9 +126,6 @@ private fun SelectorBottomBar(
     selectedList: SnapshotStateList<AssetInfo>,
     onClick: (AssetInfo) -> Unit,
 ) {
-    val context = LocalContext.current
-    val maxAssets = LocalAssetConfig.current.maxAssets
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -138,8 +134,6 @@ private fun SelectorBottomBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val errorMessage = stringResource(R.string.message_selected_exceed, maxAssets)
-
         Row(verticalAlignment = Alignment.CenterVertically) {
             AssetImageIndicator(
                 assetInfo = assetInfo,
@@ -147,17 +141,7 @@ private fun SelectorBottomBar(
                 fontSize = 14.sp,
                 selected = selectedList.any { it == assetInfo },
                 assetSelected = selectedList,
-            ) { isSelected ->
-                if (selectedList.size == maxAssets && isSelected) {
-                    context.showShortToast(errorMessage)
-                    return@AssetImageIndicator
-                }
-                if (isSelected) {
-                    selectedList.add(assetInfo)
-                } else {
-                    selectedList.remove(assetInfo)
-                }
-            }
+            )
             Spacer(modifier = Modifier.width(4.dp))
             Text(text = stringResource(R.string.text_asset_select), color = Color.White, fontSize = 14.sp)
         }
