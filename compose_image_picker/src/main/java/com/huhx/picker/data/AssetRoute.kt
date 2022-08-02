@@ -65,7 +65,7 @@ fun AssetPickerRoute(
                 index = index,
                 assets = assets,
                 navController = navController,
-                viewModel = viewModel,
+                selectedList = viewModel.selectedList,
             )
         }
     }

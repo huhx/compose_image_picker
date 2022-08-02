@@ -138,9 +138,6 @@ object AssetLoader {
         )
     }
 
-    private data class Selection(
-        val selection: String,
-        val arguments: List<String>
-    )
+    private data class Selection(val selection: String, val arguments: List<String>)
 }
 
