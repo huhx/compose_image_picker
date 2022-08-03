@@ -45,10 +45,7 @@ fun DirectorySelectorScreen(
 ) {
     Scaffold(
         topBar = {
-            DirectoryTopAppBar(
-                directory = directory,
-                navigateUp = navigateUp,
-            )
+            DirectoryTopAppBar(directory = directory, navigateUp = navigateUp)
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
@@ -71,16 +68,13 @@ fun DirectoryTopAppBar(
         modifier = Modifier.statusBarsPadding(),
         navigationIcon = {
             IconButton(onClick = navigateUp) {
-                Icon(
-                    Icons.Filled.Close,
-                    contentDescription = "",
-                )
+                Icon(Icons.Filled.Close, contentDescription = "")
             }
         },
         title = {
             Row(modifier = Modifier.clickable(onClick = navigateUp)) {
                 Text(directory, fontSize = 18.sp)
-                Icon(Icons.Default.KeyboardArrowUp, "")
+                Icon(Icons.Default.KeyboardArrowUp, contentDescription = "")
             }
         }
     )

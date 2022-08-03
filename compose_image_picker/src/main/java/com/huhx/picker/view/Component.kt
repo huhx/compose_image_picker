@@ -43,7 +43,6 @@ fun AppBarButton(
     val buttonText = stringResource(R.string.text_select_button, size, maxAssets)
     Button(
         modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
-        enabled = true,
         shape = RoundedCornerShape(5.dp),
         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp),
         onClick = onPicked,

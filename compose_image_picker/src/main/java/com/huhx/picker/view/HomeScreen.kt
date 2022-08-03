@@ -167,16 +167,13 @@ fun HomeTopAppBar(
         modifier = Modifier.statusBarsPadding(),
         navigationIcon = {
             IconButton(onClick = { navigateUp(selectedList) }) {
-                Icon(
-                    Icons.Filled.Close,
-                    contentDescription = "",
-                )
+                Icon(Icons.Filled.Close, contentDescription = "")
             }
         },
         title = {
             Row(modifier = Modifier.clickable { navigateToDropDown() }) {
                 Text(directory, fontSize = 18.sp)
-                Icon(Icons.Default.KeyboardArrowDown, "")
+                Icon(Icons.Default.KeyboardArrowDown, contentDescription = "")
             }
         },
     )

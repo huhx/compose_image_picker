@@ -16,7 +16,7 @@ import com.huhx.picker.data.AssetViewModelFactory
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun QQAssetPicker(
+fun AssetPicker(
     assetPickerConfig: AssetPickerConfig,
     onPicked: (List<AssetInfo>) -> Unit,
     onClose: (List<AssetInfo>) -> Unit,

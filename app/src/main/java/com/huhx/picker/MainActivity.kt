@@ -45,7 +45,7 @@ import com.huhx.picker.constant.AssetPickerConfig
 import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.PickerPermissions
 import com.huhx.picker.ui.theme.Compose_image_pickerTheme
-import com.huhx.picker.view.QQAssetPicker
+import com.huhx.picker.view.AssetPicker
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
 
             Compose_image_pickerTheme() {
                 PickerPermissions(permissions = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
-                    QQAssetPicker(
+                    AssetPicker(
                         assetPickerConfig = AssetPickerConfig(gridCount = 3),
                         onPicked = {
                             context.showShortToast("picked size = ${it.size}")
