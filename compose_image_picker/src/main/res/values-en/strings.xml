@@ -10,7 +10,8 @@
     <string name="text_done">Done</string>
     <string name="text_asset_select">Select</string>
     <string name="text_select_button">Next(%1$d/%2$d)</string>
+    <string name="text_gif">GIF</string>
 
-    <string name="label_camera" formatted="false">Camera</string>
+    <string name="label_camera">Camera</string>
     <string name="label_album">Album</string>
 </resources>

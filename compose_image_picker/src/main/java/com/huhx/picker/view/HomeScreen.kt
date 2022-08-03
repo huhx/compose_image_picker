@@ -307,7 +307,7 @@ fun AssetImage(
                 ) {
                     Text(
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.dp),
-                        text = "GIF",
+                        text = stringResource(R.string.text_gif),
                         color = Color.White,
                         fontSize = 10.sp
                     )

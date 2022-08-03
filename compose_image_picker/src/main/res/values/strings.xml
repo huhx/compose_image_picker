@@ -10,6 +10,7 @@
     <string name="text_done">确定</string>
     <string name="text_asset_select">选择</string>
     <string name="text_select_button">下一步(%1$d/%2$d)</string>
+    <string name="text_gif">GIF</string>
 
     <string name="label_camera">拍摄</string>
     <string name="label_album">相册</string>
