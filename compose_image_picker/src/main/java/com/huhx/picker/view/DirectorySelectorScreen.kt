@@ -101,7 +101,7 @@ fun DirectorySelector(
                         modifier = Modifier
                             .size(32.dp)
                             .aspectRatio(1.0F),
-                        filterQuality = FilterQuality.None,
+                        filterQuality = FilterQuality.Low,
                         contentScale = ContentScale.Crop,
                         contentDescription = ""
                     )

@@ -284,7 +284,7 @@ fun AssetImage(
                     .fillMaxSize()
                     .aspectRatio(1.0F)
                     .clickable { viewModel.navigateToPreview(index, requestType) },
-                filterQuality = FilterQuality.None,
+                filterQuality = FilterQuality.Low,
                 contentScale = ContentScale.Crop,
                 contentDescription = ""
             )
