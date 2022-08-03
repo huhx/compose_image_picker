@@ -162,7 +162,7 @@ fun ImageItemPreview() {
         contentAlignment = Alignment.BottomStart
     ) {
         Image(
-            painter = painterResource(id = R.drawable.app_icon_foreground),
+            painter = painterResource(id = com.huhx.app.R.drawable.ic_launcher_background),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Fit,
             contentDescription = ""

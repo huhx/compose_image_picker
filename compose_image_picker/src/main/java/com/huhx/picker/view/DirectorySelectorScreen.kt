@@ -14,6 +14,7 @@ import androidx.compose.material.ListItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
-import com.huhx.picker.R
 import com.huhx.picker.data.AssetDirectory
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,7 +95,7 @@ fun DirectorySelector(
                 icon = {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(it.cover ?: R.drawable.app_icon_background)
+                            .data(it.cover ?: Icons.Default.Place)
                             .decoderFactory(VideoFrameDecoder.Factory())
                             .build(),
                         modifier = Modifier
