@@ -1,9 +1,9 @@
-## 📸Image and Video Picker Library for Jetpack Compose
+## 📸&nbsp;Image and Video Picker Library for Jetpack Compose
 
 Easy to use and configurable Compose library to Pick an image or video from the Gallery.
 
 
-## 🐱&Features:
+## 🐱&nbsp;Features:
 - [x] Pick Image or Video from device, It is configurable
 - [x] Capture Camera Image
 - [x] Preview Image and Video
@@ -12,7 +12,7 @@ Easy to use and configurable Compose library to Pick an image or video from the 
 - [x] Pick gif image and preview
 - [x] Dart and Light Theme
 - [x] Internationalization support
-- [x] Implememt the permission to pick images
+- [x] Implement the permission to pick images
 - [ ] To be continue....
 
 
@@ -31,7 +31,7 @@ Internationalization   |         Dart Theme     |        Picker Example       |
 
 1. Gradle dependency:
 ```groovy
-implementation "io.github.huhx:compose-image-picker:1.0.2-alpha"
+implementation "io.github.huhx:compose-image-picker:1.0.0-rc"
 ```
 
 <br>
@@ -83,7 +83,7 @@ composable("asset_picker") {
 ```
 <br>
 
-3. Trigger the image picker by navigate to the specified route
+3. Navigate to the specified route to pick images
 ```kotlin
 navController.navigate("asset_picker") 
 ```
@@ -101,6 +101,6 @@ data class AssetPickerConfig(
 ```
 > The usage of detail, you can refer to the example. 
 
-## Drop a ⭐ if you like it. New fetures to be continue...
+## Drop a ⭐ if you like it. New features to be continue...
 
 
