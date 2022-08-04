@@ -50,7 +50,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
@@ -68,7 +67,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AssetDisplayScreen(
     viewModel: AssetViewModel,
-    navController: NavHostController,
+    navigateToDropDown: (String) -> Unit,
     onPicked: (List<AssetInfo>) -> Unit,
     onClose: (List<AssetInfo>) -> Unit,
 ) {
@@ -79,7 +78,7 @@ fun AssetDisplayScreen(
                 directory = directory,
                 selectedList = viewModel.selectedList,
                 navigateUp = onClose,
-                navigateToDropDown = { navController.navigate("asset_selector?directory=$directory") }
+                navigateToDropDown = navigateToDropDown
             )
         },
         bottomBar = { DisplayBottomBar(viewModel, onPicked) }
@@ -98,6 +97,30 @@ fun AssetDisplayScreen(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DisplayTopAppBar(
+    directory: String,
+    selectedList: List<AssetInfo>,
+    navigateUp: (List<AssetInfo>) -> Unit,
+    navigateToDropDown: (String) -> Unit,
+) {
+    CenterAlignedTopAppBar(
+        modifier = Modifier.statusBarsPadding(),
+        navigationIcon = {
+            IconButton(onClick = { navigateUp(selectedList) }) {
+                Icon(Icons.Filled.Close, contentDescription = "")
+            }
+        },
+        title = {
+            Row(modifier = Modifier.clickable { navigateToDropDown(directory) }) {
+                Text(directory, fontSize = 18.sp)
+                Icon(Icons.Default.KeyboardArrowDown, contentDescription = "")
+            }
+        },
+    )
 }
 
 @Composable
@@ -153,30 +176,6 @@ private fun DisplayBottomBar(
             )
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DisplayTopAppBar(
-    directory: String,
-    selectedList: List<AssetInfo>,
-    navigateUp: (List<AssetInfo>) -> Unit,
-    navigateToDropDown: () -> Unit,
-) {
-    CenterAlignedTopAppBar(
-        modifier = Modifier.statusBarsPadding(),
-        navigationIcon = {
-            IconButton(onClick = { navigateUp(selectedList) }) {
-                Icon(Icons.Filled.Close, contentDescription = "")
-            }
-        },
-        title = {
-            Row(modifier = Modifier.clickable { navigateToDropDown() }) {
-                Text(directory, fontSize = 18.sp)
-                Icon(Icons.Default.KeyboardArrowDown, contentDescription = "")
-            }
-        },
-    )
 }
 
 @OptIn(ExperimentalPagerApi::class)

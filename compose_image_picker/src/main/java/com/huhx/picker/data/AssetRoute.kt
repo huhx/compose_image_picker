@@ -27,7 +27,7 @@ fun AssetPickerRoute(
         composable("asset_display") {
             AssetDisplayScreen(
                 viewModel = viewModel,
-                navController = navController,
+                navigateToDropDown = { navController.navigate("asset_selector?directory=$it") },
                 onPicked = onPicked,
                 onClose = onClose,
             )
