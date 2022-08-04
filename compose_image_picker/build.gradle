@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
+    id 'signing'
 }
 
 android {
@@ -33,6 +35,68 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = compose_compiler_version
     }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            pom {
+                name = 'Image Picker Lib'
+                description = 'An Image Picker Lib for Jetpack Compose'
+                url = 'https://github.com/huhx/compose_image_picker'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'huhx'
+                        name = 'hongxiang'
+                        email = 'gohuhx@gmail.com'
+                    }
+                }
+
+                scm {
+                    connection = 'https://github.com/huhx/compose_image_picker.git'
+                    developerConnection = 'https://github.com/huhx/compose_image_picker.git'
+                    url = 'https://github.com/huhx/compose_image_picker'
+                }
+            }
+
+
+            groupId "io.github.huhx"
+            artifactId "compose-image-picker"
+            version "1.0.2-alpha"
+
+            afterEvaluate {
+                from components.release
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.release
 }
 
 dependencies {
@@ -41,7 +105,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.compose.material3:material3:1.0.0-alpha15'
     implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
 
     implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
