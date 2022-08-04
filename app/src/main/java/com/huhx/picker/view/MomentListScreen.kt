@@ -1,11 +1,15 @@
 package com.huhx.picker.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
@@ -39,7 +44,12 @@ fun MomentListScreen(
             AppBar(navigateToAdd = navigateToAdd)
         }
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(Color.Gray.copy(alpha = 0.1F))
+        ) {
             Content(viewModel)
         }
     }
@@ -51,7 +61,12 @@ private fun AppBar(navigateToAdd: () -> Unit) {
     CenterAlignedTopAppBar(
         title = { Text(text = "Moment") },
         actions = {
-            Button(onClick = navigateToAdd) {
+            Button(
+                onClick = navigateToAdd,
+                modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
+                shape = RoundedCornerShape(16.dp),
+                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp),
+            ) {
                 Text(text = "Add")
             }
         }
@@ -84,7 +99,7 @@ fun MomentItem(moment: Moment) {
             GridViewImages(moment.images.split(","))
             Spacer(modifier = Modifier.height(8.dp))
         }
-        Divider(thickness = 16.dp, color = Color(0xFFF5F6F9))
+        Divider(thickness = 16.dp, color = Color.White)
     }
 }
 
@@ -95,10 +110,7 @@ fun ItemHeader(moment: Moment) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Row {
-            CircleNetworkImage(
-                imageName = moment.imageUrl,
-                size = 40.dp
-            )
+            CircleNetworkImage(imageName = moment.imageUrl, size = 40.dp)
             Spacer(modifier = Modifier.width(10.dp))
             Column {
                 Text(text = moment.username)

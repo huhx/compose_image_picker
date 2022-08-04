@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -43,8 +43,7 @@ fun GridViewImages(images: List<String>) {
         horizontalArrangement = Arrangement.spacedBy(3.dp),
         userScrollEnabled = false
     ) {
-        itemsIndexed(images, key = { _, it -> it }) { _, image ->
-
+        items(images, key = { it }) { image ->
             AsyncImage(
                 model = image,
                 modifier = Modifier.aspectRatio(1f),

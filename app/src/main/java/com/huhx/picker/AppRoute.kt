@@ -30,7 +30,6 @@ fun AppRoute(
             }
         }
 
-
         composable("moment_add") {
             MomentAddScreen(viewModel, navController) {
                 navController.navigateUp()
