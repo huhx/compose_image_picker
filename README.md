@@ -10,7 +10,7 @@ Easy to use and configurable Compose library to Pick an image or video from the 
 - [x] Play and control the Video
 - [x] Directory is group by name
 - [x] Pick gif image and preview
-- [x] Dart and Light Theme
+- [x] Dark and Light Theme
 - [x] Internationalization support
 - [x] Implement the permission to pick images
 - [ ] To be continue....
@@ -97,6 +97,14 @@ data class AssetPickerConfig(
     val maxAssets: Int = 9, // the maximum count you picked
     val gridCount: Int = 3, // the column counts of LazyVerticalGrid that layout the images
     val requestType: RequestType = RequestType.COMMON,
+)
+```
+so you can change the maxAssets and gridCount
+```kotlin
+AssetPicker(
+    assetPickerConfig = AssetPickerConfig(gridCount = 4, maxAssets = 20),
+    onPicked = onPicked,
+    onClose = onClose
 )
 ```
 > The usage of detail, you can refer to the example. 
