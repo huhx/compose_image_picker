@@ -57,7 +57,7 @@ class AssetViewModel constructor(
     }
 
     fun navigateToPreview(index: Int, requestType: RequestType) {
-        navController.navigate("preview?index=$index&requestType=${requestType.name}")
+        navController.navigate("asset_preview?index=$index&requestType=${requestType.name}")
     }
 
     fun deleteImage(cameraUri: Uri?) {

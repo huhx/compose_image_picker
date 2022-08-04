@@ -66,7 +66,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @Composable
-fun HomeScreen(
+fun AssetDisplayScreen(
     viewModel: AssetViewModel,
     navController: NavHostController,
     onPicked: (List<AssetInfo>) -> Unit,
@@ -75,14 +75,14 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             val directory = viewModel.directory
-            HomeTopAppBar(
+            DisplayTopAppBar(
                 directory = directory,
                 selectedList = viewModel.selectedList,
                 navigateUp = onClose,
-                navigateToDropDown = { navController.navigate("dropDown?directory=$directory") }
+                navigateToDropDown = { navController.navigate("asset_selector?directory=$directory") }
             )
         },
-        bottomBar = { HomeBottomBar(viewModel, onPicked) }
+        bottomBar = { DisplayBottomBar(viewModel, onPicked) }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             val tabs = listOf(TabItem.All, TabItem.Video, TabItem.Image)
@@ -101,7 +101,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeBottomBar(
+private fun DisplayBottomBar(
     viewModel: AssetViewModel,
     onPicked: (List<AssetInfo>) -> Unit
 ) {
@@ -157,7 +157,7 @@ private fun HomeBottomBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopAppBar(
+fun DisplayTopAppBar(
     directory: String,
     selectedList: List<AssetInfo>,
     navigateUp: (List<AssetInfo>) -> Unit,

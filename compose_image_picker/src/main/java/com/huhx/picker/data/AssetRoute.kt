@@ -8,9 +8,9 @@ import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.huhx.picker.constant.RequestType
+import com.huhx.picker.view.AssetDisplayScreen
 import com.huhx.picker.view.AssetPreviewScreen
-import com.huhx.picker.view.DirectorySelectorScreen
-import com.huhx.picker.view.HomeScreen
+import com.huhx.picker.view.AssetSelectorScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -22,10 +22,10 @@ fun AssetPickerRoute(
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = "home"
+        startDestination = "asset_display"
     ) {
-        composable("home") {
-            HomeScreen(
+        composable("asset_display") {
+            AssetDisplayScreen(
                 viewModel = viewModel,
                 navController = navController,
                 onPicked = onPicked,
@@ -34,12 +34,12 @@ fun AssetPickerRoute(
         }
 
         composable(
-            "dropDown?directory={directory}",
+            "asset_selector?directory={directory}",
             arguments = listOf(navArgument("directory") { type = NavType.StringType })
         ) { backStackEntry ->
             val arguments = backStackEntry.arguments!!
             val directory = arguments.getString("directory")!!
-            DirectorySelectorScreen(
+            AssetSelectorScreen(
                 directory = directory,
                 assetDirectories = viewModel.directoryGroup,
                 navigateUp = { navController.navigateUp() },
@@ -51,7 +51,7 @@ fun AssetPickerRoute(
         }
 
         composable(
-            "preview?index={index}&requestType={requestType}",
+            "asset_preview?index={index}&requestType={requestType}",
             arguments = listOf(
                 navArgument("index") { type = NavType.IntType },
                 navArgument("requestType") { type = NavType.StringType },
