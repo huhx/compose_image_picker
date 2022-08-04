@@ -41,9 +41,8 @@ android {
 }
 
 dependencies {
-//    implementation(project(":compose_image_picker"))
-
-    implementation "io.github.huhx:compose-image-picker:1.0.2-alpha"
+    implementation(project(":compose_image_picker"))
+//    implementation "io.github.huhx:compose-image-picker:1.0.0"
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation "androidx.compose.ui:ui:$compose_version"

@@ -74,10 +74,9 @@ publishing {
                 }
             }
 
-
             groupId "io.github.huhx"
             artifactId "compose-image-picker"
-            version "1.0.0-rc"
+            version "1.0.0"
 
             afterEvaluate {
                 from components.release

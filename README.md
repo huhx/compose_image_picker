@@ -31,7 +31,7 @@ Internationalization   |         Dart Theme     |        Picker Example       |
 
 1. Gradle dependency:
 ```groovy
-implementation "io.github.huhx:compose-image-picker:1.0.0-rc"
+implementation "io.github.huhx:compose-image-picker:1.0.0"
 ```
 
 <br>
@@ -99,7 +99,7 @@ data class AssetPickerConfig(
     val requestType: RequestType = RequestType.COMMON,
 )
 ```
-so you can change the maxAssets and gridCount
+So you can change the maxAssets and gridCount
 ```kotlin
 AssetPicker(
     assetPickerConfig = AssetPickerConfig(gridCount = 4, maxAssets = 20),
