@@ -1,9 +1,9 @@
-## 📸&nbsp;Image and Video Picker Library for Jetpack Compose
+## 📸Image and Video Picker Library for Jetpack Compose
 
 Easy to use and configurable Compose library to Pick an image or video from the Gallery.
 
 
-## 🐱&nbsp;Features:
+## 🐱&Features:
 - [x] Pick Image or Video from device, It is configurable
 - [x] Capture Camera Image
 - [x] Preview Image and Video
@@ -24,7 +24,7 @@ Image Picker    |         Directory Selector      |       Image Preview        |
 
 Internationalization   |         Dart Theme     |        Picker Example       |
 :-------------------------:|:-------------------------:|:-------------------------:
-![](https://user-images.githubusercontent.com/15972372/182802666-a82ef410-2a52-4f7d-854f-425e06e1896a.gif)  |  ![](https://user-images.githubusercontent.com/15972372/182802765-0e091698-2994-49e6-8a57-1367fb39ef45.gif)  |  ![](https://user-images.githubusercontent.com/15972372/182802821-a6c0c2d9-f997-4e89-9e6f-64b9297ec92b.gif)
+![](https://user-images.githubusercontent.com/15972372/182802765-0e091698-2994-49e6-8a57-1367fb39ef45.gif)  |  ![](https://user-images.githubusercontent.com/15972372/182802666-a82ef410-2a52-4f7d-854f-425e06e1896a.gif)  |  ![](https://user-images.githubusercontent.com/15972372/182802821-a6c0c2d9-f997-4e89-9e6f-64b9297ec92b.gif)
 
 
 ## 💻&nbsp;Preparation
@@ -34,7 +34,7 @@ Internationalization   |         Dart Theme     |        Picker Example       |
 implementation "io.github.huhx:compose-image-picker:1.0.2-alpha"
 ```
 
-</br>
+<br>
 
 2. Add permission in AndroidManifest.xml file:
 ```xml
@@ -61,7 +61,7 @@ fun ImagePicker(
     }
 }
 ```
-</br>
+<br>
 
 2. Put the Composable you created in navigation routes
 ```kotlin
@@ -81,14 +81,15 @@ composable("asset_picker") {
     )
 }
 ```
-</br>
+<br>
 
 3. Trigger the image picker by navigate to the specified route
 ```kotlin
 navController.navigate("asset_picker") 
 ```
 > route name("asset_picker") should be the same as name in the step two
-</br>
+
+<br>
 
 4. You can customize the properties in AssetPickerConfig
 ```kotlin
