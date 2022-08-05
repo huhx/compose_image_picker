@@ -37,7 +37,7 @@ import com.huhx.picker.data.AssetDirectory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AssetSelectorScreen(
+internal fun AssetSelectorScreen(
     directory: String,
     assetDirectories: List<AssetDirectory>,
     navigateUp: () -> Unit,
@@ -60,7 +60,7 @@ fun AssetSelectorScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DirectoryTopAppBar(
+private fun DirectoryTopAppBar(
     directory: String,
     navigateUp: () -> Unit,
 ) {
@@ -82,7 +82,7 @@ fun DirectoryTopAppBar(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DirectorySelector(
+private fun DirectorySelector(
     directory: String,
     assetDirectories: List<AssetDirectory>,
     onClick: (String) -> Unit,

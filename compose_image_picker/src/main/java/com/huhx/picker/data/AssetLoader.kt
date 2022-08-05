@@ -18,7 +18,7 @@ private val projection = arrayOf(
     MediaStore.Video.Media.BUCKET_DISPLAY_NAME
 )
 
-object AssetLoader {
+internal object AssetLoader {
 
     fun insertImage(context: Context): Uri? {
         val contentValues = ContentValues().apply {

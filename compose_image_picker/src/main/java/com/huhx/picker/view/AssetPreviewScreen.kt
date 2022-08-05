@@ -63,7 +63,7 @@ import com.huhx.picker.data.AssetInfo
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @Composable
-fun AssetPreviewScreen(
+internal fun AssetPreviewScreen(
     index: Int,
     assets: List<AssetInfo>,
     navigateUp: () -> Unit,
@@ -97,7 +97,7 @@ fun AssetPreviewScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PreviewTopAppBar(navigateUp: () -> Unit) {
+private fun PreviewTopAppBar(navigateUp: () -> Unit) {
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
         title = {},
@@ -155,7 +155,7 @@ private fun SelectorBottomBar(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun AssetPreview(
+private fun AssetPreview(
     assets: List<AssetInfo>,
     pagerState: PagerState
 ) {
@@ -172,7 +172,7 @@ fun AssetPreview(
 }
 
 @Composable
-fun ImageItem(assetInfo: AssetInfo) {
+private fun ImageItem(assetInfo: AssetInfo) {
 
     if (assetInfo.isImage()) {
         ImagePreview(uriString = assetInfo.uriString)
@@ -214,7 +214,7 @@ private fun ImagePreview(uriString: String) {
 }
 
 @Composable
-fun VideoPreview(uriString: String) {
+private fun VideoPreview(uriString: String) {
     val context = LocalContext.current
 
     val exoPlayer = remember {

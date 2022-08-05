@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import com.huhx.picker.constant.AssetPickerConfig
 
-class AssetViewModelFactory(
+internal class AssetViewModelFactory(
     private val assetPickerRepository: AssetPickerRepository,
     private val assetPickerConfig: AssetPickerConfig,
     private val navController: NavController,

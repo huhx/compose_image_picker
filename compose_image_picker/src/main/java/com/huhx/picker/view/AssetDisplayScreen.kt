@@ -65,7 +65,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @Composable
-fun AssetDisplayScreen(
+internal fun AssetDisplayScreen(
     viewModel: AssetViewModel,
     navigateToDropDown: (String) -> Unit,
     onPicked: (List<AssetInfo>) -> Unit,
@@ -101,7 +101,7 @@ fun AssetDisplayScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DisplayTopAppBar(
+private fun DisplayTopAppBar(
     directory: String,
     selectedList: List<AssetInfo>,
     navigateUp: (List<AssetInfo>) -> Unit,
@@ -206,7 +206,7 @@ private fun AssetTab(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabsContent(
+private fun TabsContent(
     tabs: List<TabItem>,
     pagerState: PagerState,
     viewModel: AssetViewModel
@@ -221,7 +221,7 @@ fun TabsContent(
 }
 
 @Composable
-fun QQAssetContent(
+private fun AssetContent(
     viewModel: AssetViewModel,
     requestType: RequestType
 ) {
@@ -247,7 +247,7 @@ fun QQAssetContent(
 }
 
 @Composable
-fun AssetImage(
+private fun AssetImage(
     assetInfo: AssetInfo,
     selectedList: SnapshotStateList<AssetInfo>,
     index: Int,
@@ -317,19 +317,19 @@ fun AssetImage(
     }
 }
 
-sealed class TabItem(
+private sealed class TabItem(
     @StringRes val resourceId: Int,
     val screen: @Composable (AssetViewModel) -> Unit
 ) {
     object All : TabItem(R.string.tab_item_all, { viewModel ->
-        QQAssetContent(viewModel, RequestType.COMMON)
+        AssetContent(viewModel, RequestType.COMMON)
     })
 
     object Video : TabItem(R.string.tab_item_video, { viewModel ->
-        QQAssetContent(viewModel, RequestType.VIDEO)
+        AssetContent(viewModel, RequestType.VIDEO)
     })
 
     object Image : TabItem(R.string.tab_item_image, { viewModel ->
-        QQAssetContent(viewModel, RequestType.IMAGE)
+        AssetContent(viewModel, RequestType.IMAGE)
     })
 }

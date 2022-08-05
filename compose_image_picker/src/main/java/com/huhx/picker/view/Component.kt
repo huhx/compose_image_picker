@@ -32,10 +32,10 @@ import com.huhx.picker.constant.AssetPickerConfig
 import com.huhx.picker.constant.showShortToast
 import com.huhx.picker.data.AssetInfo
 
-val LocalAssetConfig = compositionLocalOf { AssetPickerConfig() }
+internal val LocalAssetConfig = compositionLocalOf { AssetPickerConfig() }
 
 @Composable
-fun AppBarButton(
+internal fun AppBarButton(
     size: Int,
     onPicked: () -> Unit
 ) {
@@ -52,7 +52,7 @@ fun AppBarButton(
 }
 
 @Composable
-fun TrailingIcon(source: String, target: String) {
+internal fun TrailingIcon(source: String, target: String) {
     if (source == target) {
         Icon(
             imageVector = Icons.Default.Done,
@@ -64,7 +64,7 @@ fun TrailingIcon(source: String, target: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AssetImageIndicator(
+internal fun AssetImageIndicator(
     assetInfo: AssetInfo,
     selected: Boolean,
     size: Dp = 24.dp,

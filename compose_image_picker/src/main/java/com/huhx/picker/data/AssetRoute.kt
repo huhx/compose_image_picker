@@ -14,7 +14,7 @@ import com.huhx.picker.view.AssetSelectorScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AssetPickerRoute(
+internal fun AssetPickerRoute(
     navController: NavHostController,
     viewModel: AssetViewModel,
     onPicked: (List<AssetInfo>) -> Unit,

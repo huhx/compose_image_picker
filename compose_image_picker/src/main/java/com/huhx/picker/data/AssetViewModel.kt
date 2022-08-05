@@ -12,7 +12,7 @@ import com.huhx.picker.constant.AssetPickerConfig
 import com.huhx.picker.constant.RequestType
 import kotlinx.coroutines.launch
 
-class AssetViewModel constructor(
+internal class AssetViewModel constructor(
     private val assetPickerRepository: AssetPickerRepository,
     val assetPickerConfig: AssetPickerConfig,
     private val navController: NavController,

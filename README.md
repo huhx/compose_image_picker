@@ -3,7 +3,7 @@
 Easy to use and configurable Compose library to Pick an image or video from the Gallery.
 
 
-## 🐱&nbsp;Features:
+## 🐱&nbsp;Features
 - [x] Pick Image or Video from device, It is configurable
 - [x] Capture Camera Image
 - [x] Preview Image and Video

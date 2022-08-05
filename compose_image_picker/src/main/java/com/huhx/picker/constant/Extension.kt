@@ -6,17 +6,17 @@ import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
 
-fun Context.showShortToast(msg: String) {
+internal fun Context.showShortToast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }
 
-fun Context.goSetting() {
+internal fun Context.goSetting() {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${this.packageName}"))
     intent.addCategory(Intent.CATEGORY_DEFAULT)
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     startActivity(intent)
 }
 
-fun Long.prefixZero(): String {
+internal fun Long.prefixZero(): String {
     return if (this < 10) "0$this" else "$this"
 }

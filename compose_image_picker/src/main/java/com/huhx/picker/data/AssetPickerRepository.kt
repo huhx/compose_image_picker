@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.huhx.picker.constant.RequestType
 
-class AssetPickerRepository(
+internal class AssetPickerRepository(
     private val context: Context
 ) {
     suspend fun getAssets(requestType: RequestType): List<AssetInfo> {
