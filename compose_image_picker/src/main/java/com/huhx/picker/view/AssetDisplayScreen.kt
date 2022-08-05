@@ -226,9 +226,11 @@ private fun AssetContent(
     requestType: RequestType
 ) {
     val assets = viewModel.getAssets(requestType)
+    val gridCount = LocalAssetConfig.current.gridCount
+
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
-        columns = GridCells.Fixed(viewModel.assetPickerConfig.gridCount),
+        columns = GridCells.Fixed(gridCount),
         contentPadding = PaddingValues(horizontal = 1.dp),
         verticalArrangement = Arrangement.spacedBy(1.dp),
         horizontalArrangement = Arrangement.spacedBy(1.dp),
@@ -237,9 +239,7 @@ private fun AssetContent(
         itemsIndexed(assets, key = { _, it -> it.id }) { index, it ->
             AssetImage(
                 assetInfo = it,
-                index = index,
-                requestType = requestType,
-                viewModel = viewModel,
+                navigateToPreview = { viewModel.navigateToPreview(index, requestType) },
                 selectedList = viewModel.selectedList
             )
         }
@@ -250,9 +250,7 @@ private fun AssetContent(
 private fun AssetImage(
     assetInfo: AssetInfo,
     selectedList: SnapshotStateList<AssetInfo>,
-    index: Int,
-    requestType: RequestType,
-    viewModel: AssetViewModel
+    navigateToPreview: () -> Unit,
 ) {
     val selected = selectedList.any { it.id == assetInfo.id }
 
@@ -282,7 +280,7 @@ private fun AssetImage(
                 modifier = Modifier
                     .fillMaxSize()
                     .aspectRatio(1.0F)
-                    .clickable { viewModel.navigateToPreview(index, requestType) },
+                    .clickable { navigateToPreview() },
                 filterQuality = FilterQuality.Low,
                 contentScale = ContentScale.Crop,
                 contentDescription = ""
