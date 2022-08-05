@@ -31,7 +31,7 @@ Internationalization   |         Dart Theme     |        Picker Example       |
 
 1. Gradle dependency:
 ```groovy
-implementation "io.github.huhx:compose-image-picker:1.0.0"
+implementation "io.github.huhx:compose-image-picker:1.0.2"
 ```
 
 <br>
