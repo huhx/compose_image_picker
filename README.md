@@ -45,7 +45,7 @@ implementation "io.github.huhx:compose-image-picker:1.0.2"
 
 ## 🎨&nbsp;Usage
 
-1. Create the picker Composable that you can implement the callback onClose and onClose
+1. Create the picker Composable that you can implement the callback onPicked and onClose
 ```kotlin
 @Composable
 fun ImagePicker(

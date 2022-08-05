@@ -8,13 +8,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.huhx.picker.constant.AssetPickerConfig
 import com.huhx.picker.constant.RequestType
 import kotlinx.coroutines.launch
 
-internal class AssetViewModel constructor(
+internal class AssetViewModel(
     private val assetPickerRepository: AssetPickerRepository,
-    val assetPickerConfig: AssetPickerConfig,
     private val navController: NavController,
 ) : ViewModel() {
 

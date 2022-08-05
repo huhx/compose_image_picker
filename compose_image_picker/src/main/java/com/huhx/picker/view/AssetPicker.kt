@@ -26,7 +26,6 @@ fun AssetPicker(
     val viewModel: AssetViewModel = viewModel(
         factory = AssetViewModelFactory(
             assetPickerRepository = AssetPickerRepository(context),
-            assetPickerConfig = assetPickerConfig,
             navController = navController
         )
     )
