@@ -7,8 +7,8 @@ Language: [English](README.md) | [中文简体](README_ZH.md)
 
 ## 🐱&nbsp;功能
 - [x] 图片和视频的选取
-- [x] 支持拍照并选取
-- [x] 选取图片和视频的预览
+- [x] 支持拍照并加以选取
+- [x] 图片和视频的预览
 - [x] 图片或视频根据目录分组展示
 - [x] 支持GIF图片的选取与预览
 - [x] 支持亮/暗主题
@@ -84,11 +84,11 @@ composable("asset_picker") {
 ```
 <br>
 
-3. 触发图片选取时，调用navController.navigate的方法
+3. 调用navController.navigate的方法，触发图片的选取
 ```kotlin
 navController.navigate("asset_picker") 
 ```
-> 注意route string应该和第二步的路由string保持一致
+> 注意参数route string应该和第二步的路由string保持一致
 
 <br>
 
@@ -100,7 +100,7 @@ data class AssetPickerConfig(
     val requestType: RequestType = RequestType.COMMON,
 )
 ```
-基于上述你可以配置maxAssets和gridCount以满足不同屏幕的需求
+基于上述你可以配置maxAssets和gridCount以满足对不同屏幕的需求
 ```kotlin
 AssetPicker(
     assetPickerConfig = AssetPickerConfig(gridCount = 4, maxAssets = 20),
@@ -108,7 +108,7 @@ AssetPicker(
     onClose = onClose
 )
 ```
-> 关于compose-image-picker的详细使用，可以参考代码里面的例子。里面实现了一个简易的发朋友圈功能
+> 关于compose-image-picker的详细使用，可以参考代码里面的例子，里面实现了一个简易的朋友圈功能
 
 ## Drop a ⭐ if you like it. New features to be continue...
 

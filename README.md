@@ -6,11 +6,10 @@ Easy to use and configurable Compose library to Pick an image or video from the 
 
 
 ## 🐱&nbsp;Features
-- [x] Pick Image or Video from device, It is configurable
+- [x] Pick Image or Video and preview
 - [x] Capture Camera Image
-- [x] Preview Image and Video
 - [x] Play and control the Video
-- [x] Directory is group by name
+- [x] Display Images group by directory
 - [x] Pick gif image and preview
 - [x] Dark and Light Theme
 - [x] Internationalization support
@@ -47,7 +46,7 @@ implementation "io.github.huhx:compose-image-picker:1.0.2"
 
 ## 🎨&nbsp;Usage
 
-1. Create the picker Composable that you can implement the callback onPicked and onClose
+1. Create Composable method and you can implement the callback onPicked and onClose
 ```kotlin
 @Composable
 fun ImagePicker(
@@ -89,7 +88,7 @@ composable("asset_picker") {
 ```kotlin
 navController.navigate("asset_picker") 
 ```
-> route name("asset_picker") should be the same as name in the step two
+> route name("asset_picker") should be the same as the name in the step two
 
 <br>
 
@@ -101,7 +100,7 @@ data class AssetPickerConfig(
     val requestType: RequestType = RequestType.COMMON,
 )
 ```
-So you can change the maxAssets and gridCount
+So you can configure the maxAssets and gridCount to meet the requirements for different screens
 ```kotlin
 AssetPicker(
     assetPickerConfig = AssetPickerConfig(gridCount = 4, maxAssets = 20),
@@ -109,7 +108,7 @@ AssetPicker(
     onClose = onClose
 )
 ```
-> The usage of detail, you can refer to the example. 
+> For the detailed use of compose-image-picker library, please refer to the examples
 
 ## Drop a ⭐ if you like it. New features to be continue...
 
