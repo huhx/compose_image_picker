@@ -11,6 +11,7 @@ class AssetInfoTest {
         filename = "test.jpeg",
         directory = "Picture",
         mediaType = 1,
+        size = 1150260,
         mimeType = "img/jpeg",
         duration = 16000,
         date = 23423434433
@@ -51,5 +52,4 @@ class AssetInfoTest {
 
         assertEquals("02:49", result)
     }
-
 }

@@ -14,6 +14,7 @@ private val projection = arrayOf(
     MediaStore.Video.Media.DATE_TAKEN,
     MediaStore.Files.FileColumns.MEDIA_TYPE,
     MediaStore.Video.Media.MIME_TYPE,
+    MediaStore.Video.Media.SIZE,
     MediaStore.Video.Media.DURATION,
     MediaStore.Video.Media.BUCKET_DISPLAY_NAME
 )
@@ -40,8 +41,9 @@ internal object AssetLoader {
             val indexDate = it.getColumnIndex(projection[2])
             val indexMediaType = it.getColumnIndex(projection[3])
             val indexMimeType = it.getColumnIndex(projection[4])
-            val indexDuration = it.getColumnIndex(projection[5])
-            val indexDirectory = it.getColumnIndex(projection[6])
+            val indexSize = it.getColumnIndex(projection[5])
+            val indexDuration = it.getColumnIndex(projection[6])
+            val indexDirectory = it.getColumnIndex(projection[7])
 
             if (it.moveToNext()) {
                 val id = it.getLong(indexId)
@@ -59,6 +61,7 @@ internal object AssetLoader {
                     date = it.getLong(indexDate),
                     mediaType = mediaType,
                     mimeType = it.getString(indexMimeType),
+                    size = it.getLong(indexSize),
                     duration = it.getLong(indexDuration),
                     directory = it.getString(indexDirectory),
                 )
@@ -76,8 +79,9 @@ internal object AssetLoader {
             val indexDate = it.getColumnIndex(projection[2])
             val indexMediaType = it.getColumnIndex(projection[3])
             val indexMimeType = it.getColumnIndex(projection[4])
-            val indexDuration = it.getColumnIndex(projection[5])
-            val indexDirectory = it.getColumnIndex(projection[6])
+            val indexSize = it.getColumnIndex(projection[5])
+            val indexDuration = it.getColumnIndex(projection[6])
+            val indexDirectory = it.getColumnIndex(projection[7])
 
             while (it.moveToNext()) {
                 val id = it.getLong(indexId)
@@ -96,6 +100,7 @@ internal object AssetLoader {
                         date = it.getLong(indexDate),
                         mediaType = mediaType,
                         mimeType = it.getString(indexMimeType),
+                        size = it.getLong(indexSize),
                         duration = it.getLong(indexDuration),
                         directory = it.getString(indexDirectory),
                     )

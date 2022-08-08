@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.text.format.Formatter
 import android.widget.Toast
 
 internal fun Context.showShortToast(msg: String) {
@@ -19,4 +20,8 @@ internal fun Context.goSetting() {
 
 internal fun Long.prefixZero(): String {
     return if (this < 10) "0$this" else "$this"
+}
+
+internal fun Context.formatSize(size: Long): String {
+    return Formatter.formatFileSize(this, size)
 }

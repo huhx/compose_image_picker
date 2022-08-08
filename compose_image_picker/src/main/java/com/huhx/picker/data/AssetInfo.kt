@@ -8,6 +8,7 @@ data class AssetInfo(
     val uriString: String,
     val filename: String,
     val directory: String,
+    val size: Long,
     val mediaType: Int,
     val mimeType: String,
     val duration: Long?,
