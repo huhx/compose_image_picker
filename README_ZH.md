@@ -32,7 +32,7 @@ Language: [English](README.md) | [中文简体](README_ZH.md)
 
 1. 在build.gradle中添加Gradle的依赖:
 ```groovy
-implementation "io.github.huhx:compose-image-picker:1.0.2"
+implementation "io.github.huhx:compose-image-picker:1.0.3"
 ```
 
 <br>
