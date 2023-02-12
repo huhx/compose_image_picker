@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Compose_image_pickerTheme() {
+            Compose_image_pickerTheme {
                 val navController = rememberAnimatedNavController()
                 val viewModel: MomentViewModel = viewModel(
                     factory = MomentModelFactory(momentRepository = MomentRepository())

@@ -68,7 +68,7 @@ fun MomentAddScreen(
                         username = username,
                         imageUrl = imageUrl,
                         content = viewModel.content,
-                        images = viewModel.selectedList.map { it.uriString }.joinToString(","),
+                        images = viewModel.selectedList.joinToString(",") { it.uriString },
                         createTime = SimpleDateFormat(
                             "yyyy-MM-dd HH:mm:ss",
                             Locale.getDefault()
