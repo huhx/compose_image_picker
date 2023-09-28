@@ -50,7 +50,6 @@ import com.huhx.picker.data.username
 import java.text.SimpleDateFormat
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MomentAddScreen(
     viewModel: MomentViewModel,
@@ -150,9 +149,7 @@ fun MomentAddContent(viewModel: MomentViewModel, navController: NavHostControlle
                 onValueChange = { viewModel.content = it },
                 placeholder = { Text("Say something....") },
                 maxLines = 6,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.White,
-                    textColor = Color.Black,
+                colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,

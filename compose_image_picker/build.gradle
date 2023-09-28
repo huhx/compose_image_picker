@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 26
-        targetSdk 33
+        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -77,7 +77,7 @@ publishing {
 
             groupId "io.github.huhx"
             artifactId "compose-image-picker"
-            version "1.0.8"
+            version "1.0.9"
 
             afterEvaluate {
                 from components.release
@@ -100,17 +100,16 @@ signing {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.compose.material3:material3:1.0.1'
-    implementation "androidx.compose.ui:ui:$compose_version"
 
-    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
+    implementation platform("androidx.compose:compose-bom:$compose_bom_version")
+    implementation 'androidx.compose.material3:material3'
+    implementation "androidx.compose.ui:ui"
+
     implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
 
-    implementation 'androidx.navigation:navigation-compose:2.5.3'
+    implementation 'androidx.navigation:navigation-compose:2.7.3'
     implementation "io.coil-kt:coil-compose:$coil_version"
     implementation "io.coil-kt:coil-video:$coil_version"
     implementation "io.coil-kt:coil-gif:$coil_version"

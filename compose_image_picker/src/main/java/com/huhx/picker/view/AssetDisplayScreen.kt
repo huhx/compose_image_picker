@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,9 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -53,17 +57,13 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import com.huhx.picker.R
 import com.huhx.picker.constant.RequestType
 import com.huhx.picker.data.AssetInfo
 import com.huhx.picker.data.AssetViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun AssetDisplayScreen(
     viewModel: AssetViewModel,
@@ -85,7 +85,7 @@ internal fun AssetDisplayScreen(
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             val tabs = listOf(TabItem.All, TabItem.Video, TabItem.Image)
-            val pagerState = rememberPagerState()
+            val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f, pageCount = tabs::size)
 
             Column {
                 AssetTab(tabs = tabs, pagerState = pagerState)
@@ -178,7 +178,7 @@ private fun DisplayBottomBar(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AssetTab(
     tabs: List<TabItem>,
@@ -204,7 +204,7 @@ private fun AssetTab(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TabsContent(
     tabs: List<TabItem>,
@@ -213,7 +213,6 @@ private fun TabsContent(
 ) {
     HorizontalPager(
         state = pagerState,
-        count = tabs.size,
         userScrollEnabled = true
     ) { page ->
         tabs[page].screen(viewModel)
@@ -319,15 +318,15 @@ private sealed class TabItem(
     @StringRes val resourceId: Int,
     val screen: @Composable (AssetViewModel) -> Unit
 ) {
-    object All : TabItem(R.string.tab_item_all, { viewModel ->
+    data object All : TabItem(R.string.tab_item_all, { viewModel ->
         AssetContent(viewModel, RequestType.COMMON)
     })
 
-    object Video : TabItem(R.string.tab_item_video, { viewModel ->
+    data object Video : TabItem(R.string.tab_item_video, { viewModel ->
         AssetContent(viewModel, RequestType.VIDEO)
     })
 
-    object Image : TabItem(R.string.tab_item_image, { viewModel ->
+    data object Image : TabItem(R.string.tab_item_image, { viewModel ->
         AssetContent(viewModel, RequestType.IMAGE)
     })
 }

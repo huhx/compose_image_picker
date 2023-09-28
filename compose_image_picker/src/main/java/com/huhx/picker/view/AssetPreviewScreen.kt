@@ -1,6 +1,7 @@
 package com.huhx.picker.view
 
 import android.os.Build
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
@@ -15,6 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -29,7 +33,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -48,10 +52,6 @@ import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -61,7 +61,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.huhx.picker.R
 import com.huhx.picker.data.AssetInfo
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun AssetPreviewScreen(
     index: Int,
@@ -69,7 +69,7 @@ internal fun AssetPreviewScreen(
     navigateUp: () -> Unit,
     selectedList: SnapshotStateList<AssetInfo>,
 ) {
-    val pageState = rememberPagerState(initialPage = index)
+    val pageState = rememberPagerState(initialPage = index, initialPageOffsetFraction = 0f, pageCount = assets::size)
 
     Scaffold(
         topBar = { PreviewTopAppBar(navigateUp = navigateUp) },
@@ -153,7 +153,7 @@ private fun SelectorBottomBar(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AssetPreview(
     assets: List<AssetInfo>,
@@ -161,7 +161,6 @@ private fun AssetPreview(
 ) {
     Box {
         HorizontalPager(
-            count = assets.size,
             state = pagerState,
             contentPadding = PaddingValues(horizontal = 0.dp),
             modifier = Modifier.fillMaxSize()
@@ -184,9 +183,9 @@ private fun ImageItem(assetInfo: AssetInfo) {
 @Composable
 private fun ImagePreview(uriString: String) {
 
-    var scale by remember { mutableStateOf(1f) }
-    val xOffset by remember { mutableStateOf(0f) }
-    val yOffset by remember { mutableStateOf(0f) }
+    var scale by remember { mutableFloatStateOf(1f) }
+    val xOffset by remember { mutableFloatStateOf(0f) }
+    val yOffset by remember { mutableFloatStateOf(0f) }
 
     val state = rememberTransformableState(onTransformation = { zoomChange, _, _ ->
         val tempScale = (zoomChange * scale).coerceAtLeast(1f)

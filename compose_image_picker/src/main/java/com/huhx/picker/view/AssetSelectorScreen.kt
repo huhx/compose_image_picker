@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -19,6 +17,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,7 +34,6 @@ import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
 import com.huhx.picker.data.AssetDirectory
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AssetSelectorScreen(
     directory: String,
@@ -80,7 +78,6 @@ private fun DirectoryTopAppBar(
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun DirectorySelector(
     directory: String,
@@ -92,7 +89,7 @@ private fun DirectorySelector(
             val itemDirectory = it.directory
             ListItem(
                 modifier = Modifier.clickable { onClick(itemDirectory) },
-                icon = {
+                leadingContent = {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(it.cover ?: Icons.Default.Place)
@@ -106,13 +103,13 @@ private fun DirectorySelector(
                         contentDescription = ""
                     )
                 },
-                text = {
+                headlineContent = {
                     Row {
                         Text(text = itemDirectory, color = MaterialTheme.colorScheme.onSurface)
                         Text(text = "(${it.counts})", color = Color.Gray)
                     }
                 },
-                trailing = { TrailingIcon(directory, itemDirectory) }
+                trailingContent = { TrailingIcon(directory, itemDirectory) }
             )
         }
     }

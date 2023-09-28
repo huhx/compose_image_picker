@@ -4,7 +4,5 @@ object IdHelper {
     private var id: Int = moments.size
 
     @Synchronized
-    fun nextID(): Int {
-        return id++
-    }
+    fun nextID(): Int = id++
 }

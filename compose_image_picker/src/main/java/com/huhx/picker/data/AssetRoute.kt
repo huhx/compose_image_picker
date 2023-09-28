@@ -1,18 +1,16 @@
 package com.huhx.picker.data
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
 import com.huhx.picker.constant.RequestType
 import com.huhx.picker.view.AssetDisplayScreen
 import com.huhx.picker.view.AssetPreviewScreen
 import com.huhx.picker.view.AssetSelectorScreen
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun AssetPickerRoute(
     navController: NavHostController,
@@ -20,7 +18,7 @@ internal fun AssetPickerRoute(
     onPicked: (List<AssetInfo>) -> Unit,
     onClose: (List<AssetInfo>) -> Unit,
 ) {
-    AnimatedNavHost(
+    NavHost(
         navController = navController,
         startDestination = "asset_display"
     ) {

@@ -1,11 +1,10 @@
 package com.huhx.picker
 
 import android.Manifest
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.huhx.picker.constant.AssetPickerConfig
 import com.huhx.picker.data.AssetInfo
 import com.huhx.picker.data.MomentViewModel
@@ -14,13 +13,12 @@ import com.huhx.picker.view.AssetPicker
 import com.huhx.picker.view.MomentAddScreen
 import com.huhx.picker.view.MomentListScreen
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppRoute(
     navController: NavHostController,
     viewModel: MomentViewModel
 ) {
-    AnimatedNavHost(
+    NavHost(
         navController = navController,
         startDestination = "moment_list",
     ) {
