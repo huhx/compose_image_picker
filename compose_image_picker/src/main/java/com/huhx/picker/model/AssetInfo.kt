@@ -1,7 +1,6 @@
-package com.huhx.picker.data
+package com.huhx.picker.model
 
 import android.provider.MediaStore
-import com.huhx.picker.constant.prefixZero
 
 data class AssetInfo(
     val id: Long,
@@ -11,7 +10,7 @@ data class AssetInfo(
     val size: Long,
     val mediaType: Int,
     val mimeType: String,
-    val duration: Long?,
+    val duration: Long? = null,
     val date: Long,
 ) {
     fun isImage(): Boolean {
@@ -26,6 +25,8 @@ data class AssetInfo(
         return mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
     }
 
+    val resourceType: AssetResourceType = AssetResourceType.fromFileName(uriString)
+
     fun formatDuration(): String {
         if (duration == null) {
             return ""
@@ -34,5 +35,9 @@ data class AssetInfo(
         val seconds = duration / 1000 % 60
 
         return "${minutes.prefixZero()}:${seconds.prefixZero()}"
+    }
+
+    private fun Long.prefixZero(): String {
+        return if (this < 10) "0$this" else "$this"
     }
 }

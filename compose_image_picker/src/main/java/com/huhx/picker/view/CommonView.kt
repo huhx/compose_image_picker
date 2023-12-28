@@ -1,5 +1,6 @@
 package com.huhx.picker.view
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,10 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,17 +25,13 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huhx.picker.R
-import com.huhx.picker.constant.AssetPickerConfig
-import com.huhx.picker.constant.showShortToast
-import com.huhx.picker.data.AssetInfo
+import com.huhx.picker.model.AssetInfo
+import com.huhx.picker.model.AssetPickerConfig
 
 internal val LocalAssetConfig = compositionLocalOf { AssetPickerConfig() }
 
 @Composable
-internal fun AppBarButton(
-    size: Int,
-    onPicked: () -> Unit
-) {
+internal fun AppBarButton(size: Int, onPicked: () -> Unit) {
     val maxAssets = LocalAssetConfig.current.maxAssets
     val buttonText = stringResource(R.string.text_select_button, size, maxAssets)
     Button(
@@ -47,17 +41,6 @@ internal fun AppBarButton(
         onClick = onPicked,
     ) {
         Text(buttonText, fontSize = 14.sp, color = Color.White)
-    }
-}
-
-@Composable
-internal fun TrailingIcon(source: String, target: String) {
-    if (source == target) {
-        Icon(
-            imageVector = Icons.Default.Done,
-            contentDescription = "",
-            tint = Color.Blue
-        )
     }
 }
 
@@ -87,7 +70,7 @@ internal fun AssetImageIndicator(
                 return@Surface
             }
             if (assetSelected.size == maxAssets && isSelected) {
-                context.showShortToast(errorMessage)
+                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                 return@Surface
             }
             if (isSelected) {

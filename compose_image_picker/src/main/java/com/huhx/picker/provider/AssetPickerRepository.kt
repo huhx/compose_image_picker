@@ -1,8 +1,9 @@
-package com.huhx.picker.data
+package com.huhx.picker.provider
 
 import android.content.Context
 import android.net.Uri
-import com.huhx.picker.constant.RequestType
+import com.huhx.picker.model.AssetInfo
+import com.huhx.picker.model.RequestType
 
 internal class AssetPickerRepository(
     private val context: Context
@@ -16,14 +17,10 @@ internal class AssetPickerRepository(
     }
 
     fun findByUri(uri: Uri?): AssetInfo? {
-        return uri?.let {
-            AssetLoader.findByUri(context, it)
-        }
+        return uri?.let { AssetLoader.findByUri(context, it) }
     }
 
     fun deleteByUri(uri: Uri?) {
-        uri?.let {
-            AssetLoader.deleteByUri(context, it)
-        }
+        uri?.let { AssetLoader.deleteByUri(context, it) }
     }
 }

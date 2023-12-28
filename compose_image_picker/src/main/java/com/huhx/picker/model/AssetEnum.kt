@@ -1,4 +1,4 @@
-package com.huhx.picker.constant
+package com.huhx.picker.model
 
 enum class RequestType {
     COMMON,

@@ -1,8 +1,9 @@
-package com.huhx.picker.data
+package com.huhx.picker.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import com.huhx.picker.provider.AssetPickerRepository
 
 internal class AssetViewModelFactory(
     private val assetPickerRepository: AssetPickerRepository,

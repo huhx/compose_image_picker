@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -32,36 +33,59 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
-import com.huhx.picker.data.AssetDirectory
+import com.huhx.picker.model.AssetDirectory
 
 @Composable
 internal fun AssetSelectorScreen(
     directory: String,
     assetDirectories: List<AssetDirectory>,
     navigateUp: () -> Unit,
-    onClick: (String) -> Unit,
+    onSelected: (String) -> Unit,
 ) {
     Scaffold(
-        topBar = {
-            DirectoryTopAppBar(directory = directory, navigateUp = navigateUp)
-        }
+        topBar = { DirectoryTopAppBar(directory = directory, navigateUp = navigateUp) }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
-            DirectorySelector(
-                directory = directory,
-                assetDirectories = assetDirectories,
-                onClick = onClick
-            )
+            LazyColumn {
+                items(items = assetDirectories) {
+                    val itemDirectory = it.directory
+                    ListItem(
+                        modifier = Modifier.clickable { onSelected(itemDirectory) },
+                        leadingContent = {
+                            AsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(it.cover ?: Icons.Default.Place)
+                                    .decoderFactory(VideoFrameDecoder.Factory())
+                                    .build(),
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .aspectRatio(1.0F),
+                                filterQuality = FilterQuality.Low,
+                                contentScale = ContentScale.Crop,
+                                contentDescription = ""
+                            )
+                        },
+                        headlineContent = {
+                            Row {
+                                Text(text = itemDirectory, color = MaterialTheme.colorScheme.onSurface)
+                                Text(text = "(${it.counts})", color = Color.Gray)
+                            }
+                        },
+                        trailingContent = {
+                            if (directory == itemDirectory) {
+                                Icon(imageVector = Icons.Default.Done, contentDescription = "", tint = Color.Blue)
+                            }
+                        }
+                    )
+                }
+            }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DirectoryTopAppBar(
-    directory: String,
-    navigateUp: () -> Unit,
-) {
+@OptIn(ExperimentalMaterial3Api::class)
+private fun DirectoryTopAppBar(directory: String, navigateUp: () -> Unit) {
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
         navigationIcon = {
@@ -78,39 +102,3 @@ private fun DirectoryTopAppBar(
     )
 }
 
-@Composable
-private fun DirectorySelector(
-    directory: String,
-    assetDirectories: List<AssetDirectory>,
-    onClick: (String) -> Unit,
-) {
-    LazyColumn {
-        items(assetDirectories) {
-            val itemDirectory = it.directory
-            ListItem(
-                modifier = Modifier.clickable { onClick(itemDirectory) },
-                leadingContent = {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(it.cover ?: Icons.Default.Place)
-                            .decoderFactory(VideoFrameDecoder.Factory())
-                            .build(),
-                        modifier = Modifier
-                            .size(32.dp)
-                            .aspectRatio(1.0F),
-                        filterQuality = FilterQuality.Low,
-                        contentScale = ContentScale.Crop,
-                        contentDescription = ""
-                    )
-                },
-                headlineContent = {
-                    Row {
-                        Text(text = itemDirectory, color = MaterialTheme.colorScheme.onSurface)
-                        Text(text = "(${it.counts})", color = Color.Gray)
-                    }
-                },
-                trailingContent = { TrailingIcon(directory, itemDirectory) }
-            )
-        }
-    }
-}

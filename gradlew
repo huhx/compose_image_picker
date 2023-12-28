@@ -81,7 +81,7 @@ case "`uname`" in
 esac
 
 CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
-
+#JAVA_HOME="/usr/local/Cellar/openjdk@17/17.0.9/libexec/openjdk.jdk/Contents/Home"
 
 # Determine the Java command to use to start the JVM.
 if [ -n "$JAVA_HOME" ] ; then

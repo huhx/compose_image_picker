@@ -1,4 +1,4 @@
-package com.huhx.picker.data
+package com.huhx.picker.provider
 
 import android.content.ContentUris
 import android.content.ContentValues
@@ -6,24 +6,25 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import com.huhx.picker.constant.RequestType
-
-private val projection = arrayOf(
-    MediaStore.Video.Media._ID,
-    MediaStore.Video.Media.DISPLAY_NAME,
-    MediaStore.Video.Media.DATE_TAKEN,
-    MediaStore.Files.FileColumns.MEDIA_TYPE,
-    MediaStore.Video.Media.MIME_TYPE,
-    MediaStore.Video.Media.SIZE,
-    MediaStore.Video.Media.DURATION,
-    MediaStore.Video.Media.BUCKET_DISPLAY_NAME
-)
+import com.huhx.picker.model.AssetInfo
+import com.huhx.picker.model.RequestType
 
 internal object AssetLoader {
 
+    private val projection = arrayOf(
+        MediaStore.Video.Media._ID,
+        MediaStore.Video.Media.DISPLAY_NAME,
+        MediaStore.Video.Media.DATE_TAKEN,
+        MediaStore.Files.FileColumns.MEDIA_TYPE,
+        MediaStore.Video.Media.MIME_TYPE,
+        MediaStore.Video.Media.SIZE,
+        MediaStore.Video.Media.DURATION,
+        MediaStore.Video.Media.BUCKET_DISPLAY_NAME
+    )
+
     fun insertImage(context: Context): Uri? {
         val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "compose-camera-${System.currentTimeMillis()}.jpg")
+            put(MediaStore.Images.Media.DISPLAY_NAME, "camera-${System.currentTimeMillis()}.jpg")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         }
         return context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
@@ -35,7 +36,7 @@ internal object AssetLoader {
 
     fun findByUri(context: Context, uri: Uri): AssetInfo? {
         val cursor = context.contentResolver.query(uri, projection, null, null, null, null)
-        cursor?.use { it ->
+        cursor?.use {
             val indexId = it.getColumnIndex(projection[0])
             val indexFilename = it.getColumnIndex(projection[1])
             val indexDate = it.getColumnIndex(projection[2])
@@ -120,10 +121,12 @@ internal object AssetLoader {
                 selection = "$mediaType=? OR $mediaType=?",
                 arguments = listOf(image.toString(), video.toString())
             )
+
             RequestType.IMAGE -> Selection(
                 selection = "$mediaType=?",
                 arguments = listOf(image.toString())
             )
+
             RequestType.VIDEO -> Selection(
                 selection = "$mediaType=?",
                 arguments = listOf(video.toString())
@@ -145,4 +148,3 @@ internal object AssetLoader {
 
     private data class Selection(val selection: String, val arguments: List<String>)
 }
-

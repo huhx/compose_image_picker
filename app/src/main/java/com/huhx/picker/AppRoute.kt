@@ -5,10 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.huhx.picker.constant.AssetPickerConfig
-import com.huhx.picker.data.AssetInfo
 import com.huhx.picker.data.MomentViewModel
-import com.huhx.picker.data.PickerPermissions
+import com.huhx.picker.model.AssetInfo
+import com.huhx.picker.model.AssetPickerConfig
+import com.huhx.picker.support.PickerPermissions
 import com.huhx.picker.view.AssetPicker
 import com.huhx.picker.view.MomentAddScreen
 import com.huhx.picker.view.MomentListScreen
@@ -23,15 +23,11 @@ fun AppRoute(
         startDestination = "moment_list",
     ) {
         composable("moment_list") {
-            MomentListScreen(viewModel) {
-                navController.navigate("moment_add")
-            }
+            MomentListScreen(viewModel) { navController.navigate("moment_add") }
         }
 
         composable("moment_add") {
-            MomentAddScreen(viewModel, navController) {
-                navController.navigateUp()
-            }
+            MomentAddScreen(viewModel, navController, navController::navigateUp)
         }
 
         composable("asset_picker") {

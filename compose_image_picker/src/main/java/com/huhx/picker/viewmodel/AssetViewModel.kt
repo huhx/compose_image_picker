@@ -1,4 +1,4 @@
-package com.huhx.picker.data
+package com.huhx.picker.viewmodel
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
@@ -8,7 +8,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.huhx.picker.constant.RequestType
+import com.huhx.picker.AssetRoute
+import com.huhx.picker.model.AssetDirectory
+import com.huhx.picker.model.AssetInfo
+import com.huhx.picker.model.RequestType
+import com.huhx.picker.provider.AssetPickerRepository
 import kotlinx.coroutines.launch
 
 internal class AssetViewModel(
@@ -55,7 +59,7 @@ internal class AssetViewModel(
     }
 
     fun navigateToPreview(index: Int, requestType: RequestType) {
-        navController.navigate("asset_preview?index=$index&requestType=${requestType.name}")
+        navController.navigate(AssetRoute.preview(index, requestType))
     }
 
     fun deleteImage(cameraUri: Uri?) {

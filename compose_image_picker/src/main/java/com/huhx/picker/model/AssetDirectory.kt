@@ -1,4 +1,4 @@
-package com.huhx.picker.data
+package com.huhx.picker.model
 
 data class AssetDirectory(
     val directory: String,

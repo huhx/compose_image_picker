@@ -3,8 +3,6 @@ package com.huhx.picker.view
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.rememberTransformableState
-import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,16 +30,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -59,7 +53,7 @@ import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.huhx.picker.R
-import com.huhx.picker.data.AssetInfo
+import com.huhx.picker.model.AssetInfo
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -69,25 +63,20 @@ internal fun AssetPreviewScreen(
     navigateUp: () -> Unit,
     selectedList: SnapshotStateList<AssetInfo>,
 ) {
-    val pageState = rememberPagerState(initialPage = index, initialPageOffsetFraction = 0f, pageCount = assets::size)
+    val pageState = rememberPagerState(initialPage = index, pageCount = assets::size)
 
     Scaffold(
         topBar = { PreviewTopAppBar(navigateUp = navigateUp) },
         bottomBar = {
-            SelectorBottomBar(
-                selectedList = selectedList,
-                assetInfo = assets[pageState.currentPage]
-            ) {
+            SelectorBottomBar(selectedList = selectedList, assetInfo = assets[pageState.currentPage]) {
                 navigateUp()
-                if (selectedList.isEmpty()) {
-                    selectedList.add(it)
-                }
+                if (selectedList.isEmpty()) selectedList.add(it)
             }
         }
-    ) { innerPadding ->
+    ) {
         Box(
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(it)
                 .background(Color.Black)
         ) {
             AssetPreview(assets = assets, pagerState = pageState)
@@ -101,16 +90,10 @@ private fun PreviewTopAppBar(navigateUp: () -> Unit) {
     CenterAlignedTopAppBar(
         modifier = Modifier.statusBarsPadding(),
         title = {},
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = Color.Black
-        ),
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Black),
         navigationIcon = {
             IconButton(onClick = navigateUp) {
-                Icon(
-                    Icons.Default.ArrowBack,
-                    tint = Color.White,
-                    contentDescription = "",
-                )
+                Icon(Icons.Default.ArrowBack, tint = Color.White, contentDescription = "")
             }
         }
     )
@@ -155,57 +138,31 @@ private fun SelectorBottomBar(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun AssetPreview(
-    assets: List<AssetInfo>,
-    pagerState: PagerState
-) {
+private fun AssetPreview(assets: List<AssetInfo>, pagerState: PagerState) {
     Box {
         HorizontalPager(
             state = pagerState,
             contentPadding = PaddingValues(horizontal = 0.dp),
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            ImageItem(assets[page])
+            val assetInfo = assets[page]
+            if (assetInfo.isImage()) {
+                ImagePreview(uriString = assetInfo.uriString)
+            } else {
+                VideoPreview(uriString = assetInfo.uriString)
+            }
         }
     }
 }
 
 @Composable
-private fun ImageItem(assetInfo: AssetInfo) {
-
-    if (assetInfo.isImage()) {
-        ImagePreview(uriString = assetInfo.uriString)
-    } else {
-        VideoPreview(uriString = assetInfo.uriString)
-    }
-}
-
-@Composable
-private fun ImagePreview(uriString: String) {
-
-    var scale by remember { mutableFloatStateOf(1f) }
-    val xOffset by remember { mutableFloatStateOf(0f) }
-    val yOffset by remember { mutableFloatStateOf(0f) }
-
-    val state = rememberTransformableState(onTransformation = { zoomChange, _, _ ->
-        val tempScale = (zoomChange * scale).coerceAtLeast(1f)
-        scale = (if (tempScale > 5f) 5f else tempScale)
-    })
-
+fun ImagePreview(uriString: String) {
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(uriString)
             .decoderFactory(if (Build.VERSION.SDK_INT >= 28) ImageDecoderDecoder.Factory() else GifDecoder.Factory())
             .build(),
-        modifier = Modifier
-            .fillMaxSize()
-            .transformable(state = state)
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-                translationX = xOffset
-                translationY = yOffset
-            },
+        modifier = Modifier.fillMaxSize(),
         filterQuality = FilterQuality.None,
         contentScale = ContentScale.Fit,
         contentDescription = ""
@@ -213,14 +170,13 @@ private fun ImagePreview(uriString: String) {
 }
 
 @Composable
-private fun VideoPreview(uriString: String) {
+fun VideoPreview(uriString: String) {
     val context = LocalContext.current
 
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
             val dataSourceFactory: DataSource.Factory = DefaultDataSource.Factory(context)
-            val source = ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(MediaItem.fromUri(uriString))
+            val source = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(uriString))
             setMediaSource(source)
 
             prepare()

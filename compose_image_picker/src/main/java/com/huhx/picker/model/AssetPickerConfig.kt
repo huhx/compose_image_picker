@@ -1,4 +1,4 @@
-package com.huhx.picker.constant
+package com.huhx.picker.model
 
 data class AssetPickerConfig(
     val maxAssets: Int = 9,

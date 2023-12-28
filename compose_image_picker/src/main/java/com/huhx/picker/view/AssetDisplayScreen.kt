@@ -5,14 +5,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,7 +21,6 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -46,25 +43,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.decode.VideoFrameDecoder
-import coil.request.ImageRequest
 import com.huhx.picker.R
-import com.huhx.picker.constant.RequestType
-import com.huhx.picker.data.AssetInfo
-import com.huhx.picker.data.AssetViewModel
+import com.huhx.picker.component.AssetImageItem
+import com.huhx.picker.model.AssetInfo
+import com.huhx.picker.model.RequestType
+import com.huhx.picker.viewmodel.AssetViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
+@OptIn(ExperimentalFoundationApi::class)
 internal fun AssetDisplayScreen(
     viewModel: AssetViewModel,
     navigateToDropDown: (String) -> Unit,
@@ -89,11 +80,9 @@ internal fun AssetDisplayScreen(
 
             Column {
                 AssetTab(tabs = tabs, pagerState = pagerState)
-                TabsContent(
-                    tabs = tabs,
-                    pagerState = pagerState,
-                    viewModel = viewModel
-                )
+                HorizontalPager(state = pagerState, userScrollEnabled = true) { page ->
+                    tabs[page].screen(viewModel)
+                }
             }
         }
     }
@@ -124,10 +113,7 @@ private fun DisplayTopAppBar(
 }
 
 @Composable
-private fun DisplayBottomBar(
-    viewModel: AssetViewModel,
-    onPicked: (List<AssetInfo>) -> Unit
-) {
+private fun DisplayBottomBar(viewModel: AssetViewModel, onPicked: (List<AssetInfo>) -> Unit) {
     var cameraUri: Uri? by remember { mutableStateOf(null) }
 
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
@@ -150,15 +136,11 @@ private fun DisplayBottomBar(
                     cameraUri = viewModel.getUri()
                     cameraLauncher.launch(cameraUri)
                 },
-                content = {
-                    Text(text = stringResource(R.string.label_camera), fontSize = 16.sp, color = Color.Gray)
-                }
+                content = { Text(text = stringResource(R.string.label_camera), fontSize = 16.sp, color = Color.Gray) }
             )
             TextButton(
                 onClick = {},
-                content = {
-                    Text(text = stringResource(R.string.label_album), fontSize = 16.sp)
-                }
+                content = { Text(text = stringResource(R.string.label_album), fontSize = 16.sp) }
             )
         }
     } else {
@@ -180,16 +162,10 @@ private fun DisplayBottomBar(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun AssetTab(
-    tabs: List<TabItem>,
-    pagerState: PagerState,
-) {
+private fun AssetTab(tabs: List<TabItem>, pagerState: PagerState) {
     val coroutineScope = rememberCoroutineScope()
 
-    TabRow(
-        selectedTabIndex = pagerState.currentPage,
-        indicator = {},
-    ) {
+    TabRow(selectedTabIndex = pagerState.currentPage, indicator = {}) {
         tabs.forEachIndexed { index, tab ->
             Tab(
                 selected = pagerState.currentPage == index,
@@ -204,26 +180,8 @@ private fun AssetTab(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun TabsContent(
-    tabs: List<TabItem>,
-    pagerState: PagerState,
-    viewModel: AssetViewModel
-) {
-    HorizontalPager(
-        state = pagerState,
-        userScrollEnabled = true
-    ) { page ->
-        tabs[page].screen(viewModel)
-    }
-}
-
-@Composable
-private fun AssetContent(
-    viewModel: AssetViewModel,
-    requestType: RequestType
-) {
+private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
     val assets = viewModel.getAssets(requestType)
     val gridCount = LocalAssetConfig.current.gridCount
 
@@ -253,63 +211,17 @@ private fun AssetImage(
 ) {
     val selected = selectedList.any { it.id == assetInfo.id }
 
-    val (backgroundColor, alpha) = if (selected) {
-        Pair(Color.Black, 0.6F)
-    } else {
-        Pair(Color.Transparent, 1F)
-    }
-    val context = LocalContext.current
-
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopEnd,
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(backgroundColor)
-                .alpha(alpha),
-            contentAlignment = Alignment.BottomEnd,
-        ) {
-            AsyncImage(
-                model = ImageRequest.Builder(context)
-                    .data(assetInfo.uriString)
-                    .decoderFactory(VideoFrameDecoder.Factory())
-                    .build(),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .aspectRatio(1.0F)
-                    .clickable { navigateToPreview() },
-                filterQuality = FilterQuality.Low,
-                contentScale = ContentScale.Crop,
-                contentDescription = ""
-            )
-            if (assetInfo.isVideo()) {
-                Text(
-                    modifier = Modifier.padding(bottom = 10.dp, end = 8.dp),
-                    text = assetInfo.formatDuration(),
-                    color = Color.White,
-                    fontSize = 14.sp
-                )
-            }
-            if (assetInfo.isGif()) {
-                Box(
-                    modifier = Modifier
-                        .padding(bottom = 4.dp, end = 6.dp)
-                        .background(
-                            color = Color(0F, 0F, 0F, 0.4F),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                ) {
-                    Text(
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.dp),
-                        text = stringResource(R.string.text_gif),
-                        color = Color.White,
-                        fontSize = 10.sp
-                    )
-                }
-            }
-        }
+        AssetImageItem(
+            urlString = assetInfo.uriString,
+            isSelected = selected,
+            resourceType = assetInfo.resourceType,
+            durationString = assetInfo.formatDuration(),
+            navigateToPreview = navigateToPreview,
+        )
         AssetImageIndicator(assetInfo = assetInfo, selected = selected, assetSelected = selectedList)
     }
 }
@@ -318,15 +230,9 @@ private sealed class TabItem(
     @StringRes val resourceId: Int,
     val screen: @Composable (AssetViewModel) -> Unit
 ) {
-    data object All : TabItem(R.string.tab_item_all, { viewModel ->
-        AssetContent(viewModel, RequestType.COMMON)
-    })
+    data object All : TabItem(R.string.tab_item_all, { viewModel -> AssetContent(viewModel, RequestType.COMMON) })
 
-    data object Video : TabItem(R.string.tab_item_video, { viewModel ->
-        AssetContent(viewModel, RequestType.VIDEO)
-    })
+    data object Video : TabItem(R.string.tab_item_video, { viewModel -> AssetContent(viewModel, RequestType.VIDEO) })
 
-    data object Image : TabItem(R.string.tab_item_image, { viewModel ->
-        AssetContent(viewModel, RequestType.IMAGE)
-    })
+    data object Image : TabItem(R.string.tab_item_image, { viewModel -> AssetContent(viewModel, RequestType.IMAGE) })
 }

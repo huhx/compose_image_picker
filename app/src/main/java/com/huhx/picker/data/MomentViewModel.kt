@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.huhx.picker.model.AssetInfo
 
 class MomentViewModel constructor(repository: MomentRepository) : ViewModel() {
 
