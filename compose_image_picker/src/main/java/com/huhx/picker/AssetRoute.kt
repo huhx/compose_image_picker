@@ -1,6 +1,7 @@
 package com.huhx.picker
 
 import androidx.compose.runtime.Composable
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -13,7 +14,7 @@ import com.huhx.picker.view.AssetPreviewScreen
 import com.huhx.picker.view.AssetSelectorScreen
 import com.huhx.picker.viewmodel.AssetViewModel
 
-@Composable
+@UnstableApi @Composable
 internal fun AssetPickerRoute(
     navController: NavHostController,
     viewModel: AssetViewModel,

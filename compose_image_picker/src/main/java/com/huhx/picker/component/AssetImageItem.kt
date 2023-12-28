@@ -59,7 +59,7 @@ fun AssetImageItem(
                 .clickable { navigateToPreview() },
             filterQuality = FilterQuality.Low,
             contentScale = ContentScale.Crop,
-            contentDescription = ""
+            contentDescription = null
         )
         if (resourceType == AssetResourceType.VIDEO) {
             Text(

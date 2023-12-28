@@ -42,20 +42,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.ui.StyledPlayerView
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.huhx.picker.R
 import com.huhx.picker.model.AssetInfo
 
-@OptIn(ExperimentalFoundationApi::class)
+@UnstableApi @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun AssetPreviewScreen(
     index: Int,
@@ -136,7 +137,7 @@ private fun SelectorBottomBar(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@UnstableApi @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AssetPreview(assets: List<AssetInfo>, pagerState: PagerState) {
     Box {
@@ -169,7 +170,7 @@ fun ImagePreview(uriString: String) {
     )
 }
 
-@Composable
+@UnstableApi @Composable
 fun VideoPreview(uriString: String) {
     val context = LocalContext.current
 
@@ -183,15 +184,11 @@ fun VideoPreview(uriString: String) {
         }
     }
 
-    DisposableEffect(
-        AndroidView(
-            factory = {
-                StyledPlayerView(context).apply {
-                    player = exoPlayer
-                }
-            }
-        )
-    ) {
-        onDispose { exoPlayer.release() }
+    DisposableEffect(Unit) {
+        onDispose {
+            exoPlayer.release()
+        }
     }
+
+    AndroidView(factory = { PlayerView(it).apply { player = exoPlayer } })
 }
