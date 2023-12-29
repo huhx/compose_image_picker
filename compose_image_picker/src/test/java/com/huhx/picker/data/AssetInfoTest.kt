@@ -2,11 +2,12 @@ package com.huhx.picker.data
 
 import com.huhx.picker.model.AssetInfo
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AssetInfoTest {
-    private var assetInfo = AssetInfo(
+    private val assetInfo = AssetInfo(
         id = 8L,
         uriString = "http://lcoalhost/5",
         filename = "test.jpeg",
@@ -52,5 +53,14 @@ class AssetInfoTest {
         val result = info.formatDuration()
 
         assertEquals("02:49", result)
+    }
+
+    @Test
+    fun `should return same random string when multiple invoked`() {
+        val info = assetInfo.copy()
+        val info2 = assetInfo.copy()
+
+        assertEquals(info.randomName, info.randomName)
+        assertNotEquals(info.randomName, info2.randomName)
     }
 }

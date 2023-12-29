@@ -1,6 +1,11 @@
 package com.huhx.picker.model
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.provider.MediaStore
+import com.huhx.picker.util.StringUtil
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 data class AssetInfo(
     val id: Long,
@@ -25,7 +30,21 @@ data class AssetInfo(
         return mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
     }
 
+    fun getBitmap(): Bitmap {
+        return BitmapFactory.decodeFile(uriString)
+    }
+
     val resourceType: AssetResourceType = AssetResourceType.fromFileName(uriString)
+
+    // todo: 这种方式还是存在问题
+    val randomName: String = run {
+        val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+        val dateTimeString = LocalDateTime.now().format(formatter)
+        val fileExtension = filename.split(".")[1]
+        val randomString = StringUtil.randomNumeric(6)
+
+        "${dateTimeString}$randomString.$fileExtension"
+    }
 
     fun formatDuration(): String {
         if (duration == null) {
