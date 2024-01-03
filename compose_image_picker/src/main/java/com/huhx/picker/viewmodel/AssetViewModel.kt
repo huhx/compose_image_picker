@@ -51,10 +51,12 @@ internal class AssetViewModel(
     fun getAssets(requestType: RequestType): List<AssetInfo> {
         val assetList = _directoryGroup.first { it.directory == directory }.assets
 
-        return when (requestType) {
-            RequestType.COMMON -> assetList
-            RequestType.IMAGE -> assetList.filter(AssetInfo::isImage)
-            RequestType.VIDEO -> assetList.filter(AssetInfo::isVideo)
+        return assetList.filter {
+            when (requestType) {
+                RequestType.COMMON -> true
+                RequestType.IMAGE -> it.isImage()
+                RequestType.VIDEO -> it.isVideo()
+            }
         }
     }
 

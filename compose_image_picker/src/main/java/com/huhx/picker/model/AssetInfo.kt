@@ -34,7 +34,7 @@ data class AssetInfo(
         return BitmapFactory.decodeFile(uriString)
     }
 
-    val resourceType: AssetResourceType = AssetResourceType.fromFileName(uriString)
+    val resourceType: AssetResourceType = AssetResourceType.fromFileName(filename)
 
     // todo: 这种方式还是存在问题
     val randomName: String = run {

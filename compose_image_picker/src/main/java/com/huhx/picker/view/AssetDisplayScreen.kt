@@ -163,7 +163,7 @@ private fun DisplayBottomBar(viewModel: AssetViewModel, onPicked: (List<AssetInf
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AssetTab(tabs: List<TabItem>, pagerState: PagerState) {
-    val coroutineScope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
     TabRow(selectedTabIndex = pagerState.currentPage, indicator = {}) {
         tabs.forEachIndexed { index, tab ->
@@ -172,9 +172,7 @@ private fun AssetTab(tabs: List<TabItem>, pagerState: PagerState) {
                 text = { Text(text = stringResource(tab.resourceId)) },
                 selectedContentColor = MaterialTheme.colorScheme.onSurface,
                 unselectedContentColor = Color.Gray,
-                onClick = {
-                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                }
+                onClick = { scope.launch { pagerState.animateScrollToPage(index) } }
             )
         }
     }
@@ -228,7 +226,7 @@ private fun AssetImage(
 
 private sealed class TabItem(
     @StringRes val resourceId: Int,
-    val screen: @Composable (AssetViewModel) -> Unit
+    val screen: @Composable (AssetViewModel) -> Unit,
 ) {
     data object All : TabItem(R.string.tab_item_all, { viewModel -> AssetContent(viewModel, RequestType.COMMON) })
 

@@ -73,11 +73,7 @@ internal fun AssetImageIndicator(
                 Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                 return@Surface
             }
-            if (isSelected) {
-                assetSelected.add(assetInfo)
-            } else {
-                assetSelected.remove(assetInfo)
-            }
+            if (isSelected) assetSelected.add(assetInfo) else assetSelected.remove(assetInfo)
         },
         modifier = Modifier
             .padding(6.dp)
