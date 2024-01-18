@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
 import com.huhx.picker.R
@@ -31,6 +32,8 @@ fun AssetImageItem(
     isSelected: Boolean,
     resourceType: AssetResourceType = AssetResourceType.IMAGE,
     durationString: String? = null,
+    filterQuality: FilterQuality = FilterQuality.Low,
+    onState: ((AsyncImagePainter.State) -> Unit)? = null,
     navigateToPreview: () -> Unit,
 ) {
     val (backgroundColor, alpha) = if (isSelected) {
@@ -57,7 +60,8 @@ fun AssetImageItem(
                 .fillMaxSize()
                 .aspectRatio(1.0F)
                 .clickable { navigateToPreview() },
-            filterQuality = FilterQuality.Low,
+            filterQuality = filterQuality,
+            onState = onState,
             contentScale = ContentScale.Crop,
             contentDescription = null
         )

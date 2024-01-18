@@ -19,7 +19,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -94,7 +94,7 @@ private fun PreviewTopAppBar(navigateUp: () -> Unit) {
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Black),
         navigationIcon = {
             IconButton(onClick = navigateUp) {
-                Icon(Icons.Default.ArrowBack, tint = Color.White, contentDescription = "")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, tint = Color.White, contentDescription = "")
             }
         }
     )

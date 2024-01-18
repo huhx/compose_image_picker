@@ -14,7 +14,8 @@ import com.huhx.picker.view.AssetPreviewScreen
 import com.huhx.picker.view.AssetSelectorScreen
 import com.huhx.picker.viewmodel.AssetViewModel
 
-@UnstableApi @Composable
+@UnstableApi
+@Composable
 internal fun AssetPickerRoute(
     navController: NavHostController,
     viewModel: AssetViewModel,
@@ -34,9 +35,8 @@ internal fun AssetPickerRoute(
         composable(
             AssetRoute.selector,
             arguments = listOf(navArgument("directory") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val arguments = backStackEntry.arguments!!
-            val directory = arguments.getString("directory")!!
+        ) {
+            val directory = it.arguments!!.getString("directory")!!
 
             AssetSelectorScreen(
                 directory = directory,
@@ -55,8 +55,8 @@ internal fun AssetPickerRoute(
                 navArgument("index") { type = NavType.IntType },
                 navArgument("requestType") { type = NavType.StringType },
             )
-        ) { backStackEntry ->
-            val arguments = backStackEntry.arguments!!
+        ) {
+            val arguments = it.arguments!!
             val index = arguments.getInt("index")
             val requestType = arguments.getString("requestType")
             val assets = viewModel.getAssets(RequestType.valueOf(requestType!!))
@@ -75,8 +75,6 @@ object AssetRoute {
     const val display = "asset_display"
     const val preview = "asset_preview?index={index}&requestType={requestType}"
     const val selector = "asset_selector?directory={directory}"
-
-    fun display(): String = display
 
     fun preview(index: Int, requestType: RequestType): String {
         return preview.replaceFirst("{index}", index.toString())

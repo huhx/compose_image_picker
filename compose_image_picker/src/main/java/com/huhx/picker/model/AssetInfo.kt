@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter
 data class AssetInfo(
     val id: Long,
     val uriString: String,
+    val filepath: String,
     val filename: String,
     val directory: String,
     val size: Long,

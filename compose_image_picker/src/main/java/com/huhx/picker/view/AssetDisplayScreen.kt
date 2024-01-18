@@ -76,7 +76,7 @@ internal fun AssetDisplayScreen(
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             val tabs = listOf(TabItem.All, TabItem.Video, TabItem.Image)
-            val pagerState = rememberPagerState(initialPage = 0, pageCount = tabs::size)
+            val pagerState = rememberPagerState(pageCount = tabs::size)
 
             Column {
                 AssetTab(tabs = tabs, pagerState = pagerState)

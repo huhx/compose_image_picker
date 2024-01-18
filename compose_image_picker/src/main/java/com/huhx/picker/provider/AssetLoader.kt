@@ -19,8 +19,9 @@ internal object AssetLoader {
         MediaStore.Video.Media.MIME_TYPE,
         MediaStore.Video.Media.SIZE,
         MediaStore.Video.Media.DURATION,
-        MediaStore.Video.Media.BUCKET_DISPLAY_NAME
-    )
+        MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
+        MediaStore.Files.FileColumns.DATA,
+        )
 
     fun insertImage(context: Context): Uri? {
         val contentValues = ContentValues().apply {
@@ -45,19 +46,21 @@ internal object AssetLoader {
             val indexSize = it.getColumnIndex(projection[5])
             val indexDuration = it.getColumnIndex(projection[6])
             val indexDirectory = it.getColumnIndex(projection[7])
+            val indexFilepath = it.getColumnIndex(projection[8])
 
             if (it.moveToNext()) {
                 val id = it.getLong(indexId)
                 val mediaType = it.getInt(indexMediaType)
-                val contentUri = if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
-                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                val filepathIndex = if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
+                    it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
                 } else {
-                    ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id)
+                    it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
                 }
 
                 return AssetInfo(
                     id = id,
-                    uriString = contentUri.toString(),
+                    uriString = it.getString(filepathIndex),
+                    filepath = it.getString(indexFilepath),
                     filename = it.getString(indexFilename),
                     date = it.getLong(indexDate),
                     mediaType = mediaType,
@@ -74,7 +77,7 @@ internal object AssetLoader {
     fun load(context: Context, requestType: RequestType): List<AssetInfo> {
         val assets = ArrayList<AssetInfo>()
         val cursor = createCursor(context, requestType)
-        cursor?.use { it ->
+        cursor?.use {
             val indexId = it.getColumnIndex(projection[0])
             val indexFilename = it.getColumnIndex(projection[1])
             val indexDate = it.getColumnIndex(projection[2])
@@ -83,6 +86,7 @@ internal object AssetLoader {
             val indexSize = it.getColumnIndex(projection[5])
             val indexDuration = it.getColumnIndex(projection[6])
             val indexDirectory = it.getColumnIndex(projection[7])
+            val indexFilepath = it.getColumnIndex(projection[8])
 
             while (it.moveToNext()) {
                 val id = it.getLong(indexId)
@@ -97,6 +101,7 @@ internal object AssetLoader {
                     AssetInfo(
                         id = id,
                         uriString = contentUri.toString(),
+                        filepath = it.getString(indexFilepath),
                         filename = it.getString(indexFilename),
                         date = it.getLong(indexDate),
                         mediaType = mediaType,
