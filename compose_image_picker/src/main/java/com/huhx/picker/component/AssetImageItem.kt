@@ -67,7 +67,7 @@ fun AssetImageItem(
         )
         if (resourceType == AssetResourceType.VIDEO) {
             Text(
-                modifier = Modifier.padding(bottom = 10.dp, end = 8.dp),
+                modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),
                 text = durationString ?: "00:00",
                 color = Color.White,
                 fontSize = 14.sp

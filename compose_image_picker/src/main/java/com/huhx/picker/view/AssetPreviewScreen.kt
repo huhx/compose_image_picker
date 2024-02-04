@@ -56,7 +56,8 @@ import coil.request.ImageRequest
 import com.huhx.picker.R
 import com.huhx.picker.model.AssetInfo
 
-@UnstableApi @OptIn(ExperimentalFoundationApi::class)
+@UnstableApi
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun AssetPreviewScreen(
     index: Int,
@@ -137,7 +138,8 @@ private fun SelectorBottomBar(
     }
 }
 
-@UnstableApi @OptIn(ExperimentalFoundationApi::class)
+@UnstableApi
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AssetPreview(assets: List<AssetInfo>, pagerState: PagerState) {
     Box {
@@ -170,7 +172,8 @@ fun ImagePreview(uriString: String) {
     )
 }
 
-@UnstableApi @Composable
+@UnstableApi
+@Composable
 fun VideoPreview(uriString: String) {
     val context = LocalContext.current
 
@@ -190,5 +193,14 @@ fun VideoPreview(uriString: String) {
         }
     }
 
-    AndroidView(factory = { PlayerView(it).apply { player = exoPlayer } })
+    AndroidView(factory = {
+        PlayerView(it).apply {
+            player = exoPlayer
+            setShowPreviousButton(false)
+            setShowNextButton(false)
+            setShowFastForwardButton(false)
+            setShowRewindButton(false)
+            setShowSubtitleButton(false)
+        }
+    })
 }
