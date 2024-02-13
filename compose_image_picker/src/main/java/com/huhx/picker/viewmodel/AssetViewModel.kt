@@ -15,6 +15,8 @@ import com.huhx.picker.model.RequestType
 import com.huhx.picker.provider.AssetPickerRepository
 import kotlinx.coroutines.launch
 
+const val init_directory = "Photos/Videos"
+
 internal class AssetViewModel(
     private val assetPickerRepository: AssetPickerRepository,
     private val navController: NavController,
@@ -27,7 +29,7 @@ internal class AssetViewModel(
         get() = _directoryGroup
 
     val selectedList = mutableStateListOf<AssetInfo>()
-    var directory by mutableStateOf("Photos/Videos")
+    var directory by mutableStateOf(init_directory)
 
     fun initDirectories() {
         viewModelScope.launch {
@@ -38,7 +40,7 @@ internal class AssetViewModel(
                 AssetDirectory(directory = it.key, assets = it.value)
             }
             _directoryGroup.clear()
-            _directoryGroup.add(AssetDirectory(directory = "Photos/Videos", assets = assets))
+            _directoryGroup.add(AssetDirectory(directory = init_directory, assets = assets))
             _directoryGroup.addAll(directoryList)
         }
     }

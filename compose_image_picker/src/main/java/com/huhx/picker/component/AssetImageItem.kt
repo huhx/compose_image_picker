@@ -1,7 +1,8 @@
 package com.huhx.picker.component
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,7 @@ import coil.request.ImageRequest
 import com.huhx.picker.R
 import com.huhx.picker.model.AssetResourceType
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AssetImageItem(
     urlString: String,
@@ -35,6 +37,7 @@ fun AssetImageItem(
     filterQuality: FilterQuality = FilterQuality.Low,
     onState: ((AsyncImagePainter.State) -> Unit)? = null,
     navigateToPreview: () -> Unit,
+    onLongClick: (() -> Unit)? = null,
 ) {
     val (backgroundColor, alpha) = if (isSelected) {
         Pair(Color.Black, 0.6F)
@@ -59,7 +62,10 @@ fun AssetImageItem(
             modifier = Modifier
                 .fillMaxSize()
                 .aspectRatio(1.0F)
-                .clickable { navigateToPreview() },
+                .combinedClickable(
+                    onClick = navigateToPreview,
+                    onLongClick = onLongClick,
+                ),
             filterQuality = filterQuality,
             onState = onState,
             contentScale = ContentScale.Crop,

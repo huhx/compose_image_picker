@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,7 +54,6 @@ import com.huhx.picker.viewmodel.AssetViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 internal fun AssetDisplayScreen(
     viewModel: AssetViewModel,
     navigateToDropDown: (String) -> Unit,
@@ -160,7 +158,6 @@ private fun DisplayBottomBar(viewModel: AssetViewModel, onPicked: (List<AssetInf
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AssetTab(tabs: List<TabItem>, pagerState: PagerState) {
     val scope = rememberCoroutineScope()

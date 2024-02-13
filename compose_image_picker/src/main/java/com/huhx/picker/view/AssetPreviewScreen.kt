@@ -1,7 +1,6 @@
 package com.huhx.picker.view
 
 import android.os.Build
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,7 +56,6 @@ import com.huhx.picker.R
 import com.huhx.picker.model.AssetInfo
 
 @UnstableApi
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun AssetPreviewScreen(
     index: Int,
@@ -139,7 +137,6 @@ private fun SelectorBottomBar(
 }
 
 @UnstableApi
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AssetPreview(assets: List<AssetInfo>, pagerState: PagerState) {
     Box {
