@@ -35,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -164,8 +163,7 @@ fun ImagePreview(uriString: String) {
             .build(),
         modifier = Modifier.fillMaxSize(),
         filterQuality = FilterQuality.None,
-        contentScale = ContentScale.Fit,
-        contentDescription = ""
+        contentDescription = null
     )
 }
 
@@ -174,7 +172,7 @@ fun ImagePreview(uriString: String) {
 fun VideoPreview(uriString: String) {
     val context = LocalContext.current
 
-    val exoPlayer = remember {
+    val player = remember {
         ExoPlayer.Builder(context).build().apply {
             val dataSourceFactory: DataSource.Factory = DefaultDataSource.Factory(context)
             val source = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(uriString))
@@ -186,13 +184,13 @@ fun VideoPreview(uriString: String) {
 
     DisposableEffect(Unit) {
         onDispose {
-            exoPlayer.release()
+            player.release()
         }
     }
 
     AndroidView(factory = {
         PlayerView(it).apply {
-            player = exoPlayer
+            this.player = player
             setShowPreviousButton(false)
             setShowNextButton(false)
             setShowFastForwardButton(false)

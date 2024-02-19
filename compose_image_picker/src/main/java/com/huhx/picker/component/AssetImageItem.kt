@@ -4,10 +4,16 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,6 +37,7 @@ import com.huhx.picker.model.AssetResourceType
 @Composable
 fun AssetImageItem(
     urlString: String,
+    onDelete: (() -> Unit)? = null,
     isSelected: Boolean,
     resourceType: AssetResourceType = AssetResourceType.IMAGE,
     durationString: String? = null,
@@ -51,7 +58,6 @@ fun AssetImageItem(
             .fillMaxSize()
             .background(backgroundColor)
             .alpha(alpha),
-        contentAlignment = Alignment.BottomEnd,
     ) {
         AsyncImage(
             model = ImageRequest.Builder(context)
@@ -71,14 +77,39 @@ fun AssetImageItem(
             contentScale = ContentScale.Crop,
             contentDescription = null
         )
-        if (resourceType == AssetResourceType.VIDEO) {
-            Text(
-                modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),
-                text = durationString ?: "00:00",
-                color = Color.White,
-                fontSize = 14.sp
-            )
+
+        if (onDelete != null) {
+            Column(
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                IconButton(
+                    modifier = Modifier
+                        .padding(top = 4.dp, end = 4.dp)
+                        .size(24.dp),
+                    onClick = onDelete,
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = null,
+                        tint = Color.White,
+                    )
+                }
+            }
         }
+
+        if (resourceType == AssetResourceType.VIDEO) {
+            Column(
+                modifier = Modifier.align(Alignment.BottomEnd),
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),
+                    text = durationString ?: "00:00",
+                    color = Color.White,
+                    fontSize = 14.sp
+                )
+            }
+        }
+
         if (resourceType == AssetResourceType.GIF) {
             Box(
                 modifier = Modifier
