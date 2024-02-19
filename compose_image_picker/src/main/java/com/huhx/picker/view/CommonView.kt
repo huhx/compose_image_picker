@@ -2,6 +2,9 @@ package com.huhx.picker.view
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
@@ -10,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
@@ -62,34 +64,34 @@ fun AssetImageIndicator(
     } else {
         Pair(BorderStroke(width = 1.dp, color = Color.White), Color.Black.copy(alpha = 0.3F))
     }
-    Surface(
-        onClick = {
-            val isSelected = !selected
-            if (onClicks != null) {
-                onClicks(isSelected)
-                return@Surface
-            }
-            if (assetSelected.size == maxAssets && isSelected) {
-                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                return@Surface
-            }
-            if (isSelected) assetSelected.add(assetInfo) else assetSelected.remove(assetInfo)
-        },
+    Box(
         modifier = Modifier
             .padding(6.dp)
-            .size(size = size),
-        shape = CircleShape,
-        border = border,
-        color = color
+            .size(size)
+            .then(if (border == null) Modifier else Modifier.border(border, shape = CircleShape))
+            .background(color = color, shape = CircleShape)
+            .clickable {
+                val isSelected = !selected
+                if (onClicks != null) {
+                    onClicks(isSelected)
+                    return@clickable
+                }
+                if (assetSelected.size == maxAssets && isSelected) {
+                    Toast
+                        .makeText(context, errorMessage, Toast.LENGTH_SHORT)
+                        .show()
+                    return@clickable
+                }
+                if (isSelected) assetSelected.add(assetInfo) else assetSelected.remove(assetInfo)
+            },
+        contentAlignment = Alignment.Center
     ) {
-        Box(contentAlignment = Alignment.Center) {
-            if (selected) {
-                Text(
-                    text = "${assetSelected.indexOf(assetInfo) + 1}",
-                    color = Color.White,
-                    fontSize = fontSize,
-                )
-            }
+        if (selected) {
+            Text(
+                text = "${assetSelected.indexOf(assetInfo) + 1}",
+                color = Color.White,
+                fontSize = fontSize,
+            )
         }
     }
 }

@@ -161,7 +161,7 @@ fun AssetImageIndicatorPreview() {
             assetInfo = assetInfo,
             size = 24.dp,
             fontSize = 15.sp,
-            selected = false,
+            selected = true,
             assetSelected = list
         )
     }

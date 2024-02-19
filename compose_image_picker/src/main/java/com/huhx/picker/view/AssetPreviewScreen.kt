@@ -108,7 +108,7 @@ private fun SelectorBottomBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color.Black.copy(alpha = 0.9F))
-            .padding(horizontal = 10.dp, vertical = 14.dp),
+            .padding(horizontal = 10.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -117,8 +117,10 @@ private fun SelectorBottomBar(
                 assetInfo = assetInfo,
                 selected = selectedList.any { it == assetInfo },
                 assetSelected = selectedList,
+                fontSize = 14.sp,
+                size = 22.dp
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(6.dp))
             Text(text = stringResource(R.string.text_asset_select), color = Color.White, fontSize = 14.sp)
         }
         Button(
