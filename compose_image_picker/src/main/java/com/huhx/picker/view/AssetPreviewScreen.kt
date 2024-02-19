@@ -115,8 +115,6 @@ private fun SelectorBottomBar(
         Row(verticalAlignment = Alignment.CenterVertically) {
             AssetImageIndicator(
                 assetInfo = assetInfo,
-                size = 20.dp,
-                fontSize = 14.sp,
                 selected = selectedList.any { it == assetInfo },
                 assetSelected = selectedList,
             )

@@ -45,13 +45,13 @@ internal fun AppBarButton(size: Int, onPicked: () -> Unit) {
 }
 
 @Composable
-internal fun AssetImageIndicator(
+fun AssetImageIndicator(
     assetInfo: AssetInfo,
     selected: Boolean,
     size: Dp = 24.dp,
     fontSize: TextUnit = 16.sp,
     assetSelected: SnapshotStateList<AssetInfo>,
-    onClicks: ((Boolean) -> Unit)? = null
+    onClicks: ((Boolean) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val maxAssets = LocalAssetConfig.current.maxAssets

@@ -9,6 +9,7 @@ import org.junit.Test
 class AssetInfoTest {
     private val assetInfo = AssetInfo(
         id = 8L,
+        filepath = "/data/emulator/test.jpeg",
         uriString = "http://lcoalhost/5",
         filename = "test.jpeg",
         directory = "Picture",
