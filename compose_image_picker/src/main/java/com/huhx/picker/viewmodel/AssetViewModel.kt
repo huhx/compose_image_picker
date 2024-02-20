@@ -50,6 +50,26 @@ internal class AssetViewModel(
         assets.addAll(assetPickerRepository.getAssets(requestType))
     }
 
+    fun clear() {
+        selectedList.clear()
+    }
+
+    fun toggleSelect(selected: Boolean, assetInfo: AssetInfo) {
+        if (selected) {
+            select(assetInfo)
+        } else {
+            unSelect(assetInfo)
+        }
+    }
+
+    private fun select(assetInfo: AssetInfo) {
+        selectedList += assetInfo
+    }
+
+    private fun unSelect(assetInfo: AssetInfo) {
+        selectedList -= assetInfo
+    }
+
     fun getAssets(requestType: RequestType): List<AssetInfo> {
         val assetList = _directoryGroup.first { it.directory == directory }.assets
 

@@ -1,6 +1,7 @@
 package com.huhx.picker.view
 
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
@@ -60,6 +61,8 @@ internal fun AssetDisplayScreen(
     onPicked: (List<AssetInfo>) -> Unit,
     onClose: (List<AssetInfo>) -> Unit,
 ) {
+    BackHandler { viewModel.clear() }
+
     Scaffold(
         topBar = {
             val directory = viewModel.directory
@@ -188,11 +191,12 @@ private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
         horizontalArrangement = Arrangement.spacedBy(1.dp),
         userScrollEnabled = true
     ) {
-        itemsIndexed(assets, key = { _, it -> it.id }) { index, it ->
+        itemsIndexed(assets, key = { _, it -> it.id }) { index, assetInfo ->
             AssetImage(
-                assetInfo = it,
+                assetInfo = assetInfo,
                 navigateToPreview = { viewModel.navigateToPreview(index, requestType) },
-                selectedList = viewModel.selectedList
+                selectedList = viewModel.selectedList,
+                onLongClick = { selected -> viewModel.toggleSelect(selected, assetInfo) }
             )
         }
     }
@@ -203,6 +207,7 @@ private fun AssetImage(
     assetInfo: AssetInfo,
     selectedList: SnapshotStateList<AssetInfo>,
     navigateToPreview: () -> Unit,
+    onLongClick: (Boolean) -> Unit,
 ) {
     val selected = selectedList.any { it.id == assetInfo.id }
 
@@ -216,6 +221,7 @@ private fun AssetImage(
             resourceType = assetInfo.resourceType,
             durationString = assetInfo.formatDuration(),
             navigateToPreview = navigateToPreview,
+            onLongClick = { onLongClick(!selected) }
         )
         AssetImageIndicator(assetInfo = assetInfo, selected = selected, assetSelected = selectedList)
     }
