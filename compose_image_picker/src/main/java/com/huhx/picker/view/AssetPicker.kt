@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.compose.rememberNavController
 import com.huhx.picker.AssetPickerRoute
 import com.huhx.picker.model.AssetInfo
@@ -16,6 +17,7 @@ import com.huhx.picker.provider.AssetPickerRepository
 import com.huhx.picker.viewmodel.AssetViewModel
 import com.huhx.picker.viewmodel.AssetViewModelFactory
 
+@UnstableApi
 @Composable
 fun AssetPicker(
     assetPickerConfig: AssetPickerConfig,

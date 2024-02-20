@@ -61,7 +61,13 @@ internal fun AssetDisplayScreen(
     onPicked: (List<AssetInfo>) -> Unit,
     onClose: (List<AssetInfo>) -> Unit,
 ) {
-    BackHandler { viewModel.clear() }
+    BackHandler {
+        if (viewModel.selectedList.isNotEmpty()) {
+            viewModel.clear()
+        } else {
+            onClose(viewModel.selectedList)
+        }
+    }
 
     Scaffold(
         topBar = {

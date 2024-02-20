@@ -36,6 +36,7 @@ import coil.request.ImageRequest
 import com.huhx.picker.model.AssetDirectory
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 internal fun AssetSelectorScreen(
     directory: String,
     assetDirectories: List<AssetDirectory>,
@@ -43,7 +44,22 @@ internal fun AssetSelectorScreen(
     onSelected: (String) -> Unit,
 ) {
     Scaffold(
-        topBar = { DirectoryTopAppBar(directory = directory, navigateUp = navigateUp) }
+        topBar = {
+            CenterAlignedTopAppBar(
+                modifier = Modifier.statusBarsPadding(),
+                navigationIcon = {
+                    IconButton(onClick = navigateUp) {
+                        Icon(Icons.Filled.Close, contentDescription = "")
+                    }
+                },
+                title = {
+                    Row(modifier = Modifier.clickable(onClick = navigateUp)) {
+                        Text(text = directory, fontSize = 18.sp)
+                        Icon(Icons.Default.KeyboardArrowUp, contentDescription = "")
+                    }
+                }
+            )
+        }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             LazyColumn {
@@ -62,7 +78,7 @@ internal fun AssetSelectorScreen(
                                     .aspectRatio(1.0F),
                                 filterQuality = FilterQuality.Low,
                                 contentScale = ContentScale.Crop,
-                                contentDescription = ""
+                                contentDescription = null
                             )
                         },
                         headlineContent = {

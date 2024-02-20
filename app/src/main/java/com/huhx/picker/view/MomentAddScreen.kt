@@ -48,13 +48,13 @@ import com.huhx.picker.data.MomentViewModel
 import com.huhx.picker.data.imageUrl
 import com.huhx.picker.data.username
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 @Composable
 fun MomentAddScreen(
     viewModel: MomentViewModel,
     navController: NavHostController,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
 ) {
 
     Scaffold(
@@ -164,7 +164,7 @@ fun MomentAddContent(viewModel: MomentViewModel, navController: NavHostControlle
 fun ImageAdd(
     modifier: Modifier,
     viewModel: MomentViewModel,
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     LazyVerticalGrid(
         modifier = Modifier.heightIn(0.dp, 600.dp),
@@ -196,7 +196,7 @@ fun ImageAdd(
 @Composable
 internal fun CameraIcon(
     modifier: Modifier,
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     Box(
         contentAlignment = Alignment.Center,

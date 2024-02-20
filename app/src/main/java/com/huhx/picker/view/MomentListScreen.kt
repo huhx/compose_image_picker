@@ -32,11 +32,10 @@ import androidx.compose.ui.unit.dp
 import com.huhx.picker.data.Moment
 import com.huhx.picker.data.MomentViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MomentListScreen(
     viewModel: MomentViewModel,
-    navigateToAdd: () -> Unit
+    navigateToAdd: () -> Unit,
 ) {
 
     Scaffold(

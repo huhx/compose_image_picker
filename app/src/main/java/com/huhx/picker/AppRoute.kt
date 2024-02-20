@@ -16,11 +16,11 @@ import com.huhx.picker.view.MomentListScreen
 @Composable
 fun AppRoute(
     navController: NavHostController,
-    viewModel: MomentViewModel
+    viewModel: MomentViewModel,
 ) {
     NavHost(
         navController = navController,
-        startDestination = "moment_list",
+        startDestination = "asset_picker",
     ) {
         composable("moment_list") {
             MomentListScreen(viewModel) { navController.navigate("moment_add") }

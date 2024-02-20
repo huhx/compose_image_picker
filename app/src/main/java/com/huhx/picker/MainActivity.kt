@@ -189,6 +189,6 @@ fun AssetPreviewScreenPreview() {
     selectedList.add(assetInfo)
 
     Compose_image_pickerTheme {
-        SelectorBottomBar(assetInfo = assetInfo, selectedList = selectedList, onClick = {}, onSelectedClick = {})
+        SelectorBottomBar(assetInfo = assetInfo, selectedList = selectedList, onClick = {})
     }
 }

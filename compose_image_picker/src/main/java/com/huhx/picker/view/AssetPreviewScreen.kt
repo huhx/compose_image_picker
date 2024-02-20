@@ -111,12 +111,6 @@ fun AssetPreviewScreen(
             SelectorBottomBar(
                 selectedList = selectedList,
                 assetInfo = assets[pageState.currentPage],
-                onSelectedClick = { asset ->
-                    val selectedIndex = assets.indexOfFirst { it.id == asset.id }
-                    scope.launch {
-                        pageState.animateScrollToPage(selectedIndex)
-                    }
-                }
             ) {
                 navigateUp()
                 if (selectedList.isEmpty()) selectedList.add(it)
@@ -126,9 +120,36 @@ fun AssetPreviewScreen(
         Box(
             modifier = Modifier
                 .padding(it)
-                .background(Color.Black)
+                .background(Color.Black),
+            contentAlignment = Alignment.BottomCenter
         ) {
             AssetPreview(assets = assets, pagerState = pageState)
+
+            if (selectedList.isNotEmpty()) {
+                val assetInfo = assets[pageState.currentPage]
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Black.copy(alpha = 0.8F))
+                        .padding(horizontal = 2.dp, vertical = 2.dp)
+                ) {
+                    itemsIndexed(selectedList) { _, resource ->
+                        SelectedAssetImageItem(
+                            assetInfo = resource,
+                            isSelected = resource.id == assetInfo.id,
+                            resourceType = resource.resourceType,
+                            durationString = resource.formatDuration(),
+                            modifier = Modifier.size(64.dp),
+                            onClick = { asset ->
+                                val selectedIndex = assets.indexOfFirst { item -> item.id == asset.id }
+                                scope.launch {
+                                    pageState.animateScrollToPage(selectedIndex)
+                                }
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -138,57 +159,35 @@ fun AssetPreviewScreen(
 fun SelectorBottomBar(
     assetInfo: AssetInfo,
     selectedList: SnapshotStateList<AssetInfo>,
-    onSelectedClick: (AssetInfo) -> Unit,
     onClick: (AssetInfo) -> Unit,
 ) {
-    Column {
-        if (selectedList.isNotEmpty()) {
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Black.copy(alpha = 0.8F))
-                    .padding(horizontal = 2.dp, vertical = 2.dp)
-            ) {
-                itemsIndexed(selectedList) { _, resource ->
-                    SelectedAssetImageItem(
-                        assetInfo = resource,
-                        isSelected = resource.id == assetInfo.id,
-                        resourceType = resource.resourceType,
-                        modifier = Modifier.size(64.dp),
-                        onClick = onSelectedClick
-                    )
-                }
-            }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color.Black.copy(alpha = 0.9F))
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            AssetImageIndicator(
+                assetInfo = assetInfo,
+                selected = selectedList.any { it == assetInfo },
+                assetSelected = selectedList,
+                fontSize = 14.sp,
+                size = 22.dp
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(text = stringResource(R.string.text_asset_select), color = Color.White, fontSize = 14.sp)
         }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color.Black.copy(alpha = 0.9F))
-                .padding(horizontal = 10.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Button(
+            modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
+            shape = RoundedCornerShape(5.dp),
+            enabled = true,
+            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp),
+            onClick = { onClick(assetInfo) }
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                AssetImageIndicator(
-                    assetInfo = assetInfo,
-                    selected = selectedList.any { it == assetInfo },
-                    assetSelected = selectedList,
-                    fontSize = 14.sp,
-                    size = 22.dp
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(text = stringResource(R.string.text_asset_select), color = Color.White, fontSize = 14.sp)
-            }
-            Button(
-                modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
-                shape = RoundedCornerShape(5.dp),
-                enabled = true,
-                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp),
-                onClick = { onClick(assetInfo) }
-            ) {
-                Text(stringResource(R.string.text_done), color = Color.White, fontSize = 15.sp)
-            }
+            Text(stringResource(R.string.text_done), color = Color.White, fontSize = 15.sp)
         }
     }
 }
@@ -246,14 +245,16 @@ fun VideoPreview(uriString: String) {
         }
     }
 
-    AndroidView(factory = {
-        PlayerView(it).apply {
-            this.player = player
-            setShowPreviousButton(false)
-            setShowNextButton(false)
-            setShowFastForwardButton(false)
-            setShowRewindButton(false)
-            setShowSubtitleButton(false)
-        }
-    })
+    AndroidView(
+        modifier = Modifier.fillMaxSize(),
+        factory = {
+            PlayerView(it).apply {
+                this.player = player
+                setShowPreviousButton(false)
+                setShowNextButton(false)
+                setShowFastForwardButton(false)
+                setShowRewindButton(false)
+                setShowSubtitleButton(false)
+            }
+        })
 }
