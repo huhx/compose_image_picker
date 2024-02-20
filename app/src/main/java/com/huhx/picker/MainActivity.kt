@@ -37,6 +37,7 @@ import com.huhx.picker.model.AssetInfo
 import com.huhx.picker.model.AssetResourceType
 import com.huhx.picker.ui.theme.Compose_image_pickerTheme
 import com.huhx.picker.view.AssetImageIndicator
+import com.huhx.picker.view.SelectorBottomBar
 
 class MainActivity : ComponentActivity() {
 
@@ -165,6 +166,29 @@ fun AssetImageIndicatorPreview() {
             assetSelected = list
         )
     }
+}
 
+@Preview
+@Composable
+fun AssetPreviewScreenPreview() {
+    val assetInfo = AssetInfo(
+        id = 8L,
+        filepath = "https://huhx-family.oss-cn-beijing.aliyuncs.com/20220116082003904824.jpg",
+        uriString = "https://huhx-family.oss-cn-beijing.aliyuncs.com/20220116082003904824.jpg",
+        filename = "test.jpeg",
+        directory = "Picture",
+        mediaType = 1,
+        size = 1150260,
+        mimeType = "img/jpeg",
+        duration = 16000,
+        date = 23423434433
+    )
+    val list = listOf(assetInfo, assetInfo)
+    val selectedList = SnapshotStateList<AssetInfo>()
+    selectedList.add(assetInfo)
+    selectedList.add(assetInfo)
 
+    Compose_image_pickerTheme {
+        SelectorBottomBar(assetInfo = assetInfo, selectedList = selectedList, onClick = {}, onSelectedClick = {})
+    }
 }

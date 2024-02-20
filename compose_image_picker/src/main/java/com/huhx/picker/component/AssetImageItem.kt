@@ -1,7 +1,10 @@
 package com.huhx.picker.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +34,7 @@ import coil.compose.AsyncImagePainter
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
 import com.huhx.picker.R
+import com.huhx.picker.model.AssetInfo
 import com.huhx.picker.model.AssetResourceType
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -106,6 +110,75 @@ fun AssetImageItem(
                     text = durationString ?: "00:00",
                     color = Color.White,
                     fontSize = 14.sp
+                )
+            }
+        }
+
+        if (resourceType == AssetResourceType.GIF) {
+            Box(
+                modifier = Modifier
+                    .padding(bottom = 4.dp, end = 6.dp)
+                    .background(
+                        color = Color(0F, 0F, 0F, 0.4F),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.dp),
+                    text = stringResource(R.string.text_gif),
+                    color = Color.White,
+                    fontSize = 10.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SelectedAssetImageItem(
+    assetInfo: AssetInfo,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+    resourceType: AssetResourceType = AssetResourceType.IMAGE,
+    durationString: String? = null,
+    filterQuality: FilterQuality = FilterQuality.None,
+    onClick: (AssetInfo) -> Unit,
+) {
+    val (backgroundColor, alpha) = if (isSelected) {
+        Pair(Color.Black, 0.6F)
+    } else {
+        Pair(Color.Transparent, 1F)
+    }
+    val context = LocalContext.current
+
+    Box(
+        modifier = modifier
+            .background(backgroundColor)
+            .alpha(alpha),
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(context)
+                .data(assetInfo.uriString)
+                .decoderFactory(VideoFrameDecoder.Factory())
+                .crossfade(true)
+                .build(),
+            modifier = modifier
+                .aspectRatio(1.0F)
+                .then(if (isSelected) Modifier.border(BorderStroke(width = 1.dp, color = Color.Red)) else Modifier)
+                .padding(horizontal = 3.dp, vertical = 2.dp)
+                .clickable { onClick(assetInfo) },
+            filterQuality = filterQuality,
+            contentScale = ContentScale.Crop,
+            contentDescription = null
+        )
+
+        if (resourceType == AssetResourceType.VIDEO) {
+            Column(modifier = Modifier.align(Alignment.BottomEnd)) {
+                Text(
+                    modifier = Modifier.padding(bottom = 3.dp, end = 3.dp),
+                    text = durationString ?: "00:00",
+                    color = Color.White,
+                    fontSize = 10.sp
                 )
             }
         }

@@ -20,7 +20,7 @@ fun AppRoute(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "moment_list",
+        startDestination = "asset_picker",
     ) {
         composable("moment_list") {
             MomentListScreen(viewModel) { navController.navigate("moment_add") }

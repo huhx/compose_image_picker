@@ -4,7 +4,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
 import com.huhx.picker.util.StringUtil
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 data class AssetInfo(
@@ -33,6 +35,11 @@ data class AssetInfo(
 
     fun getBitmap(): Bitmap {
         return BitmapFactory.decodeFile(uriString)
+    }
+
+    val dateString: String get() {
+        val instant = Instant.ofEpochMilli(date)
+        return instant.atZone(ZoneId.systemDefault()).toLocalDate().toString()
     }
 
     val resourceType: AssetResourceType = AssetResourceType.fromFileName(filename)
