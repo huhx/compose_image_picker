@@ -98,23 +98,3 @@ internal fun AssetSelectorScreen(
         }
     }
 }
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun DirectoryTopAppBar(directory: String, navigateUp: () -> Unit) {
-    CenterAlignedTopAppBar(
-        modifier = Modifier.statusBarsPadding(),
-        navigationIcon = {
-            IconButton(onClick = navigateUp) {
-                Icon(Icons.Filled.Close, contentDescription = "")
-            }
-        },
-        title = {
-            Row(modifier = Modifier.clickable(onClick = navigateUp)) {
-                Text(directory, fontSize = 18.sp)
-                Icon(Icons.Default.KeyboardArrowUp, contentDescription = "")
-            }
-        }
-    )
-}
-

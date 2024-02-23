@@ -83,13 +83,11 @@ fun AssetImageItem(
         )
 
         if (onDelete != null) {
-            Column(
-                modifier = Modifier.align(Alignment.TopEnd)
-            ) {
+            Column(modifier = Modifier.align(Alignment.TopEnd)) {
                 IconButton(
                     modifier = Modifier
                         .padding(top = 4.dp, end = 4.dp)
-                        .size(24.dp),
+                        .size(16.dp),
                     onClick = onDelete,
                 ) {
                     Icon(
@@ -102,9 +100,7 @@ fun AssetImageItem(
         }
 
         if (resourceType == AssetResourceType.VIDEO) {
-            Column(
-                modifier = Modifier.align(Alignment.BottomEnd),
-            ) {
+            Column(modifier = Modifier.align(Alignment.BottomEnd)) {
                 Text(
                     modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),
                     text = durationString ?: "00:00",
