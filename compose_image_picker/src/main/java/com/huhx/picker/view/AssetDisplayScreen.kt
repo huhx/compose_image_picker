@@ -74,17 +74,18 @@ internal fun AssetDisplayScreen(
 
     Scaffold(
         topBar = {
-            val directory = viewModel.directory
             DisplayTopAppBar(
-                directory = directory,
+                directory = viewModel.directory,
                 selectedList = viewModel.selectedList,
                 navigateUp = onClose,
                 navigateToDropDown = navigateToDropDown
             )
         },
-        bottomBar = { DisplayBottomBar(viewModel, onPicked) }
-    ) { padding ->
-        Box(modifier = Modifier.padding(padding)) {
+        bottomBar = {
+            DisplayBottomBar(viewModel, onPicked)
+        }
+    ) {
+        Box(modifier = Modifier.padding(it)) {
             val tabs = listOf(TabItem.All, TabItem.Video, TabItem.Image)
             val pagerState = rememberPagerState(pageCount = tabs::size)
 
@@ -215,7 +216,13 @@ private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
                             viewModel.selectAll(resources)
                         }
                     }) {
-                        Text(text = if (allSelected) "取消全选" else "全选")
+                        Text(
+                            text = if (allSelected) {
+                                stringResource(id = R.string.text_deselect_all)
+                            } else {
+                                stringResource(id = R.string.text_select_all)
+                            }
+                        )
                     }
                 }
             }

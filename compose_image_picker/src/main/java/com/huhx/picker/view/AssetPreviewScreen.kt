@@ -74,7 +74,6 @@ fun AssetPreviewScreen(
 ) {
     val pageState = rememberPagerState(initialPage = index, pageCount = assets::size)
     val scope = rememberCoroutineScope()
-    val titleString = if (assets[pageState.currentPage].isImage()) "图片" else "视频"
 
     Scaffold(
         topBar = {
@@ -83,7 +82,11 @@ fun AssetPreviewScreen(
                 title = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = titleString,
+                            text = if (assets[pageState.currentPage].isImage()) {
+                                stringResource(id = R.string.preview_title_image)
+                            } else {
+                                stringResource(id = R.string.preview_title_video)
+                            },
                             style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp, color = Color.White)
                         )
                         Text(

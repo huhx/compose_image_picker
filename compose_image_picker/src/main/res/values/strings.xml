@@ -4,6 +4,13 @@
     <string name="tab_item_video">视频</string>
     <string name="tab_item_image">照片</string>
 
+    <string name="preview_title_video">视频</string>
+    <string name="preview_title_image">照片</string>
+
+
+    <string name="text_select_all">全选</string>
+    <string name="text_deselect_all">取消全选</string>
+
     <string name="message_selected_exceed">你最多只能选择%d个图片或者视频</string>
 
     <string name="text_select_tip">可同时选取图片与视频</string>

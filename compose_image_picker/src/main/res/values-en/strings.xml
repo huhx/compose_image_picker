@@ -4,6 +4,12 @@
     <string name="tab_item_video">Videos</string>
     <string name="tab_item_image">Photos</string>
 
+    <string name="preview_title_video">Video</string>
+    <string name="preview_title_image">Image</string>
+
+    <string name="text_select_all">SelectAll</string>
+    <string name="text_deselect_all">DeSelectAll</string>
+
     <string name="message_selected_exceed">Select up to %d photos or videos</string>
 
     <string name="text_select_tip">Select both photos and videos</string>
