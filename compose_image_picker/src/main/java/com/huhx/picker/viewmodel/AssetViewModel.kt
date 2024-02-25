@@ -82,6 +82,27 @@ internal class AssetViewModel(
         }
     }
 
+
+    fun getGroupedAssets(requestType: RequestType): Map<String, List<AssetInfo>> {
+        val assetList = _directoryGroup.first { it.directory == directory }.assets
+
+        return assetList.filter {
+            when (requestType) {
+                RequestType.COMMON -> true
+                RequestType.IMAGE -> it.isImage()
+                RequestType.VIDEO -> it.isVideo()
+            }
+        }
+            .sortedByDescending { it.date }
+            .groupBy { it.dateString }
+    }
+
+    fun isAllSelected(assets: List<AssetInfo>): Boolean {
+        val selectedIds = selectedList.map { it.id }
+        val ids = assets.map { it.id }
+        return selectedIds.containsAll(ids)
+    }
+
     fun navigateToPreview(index: Int, requestType: RequestType) {
         navController.navigate(AssetRoute.preview(index, requestType))
     }
@@ -92,5 +113,16 @@ internal class AssetViewModel(
 
     fun getUri(): Uri? {
         return assetPickerRepository.insertImage()
+    }
+
+    fun unSelectAll(resources: List<AssetInfo>) {
+        selectedList -= resources.toSet()
+    }
+
+    fun selectAll(resources: List<AssetInfo>) {
+        val selectedIds = selectedList.map { it.id }
+        val newSelectedList = resources.filterNot { selectedIds.contains(it.id) }
+
+        selectedList += newSelectedList
     }
 }

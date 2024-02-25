@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -45,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huhx.picker.R
@@ -87,7 +90,7 @@ internal fun AssetDisplayScreen(
 
             Column {
                 AssetTab(tabs = tabs, pagerState = pagerState)
-                HorizontalPager(state = pagerState, userScrollEnabled = true) { page ->
+                HorizontalPager(state = pagerState, userScrollEnabled = false) { page ->
                     tabs[page].screen(viewModel)
                 }
             }
@@ -95,8 +98,8 @@ internal fun AssetDisplayScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 private fun DisplayTopAppBar(
     directory: String,
     selectedList: List<AssetInfo>,
@@ -186,24 +189,56 @@ private fun AssetTab(tabs: List<TabItem>, pagerState: PagerState) {
 
 @Composable
 private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
-    val assets = viewModel.getAssets(requestType)
+    val assets = viewModel.getGroupedAssets(requestType)
     val gridCount = LocalAssetConfig.current.gridCount
 
-    LazyVerticalGrid(
-        modifier = Modifier.fillMaxSize(),
-        columns = GridCells.Fixed(gridCount),
-        contentPadding = PaddingValues(horizontal = 1.dp),
-        verticalArrangement = Arrangement.spacedBy(1.dp),
-        horizontalArrangement = Arrangement.spacedBy(1.dp),
-        userScrollEnabled = true
-    ) {
-        itemsIndexed(assets, key = { _, it -> it.id }) { index, assetInfo ->
-            AssetImage(
-                assetInfo = assetInfo,
-                navigateToPreview = { viewModel.navigateToPreview(index, requestType) },
-                selectedList = viewModel.selectedList,
-                onLongClick = { selected -> viewModel.toggleSelect(selected, assetInfo) }
-            )
+    LazyColumn {
+        assets.forEach { (dateString, resources) ->
+            val allSelected = viewModel.isAllSelected(resources)
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = dateString,
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium)
+                    )
+
+                    TextButton(onClick = {
+                        if (allSelected) {
+                            viewModel.unSelectAll(resources)
+                        } else {
+                            viewModel.selectAll(resources)
+                        }
+                    }) {
+                        Text(text = if (allSelected) "取消全选" else "全选")
+                    }
+                }
+            }
+
+            item {
+                LazyVerticalGrid(
+                    modifier = Modifier.heightIn(0.dp, 600.dp),
+                    columns = GridCells.Fixed(gridCount),
+                    contentPadding = PaddingValues(horizontal = 1.dp),
+                    verticalArrangement = Arrangement.spacedBy(1.dp),
+                    horizontalArrangement = Arrangement.spacedBy(1.dp),
+                    userScrollEnabled = false
+                ) {
+                    itemsIndexed(resources, key = { _, it -> it.id }) { index, assetInfo ->
+                        AssetImage(
+                            assetInfo = assetInfo,
+                            navigateToPreview = { viewModel.navigateToPreview(index, requestType) },
+                            selectedList = viewModel.selectedList,
+                            onLongClick = { selected -> viewModel.toggleSelect(selected, assetInfo) }
+                        )
+                    }
+                }
+            }
         }
     }
 }
