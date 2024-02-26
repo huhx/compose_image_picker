@@ -70,19 +70,6 @@ internal class AssetViewModel(
         selectedList -= assetInfo
     }
 
-    fun getAssets(requestType: RequestType): List<AssetInfo> {
-        val assetList = _directoryGroup.first { it.directory == directory }.assets
-
-        return assetList.filter {
-            when (requestType) {
-                RequestType.COMMON -> true
-                RequestType.IMAGE -> it.isImage()
-                RequestType.VIDEO -> it.isVideo()
-            }
-        }
-    }
-
-
     fun getGroupedAssets(requestType: RequestType): Map<String, List<AssetInfo>> {
         val assetList = _directoryGroup.first { it.directory == directory }.assets
 

@@ -94,7 +94,9 @@ fun AssetPreviewScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Black),
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Black
+                ),
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, tint = Color.White, contentDescription = "")
@@ -197,18 +199,16 @@ fun SelectorBottomBar(
 @UnstableApi
 @Composable
 private fun AssetPreview(assets: List<AssetInfo>, pagerState: PagerState) {
-    Box {
-        HorizontalPager(
-            state = pagerState,
-            contentPadding = PaddingValues(horizontal = 0.dp),
-            modifier = Modifier.fillMaxSize()
-        ) { page ->
-            val assetInfo = assets[page]
-            if (assetInfo.isImage()) {
-                ImagePreview(uriString = assetInfo.uriString)
-            } else {
-                VideoPreview(uriString = assetInfo.uriString)
-            }
+    HorizontalPager(
+        state = pagerState,
+        contentPadding = PaddingValues(horizontal = 0.dp),
+        modifier = Modifier.fillMaxSize()
+    ) { page ->
+        val assetInfo = assets[page]
+        if (assetInfo.isImage()) {
+            ImagePreview(uriString = assetInfo.uriString)
+        } else {
+            VideoPreview(uriString = assetInfo.uriString)
         }
     }
 }

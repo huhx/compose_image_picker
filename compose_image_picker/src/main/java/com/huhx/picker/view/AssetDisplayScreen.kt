@@ -9,17 +9,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -46,8 +44,11 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huhx.picker.R
@@ -65,7 +66,7 @@ internal fun AssetDisplayScreen(
     onClose: (List<AssetInfo>) -> Unit,
 ) {
     BackHandler {
-        if (viewModel.selectedList.isNotEmpty()) {
+            if (viewModel.selectedList.isNotEmpty()) {
             viewModel.clear()
         } else {
             onClose(viewModel.selectedList)
@@ -188,6 +189,7 @@ private fun AssetTab(tabs: List<TabItem>, pagerState: PagerState) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
     val assets = viewModel.getGroupedAssets(requestType)
@@ -228,16 +230,13 @@ private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
             }
 
             item {
-                LazyVerticalGrid(
-                    modifier = Modifier.heightIn(0.dp, 600.dp),
-                    columns = GridCells.Fixed(gridCount),
-                    contentPadding = PaddingValues(horizontal = 1.dp),
-                    verticalArrangement = Arrangement.spacedBy(1.dp),
-                    horizontalArrangement = Arrangement.spacedBy(1.dp),
-                    userScrollEnabled = false
-                ) {
-                    itemsIndexed(resources, key = { _, it -> it.id }) { index, assetInfo ->
+                val itemSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / gridCount)
+                FlowRow(maxItemsInEachRow = gridCount) {
+                    resources.forEachIndexed { index, assetInfo ->
                         AssetImage(
+                            modifier = Modifier
+                                .size(itemSize)
+                                .padding(horizontal = 1.dp, vertical = 1.dp),
                             assetInfo = assetInfo,
                             navigateToPreview = { viewModel.navigateToPreview(index, dateString, requestType) },
                             selectedList = viewModel.selectedList,
@@ -252,6 +251,7 @@ private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
 
 @Composable
 private fun AssetImage(
+    modifier: Modifier = Modifier,
     assetInfo: AssetInfo,
     selectedList: SnapshotStateList<AssetInfo>,
     navigateToPreview: () -> Unit,
@@ -260,10 +260,11 @@ private fun AssetImage(
     val selected = selectedList.any { it.id == assetInfo.id }
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.TopEnd,
     ) {
         AssetImageItem(
+            filterQuality = FilterQuality.None,
             urlString = assetInfo.uriString,
             isSelected = selected,
             resourceType = assetInfo.resourceType,
