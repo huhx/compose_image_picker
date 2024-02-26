@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.huhx.picker.view
 
 import android.os.Build
@@ -64,6 +62,7 @@ import com.huhx.picker.component.SelectedAssetImageItem
 import com.huhx.picker.model.AssetInfo
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @UnstableApi
 @Composable
 fun AssetPreviewScreen(

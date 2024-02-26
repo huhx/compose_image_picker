@@ -239,7 +239,7 @@ private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
                     itemsIndexed(resources, key = { _, it -> it.id }) { index, assetInfo ->
                         AssetImage(
                             assetInfo = assetInfo,
-                            navigateToPreview = { viewModel.navigateToPreview(index, requestType) },
+                            navigateToPreview = { viewModel.navigateToPreview(index, dateString, requestType) },
                             selectedList = viewModel.selectedList,
                             onLongClick = { selected -> viewModel.toggleSelect(selected, assetInfo) }
                         )

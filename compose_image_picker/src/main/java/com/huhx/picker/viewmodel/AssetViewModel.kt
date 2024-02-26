@@ -103,8 +103,8 @@ internal class AssetViewModel(
         return selectedIds.containsAll(ids)
     }
 
-    fun navigateToPreview(index: Int, requestType: RequestType) {
-        navController.navigate(AssetRoute.preview(index, requestType))
+    fun navigateToPreview(index: Int, dateString: String, requestType: RequestType) {
+        navController.navigate(AssetRoute.preview(index, dateString, requestType))
     }
 
     fun deleteImage(cameraUri: Uri?) {

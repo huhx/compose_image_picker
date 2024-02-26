@@ -53,17 +53,19 @@ internal fun AssetPickerRoute(
             AssetRoute.preview,
             arguments = listOf(
                 navArgument("index") { type = NavType.IntType },
+                navArgument("dateString") { type = NavType.StringType },
                 navArgument("requestType") { type = NavType.StringType },
             )
         ) {
             val arguments = it.arguments!!
             val index = arguments.getInt("index")
             val requestType = arguments.getString("requestType")
-            val assets = viewModel.getAssets(RequestType.valueOf(requestType!!))
+            val dateString = arguments.getString("dateString")
+            val assets = viewModel.getGroupedAssets(RequestType.valueOf(requestType!!))
 
             AssetPreviewScreen(
                 index = index,
-                assets = assets,
+                assets = assets.getOrDefault(dateString, listOf()),
                 selectedList = viewModel.selectedList,
                 navigateUp = { navController.navigateUp() },
             )
@@ -73,11 +75,12 @@ internal fun AssetPickerRoute(
 
 object AssetRoute {
     const val display = "asset_display"
-    const val preview = "asset_preview?index={index}&requestType={requestType}"
+    const val preview = "asset_preview?index={index}&dateString={dateString}&requestType={requestType}"
     const val selector = "asset_selector?directory={directory}"
 
-    fun preview(index: Int, requestType: RequestType): String {
+    fun preview(index: Int, dateString: String, requestType: RequestType): String {
         return preview.replaceFirst("{index}", index.toString())
+            .replaceFirst("{dateString}", dateString)
             .replaceFirst("{requestType}", requestType.name)
     }
 
