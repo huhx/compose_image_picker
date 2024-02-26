@@ -1,13 +1,17 @@
 package com.huhx.picker.provider
 
+import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
+import androidx.core.os.bundleOf
 import com.huhx.picker.model.AssetInfo
 import com.huhx.picker.model.RequestType
+
 
 internal object AssetLoader {
 
@@ -21,7 +25,7 @@ internal object AssetLoader {
         MediaStore.Video.Media.DURATION,
         MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
         MediaStore.Files.FileColumns.DATA,
-        )
+    )
 
     fun insertImage(context: Context): Uri? {
         val contentValues = ContentValues().apply {
@@ -74,9 +78,35 @@ internal object AssetLoader {
         return null
     }
 
-    fun load(context: Context, requestType: RequestType): List<AssetInfo> {
+    fun createCursor(context: Context, limit: Int, offset: Int): Cursor? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val bundle = bundleOf(
+                ContentResolver.QUERY_ARG_OFFSET to offset,
+                ContentResolver.QUERY_ARG_LIMIT to limit,
+                ContentResolver.QUERY_ARG_SORT_COLUMNS to arrayOf(MediaStore.Images.Media.DATE_ADDED),
+                ContentResolver.QUERY_ARG_SORT_DIRECTION to ContentResolver.QUERY_SORT_DIRECTION_DESCENDING
+            )
+            context.contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                bundle,
+                null
+            )
+        } else {
+            context.contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                null,
+                null,
+                "${MediaStore.Images.Media.DATE_ADDED} DESC LIMIT $limit OFFSET $offset",
+                null
+            )
+        }
+    }
+
+    fun load(context: Context, requestType: RequestType, limit: Int, offset: Int): List<AssetInfo> {
         val assets = ArrayList<AssetInfo>()
-        val cursor = createCursor(context, requestType)
+        val cursor = createCursor(context, requestType, limit, offset)
         cursor?.use {
             val indexId = it.getColumnIndex(projection[0])
             val indexFilename = it.getColumnIndex(projection[1])
@@ -116,7 +146,7 @@ internal object AssetLoader {
         return assets
     }
 
-    private fun createCursor(context: Context, requestType: RequestType): Cursor? {
+    private fun createCursor(context: Context, requestType: RequestType, limit: Int, offset: Int): Cursor? {
         val mediaType = MediaStore.Files.FileColumns.MEDIA_TYPE
         val image = MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
         val video = MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
@@ -137,16 +167,16 @@ internal object AssetLoader {
                 arguments = listOf(video.toString())
             )
         }
-        return createMediaCursor(context, selection)
+        return createMediaCursor(context, selection, limit, offset)
     }
 
-    private fun createMediaCursor(context: Context, selection: Selection): Cursor? {
+    private fun createMediaCursor(context: Context, selection: Selection, limit: Int, offset: Int): Cursor? {
         return context.contentResolver.query(
             MediaStore.Files.getContentUri("external"),
             projection,
             selection.selection,
             selection.arguments.toTypedArray(),
-            "${MediaStore.Files.FileColumns.DATE_ADDED} DESC",
+            "${MediaStore.Files.FileColumns.DATE_ADDED} DESC LIMIT $limit OFFSET $offset",
             null
         )
     }

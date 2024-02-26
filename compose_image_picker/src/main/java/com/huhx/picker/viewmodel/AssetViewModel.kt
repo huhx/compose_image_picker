@@ -8,12 +8,16 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.huhx.picker.AssetRoute
-import com.huhx.picker.model.AssetDirectory
 import com.huhx.picker.model.AssetInfo
 import com.huhx.picker.model.RequestType
+import com.huhx.picker.provider.AssetDataSource2
 import com.huhx.picker.provider.AssetPickerRepository
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 
 const val init_directory = "Photos/Videos"
 
@@ -22,33 +26,34 @@ internal class AssetViewModel(
     private val navController: NavController,
 ) : ViewModel() {
 
-    private val assets = mutableStateListOf<AssetInfo>()
-    private val _directoryGroup = mutableStateListOf<AssetDirectory>()
-
-    val directoryGroup: List<AssetDirectory>
-        get() = _directoryGroup
+    val requestType = mutableStateOf(RequestType.COMMON)
+    val directory2 = mutableStateOf(init_directory)
 
     val selectedList = mutableStateListOf<AssetInfo>()
     var directory by mutableStateOf(init_directory)
 
-    fun initDirectories() {
-        viewModelScope.launch {
-            initAssets(RequestType.COMMON)
-            val directoryList = assets.groupBy {
-                it.directory
-            }.map {
-                AssetDirectory(directory = it.key, assets = it.value)
-            }
-            _directoryGroup.clear()
-            _directoryGroup.add(AssetDirectory(directory = init_directory, assets = assets))
-            _directoryGroup.addAll(directoryList)
-        }
-    }
+    val assets: Flow<PagingData<AssetInfo>> = Pager(PagingConfig(pageSize = 160, initialLoadSize = 160)) {
+        AssetDataSource2(assetPickerRepository, requestType.value)
+    }.flow.cachedIn(viewModelScope)
 
-    private suspend fun initAssets(requestType: RequestType) {
-        assets.clear()
-        assets.addAll(assetPickerRepository.getAssets(requestType))
-    }
+//    fun initDirectories() {
+//        viewModelScope.launch {
+//            initAssets(RequestType.COMMON)
+//            val directoryList = assets.groupBy {
+//                it.directory
+//            }.map {
+//                AssetDirectory(directory = it.key, assets = it.value)
+//            }
+//            _directoryGroup.clear()
+//            _directoryGroup.add(AssetDirectory(directory = init_directory, assets = assets))
+//            _directoryGroup.addAll(directoryList)
+//        }
+//    }
+
+//    private suspend fun initAssets(requestType: RequestType) {
+//        assets.clear()
+//        assets.addAll(assetPickerRepository.getAssets(requestTyp))
+//    }
 
     fun clear() {
         selectedList.clear()
@@ -70,32 +75,31 @@ internal class AssetViewModel(
         selectedList -= assetInfo
     }
 
-    fun getAssets(requestType: RequestType): List<AssetInfo> {
-        val assetList = _directoryGroup.first { it.directory == directory }.assets
+//    fun getAssets(requestType: RequestType): List<AssetInfo> {
+//        val assetList = _directoryGroup.first { it.directory == directory }.assets
+//
+//        return assetList.filter {
+//            when (requestType) {
+//                RequestType.COMMON -> true
+//                RequestType.IMAGE -> it.isImage()
+//                RequestType.VIDEO -> it.isVideo()
+//            }
+//        }
+//    }
 
-        return assetList.filter {
-            when (requestType) {
-                RequestType.COMMON -> true
-                RequestType.IMAGE -> it.isImage()
-                RequestType.VIDEO -> it.isVideo()
-            }
-        }
-    }
-
-
-    fun getGroupedAssets(requestType: RequestType): Map<String, List<AssetInfo>> {
-        val assetList = _directoryGroup.first { it.directory == directory }.assets
-
-        return assetList.filter {
-            when (requestType) {
-                RequestType.COMMON -> true
-                RequestType.IMAGE -> it.isImage()
-                RequestType.VIDEO -> it.isVideo()
-            }
-        }
-            .sortedByDescending { it.date }
-            .groupBy { it.dateString }
-    }
+//    fun getGroupedAssets(requestType: RequestType): Map<String, List<AssetInfo>> {
+//        val assetList = _directoryGroup.first { it.directory == directory }.assets
+//
+//        return assetList.filter {
+//            when (requestType) {
+//                RequestType.COMMON -> true
+//                RequestType.IMAGE -> it.isImage()
+//                RequestType.VIDEO -> it.isVideo()
+//            }
+//        }
+//            .sortedByDescending { it.date }
+//            .groupBy { it.dateString }
+//    }
 
     fun isAllSelected(assets: List<AssetInfo>): Boolean {
         val selectedIds = selectedList.map { it.id }

@@ -1,9 +1,7 @@
 package com.huhx.picker.view
 
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -34,21 +32,12 @@ fun AssetPicker(
     )
     val isLoading = remember { mutableStateOf(true) }
 
-    LaunchedEffect(Unit) {
-        viewModel.initDirectories()
-        isLoading.value = false
-    }
-
-    if (isLoading.value) {
-        CircularProgressIndicator()
-    } else {
-        CompositionLocalProvider(LocalAssetConfig provides assetPickerConfig) {
-            AssetPickerRoute(
-                navController = navController,
-                viewModel = viewModel,
-                onPicked = onPicked,
-                onClose = onClose,
-            )
-        }
+    CompositionLocalProvider(LocalAssetConfig provides assetPickerConfig) {
+        AssetPickerRoute(
+            navController = navController,
+            viewModel = viewModel,
+            onPicked = onPicked,
+            onClose = onClose,
+        )
     }
 }

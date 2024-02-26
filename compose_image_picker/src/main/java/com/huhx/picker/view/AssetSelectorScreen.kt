@@ -43,6 +43,7 @@ internal fun AssetSelectorScreen(
     navigateUp: () -> Unit,
     onSelected: (String) -> Unit,
 ) {
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(

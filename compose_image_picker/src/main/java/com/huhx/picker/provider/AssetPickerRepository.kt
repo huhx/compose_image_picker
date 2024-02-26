@@ -5,11 +5,21 @@ import android.net.Uri
 import com.huhx.picker.model.AssetInfo
 import com.huhx.picker.model.RequestType
 
-internal class AssetPickerRepository(
-    private val context: Context
-) {
-    suspend fun getAssets(requestType: RequestType): List<AssetInfo> {
-        return AssetLoader.load(context, requestType)
+private const val Zero = 0
+private const val One = 1
+
+class AssetPickerRepository(private val context: Context) {
+    fun getAssets(requestType: RequestType, pageNumber: Int): List<AssetInfo> {
+        val limit = 160
+        val offset = pageNumber * limit
+        return AssetLoader.load(context, requestType, limit, offset)
+    }
+
+    suspend fun getCount(): Int {
+        val cursor = AssetLoader.createCursor(context, Int.MAX_VALUE, Zero) ?: return Zero
+        val count = cursor.count
+        cursor.close()
+        return count
     }
 
     fun insertImage(): Uri? {
