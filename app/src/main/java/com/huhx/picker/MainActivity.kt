@@ -127,7 +127,6 @@ fun AssetImageItemPreview2() {
             Button(
                 modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
                 shape = RoundedCornerShape(5.dp),
-                enabled = true,
                 contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp),
                 onClick = { }
             ) {

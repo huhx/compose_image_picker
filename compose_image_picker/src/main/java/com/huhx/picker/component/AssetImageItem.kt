@@ -22,8 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -43,6 +45,7 @@ fun AssetImageItem(
     urlString: String,
     onDelete: (() -> Unit)? = null,
     isSelected: Boolean,
+    shape: Shape? = null,
     resourceType: AssetResourceType = AssetResourceType.IMAGE,
     durationString: String? = null,
     filterQuality: FilterQuality = FilterQuality.Low,
@@ -72,6 +75,7 @@ fun AssetImageItem(
             modifier = Modifier
                 .fillMaxSize()
                 .aspectRatio(1.0F)
+                .then(if (shape == null) Modifier else Modifier.clip(shape))
                 .combinedClickable(
                     onClick = navigateToPreview,
                     onLongClick = onLongClick,

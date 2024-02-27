@@ -187,11 +187,10 @@ fun SelectorBottomBar(
         Button(
             modifier = Modifier.defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
             shape = RoundedCornerShape(5.dp),
-            enabled = true,
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp),
             onClick = { onClick(assetInfo) }
         ) {
-            Text(stringResource(R.string.text_done), color = Color.White, fontSize = 15.sp)
+            Text(text = stringResource(R.string.text_done), color = Color.White, fontSize = 15.sp)
         }
     }
 }
