@@ -42,6 +42,7 @@ import com.huhx.picker.model.AssetResourceType
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AssetImageItem(
+    modifier: Modifier = Modifier,
     urlString: String,
     onDelete: (() -> Unit)? = null,
     isSelected: Boolean,
@@ -64,7 +65,8 @@ fun AssetImageItem(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
-            .alpha(alpha),
+            .alpha(alpha)
+            .then(modifier),
     ) {
         AsyncImage(
             model = ImageRequest.Builder(context)

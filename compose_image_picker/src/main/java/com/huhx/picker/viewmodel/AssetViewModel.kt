@@ -106,10 +106,11 @@ internal class AssetViewModel(
         selectedList -= resources.toSet()
     }
 
-    fun selectAll(resources: List<AssetInfo>) {
+    fun selectAll(resources: List<AssetInfo>, maxAssets: Int) : Boolean{
         val selectedIds = selectedList.map { it.id }
         val newSelectedList = resources.filterNot { selectedIds.contains(it.id) }
 
-        selectedList += newSelectedList
+        selectedList += newSelectedList.subList(0, minOf(maxAssets - selectedIds.size, newSelectedList.size))
+        return maxAssets - selectedIds.size < newSelectedList.size
     }
 }

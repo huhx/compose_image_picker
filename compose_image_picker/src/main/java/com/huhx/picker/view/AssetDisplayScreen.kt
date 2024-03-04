@@ -1,6 +1,7 @@
 package com.huhx.picker.view
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -46,8 +47,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,7 +69,7 @@ internal fun AssetDisplayScreen(
     onClose: (List<AssetInfo>) -> Unit,
 ) {
     BackHandler {
-            if (viewModel.selectedList.isNotEmpty()) {
+        if (viewModel.selectedList.isNotEmpty()) {
             viewModel.clear()
         } else {
             onClose(viewModel.selectedList)
@@ -193,7 +196,22 @@ private fun AssetTab(tabs: List<TabItem>, pagerState: PagerState) {
 @Composable
 private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
     val assets = viewModel.getGroupedAssets(requestType)
+    val context = LocalContext.current
     val gridCount = LocalAssetConfig.current.gridCount
+    val maxAssets = LocalAssetConfig.current.maxAssets
+    val errorMessage = stringResource(R.string.message_selected_exceed, maxAssets)
+
+    if (assets.isEmpty()) {
+        return Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "对应的资源为空",
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 
     LazyColumn {
         assets.forEach { (dateString, resources) ->
@@ -215,7 +233,9 @@ private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
                         if (allSelected) {
                             viewModel.unSelectAll(resources)
                         } else {
-                            viewModel.selectAll(resources)
+                            if (viewModel.selectAll(resources, maxAssets)) {
+                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }) {
                         Text(
@@ -258,6 +278,9 @@ private fun AssetImage(
     onLongClick: (Boolean) -> Unit,
 ) {
     val selected = selectedList.any { it.id == assetInfo.id }
+    val context = LocalContext.current
+    val maxAssets = LocalAssetConfig.current.maxAssets
+    val errorMessage = stringResource(R.string.message_selected_exceed, maxAssets)
 
     Box(
         modifier = modifier.fillMaxSize(),
@@ -270,7 +293,14 @@ private fun AssetImage(
             resourceType = assetInfo.resourceType,
             durationString = assetInfo.formatDuration(),
             navigateToPreview = navigateToPreview,
-            onLongClick = { onLongClick(!selected) }
+            onLongClick = {
+                val selectResult = !selected
+                if (!selectResult || selectedList.size < maxAssets) {
+                    onLongClick(selectResult)
+                } else {
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                }
+            }
         )
         AssetImageIndicator(assetInfo = assetInfo, selected = selected, assetSelected = selectedList)
     }
