@@ -7,7 +7,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -39,8 +38,8 @@ import com.huhx.picker.R
 import com.huhx.picker.model.AssetInfo
 import com.huhx.picker.model.AssetResourceType
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
+@OptIn(ExperimentalFoundationApi::class)
 fun AssetImageItem(
     modifier: Modifier = Modifier,
     urlString: String,
@@ -89,31 +88,30 @@ fun AssetImageItem(
         )
 
         if (onDelete != null) {
-            Column(modifier = Modifier.align(Alignment.TopEnd)) {
-                IconButton(
-                    modifier = Modifier
-                        .padding(top = 4.dp, end = 4.dp)
-                        .size(16.dp),
-                    onClick = onDelete,
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = null,
-                        tint = Color.White,
-                    )
-                }
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 4.dp, end = 4.dp)
+                    .size(16.dp),
+                onClick = onDelete,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = null,
+                    tint = Color.White,
+                )
             }
         }
 
         if (resourceType == AssetResourceType.VIDEO) {
-            Column(modifier = Modifier.align(Alignment.BottomEnd)) {
-                Text(
-                    modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),
-                    text = durationString ?: "00:00",
-                    color = Color.White,
-                    fontSize = 14.sp
-                )
-            }
+            Text(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(bottom = 6.dp, end = 6.dp),
+                text = durationString ?: "00:00",
+                color = Color.White,
+                fontSize = 14.sp
+            )
         }
 
         if (resourceType == AssetResourceType.GIF) {
@@ -175,14 +173,14 @@ fun SelectedAssetImageItem(
         )
 
         if (resourceType == AssetResourceType.VIDEO) {
-            Column(modifier = Modifier.align(Alignment.BottomEnd)) {
-                Text(
-                    modifier = Modifier.padding(bottom = 3.dp, end = 3.dp),
-                    text = durationString ?: "00:00",
-                    color = Color.White,
-                    fontSize = 10.sp
-                )
-            }
+            Text(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(bottom = 3.dp, end = 3.dp),
+                text = durationString ?: "00:00",
+                color = Color.White,
+                fontSize = 10.sp
+            )
         }
 
         if (resourceType == AssetResourceType.GIF) {
