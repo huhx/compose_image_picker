@@ -1,6 +1,7 @@
 package com.huhx.picker.view
 
 import android.os.Build
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,7 +54,8 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
-import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
@@ -210,21 +212,39 @@ private fun AssetPreview(assets: List<AssetInfo>, pagerState: PagerState) {
 }
 
 @Composable
-fun ImagePreview(uriString: String) {
-    AsyncImage(
+fun ImagePreview(
+    modifier: Modifier = Modifier,
+    uriString: String,
+    loading: (@Composable () -> Unit)? = null,
+) {
+    val painter = rememberAsyncImagePainter(
+        filterQuality = FilterQuality.Low,
         model = ImageRequest.Builder(LocalContext.current)
             .data(uriString)
             .decoderFactory(if (Build.VERSION.SDK_INT >= 28) ImageDecoderDecoder.Factory() else GifDecoder.Factory())
-            .build(),
-        modifier = Modifier.fillMaxSize(),
-        filterQuality = FilterQuality.None,
-        contentDescription = null
+            .build()
+    )
+
+    if (loading != null && painter.state is AsyncImagePainter.State.Loading) {
+        loading()
+    }
+
+    Image(
+        painter = painter,
+        contentDescription = null,
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier)
     )
 }
 
 @UnstableApi
 @Composable
-fun VideoPreview(uriString: String) {
+fun VideoPreview(
+    modifier: Modifier = Modifier,
+    uriString: String,
+    loading: (@Composable () -> Unit)? = null,
+) {
     val context = LocalContext.current
 
     val player = remember {
@@ -237,6 +257,10 @@ fun VideoPreview(uriString: String) {
         }
     }
 
+    if (loading != null && player.isLoading) {
+        loading()
+    }
+
     DisposableEffect(Unit) {
         onDispose {
             player.release()
@@ -244,7 +268,9 @@ fun VideoPreview(uriString: String) {
     }
 
     AndroidView(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier),
         factory = {
             PlayerView(it).apply {
                 this.player = player
