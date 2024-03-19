@@ -40,16 +40,19 @@ fun AssetPicker(
         isLoading.value = false
     }
 
-    if (isLoading.value) {
-        onLoading?.invoke() ?: CircularProgressIndicator()
-    } else {
-        CompositionLocalProvider(LocalAssetConfig provides assetPickerConfig) {
-            AssetPickerRoute(
-                navController = navController,
-                viewModel = viewModel,
-                onPicked = onPicked,
-                onClose = onClose,
-            )
+    when {
+        isLoading.value -> {
+            onLoading?.invoke() ?: CircularProgressIndicator()
+        }
+        else -> {
+            CompositionLocalProvider(LocalAssetConfig provides assetPickerConfig) {
+                AssetPickerRoute(
+                    navController = navController,
+                    viewModel = viewModel,
+                    onPicked = onPicked,
+                    onClose = onClose,
+                )
+            }
         }
     }
 }

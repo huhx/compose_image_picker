@@ -1,7 +1,6 @@
 package com.huhx.picker.view
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
@@ -61,39 +60,37 @@ internal fun AssetSelectorScreen(
             )
         }
     ) { padding ->
-        Box(modifier = Modifier.padding(padding)) {
-            LazyColumn {
-                items(items = assetDirectories) {
-                    val itemDirectory = it.directory
-                    ListItem(
-                        modifier = Modifier.clickable { onSelected(itemDirectory) },
-                        leadingContent = {
-                            AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(it.cover ?: Icons.Default.Place)
-                                    .decoderFactory(VideoFrameDecoder.Factory())
-                                    .build(),
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .aspectRatio(1.0F),
-                                filterQuality = FilterQuality.Low,
-                                contentScale = ContentScale.Crop,
-                                contentDescription = null
-                            )
-                        },
-                        headlineContent = {
-                            Row {
-                                Text(text = itemDirectory, color = MaterialTheme.colorScheme.onSurface)
-                                Text(text = "(${it.counts})", color = Color.Gray)
-                            }
-                        },
-                        trailingContent = {
-                            if (directory == itemDirectory) {
-                                Icon(imageVector = Icons.Default.Done, contentDescription = "", tint = Color.Blue)
-                            }
+        LazyColumn(modifier = Modifier.padding(padding)) {
+            items(items = assetDirectories) {
+                val itemDirectory = it.directory
+                ListItem(
+                    modifier = Modifier.clickable { onSelected(itemDirectory) },
+                    leadingContent = {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(it.cover ?: Icons.Default.Place)
+                                .decoderFactory(VideoFrameDecoder.Factory())
+                                .build(),
+                            modifier = Modifier
+                                .size(32.dp)
+                                .aspectRatio(1.0F),
+                            filterQuality = FilterQuality.Low,
+                            contentScale = ContentScale.Crop,
+                            contentDescription = null
+                        )
+                    },
+                    headlineContent = {
+                        Row {
+                            Text(text = itemDirectory, color = MaterialTheme.colorScheme.onSurface)
+                            Text(text = "(${it.counts})", color = Color.Gray)
                         }
-                    )
-                }
+                    },
+                    trailingContent = {
+                        if (directory == itemDirectory) {
+                            Icon(imageVector = Icons.Default.Done, contentDescription = "", tint = Color.Blue)
+                        }
+                    }
+                )
             }
         }
     }

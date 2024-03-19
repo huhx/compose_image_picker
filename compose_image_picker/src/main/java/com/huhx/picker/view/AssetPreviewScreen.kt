@@ -73,6 +73,7 @@ fun AssetPreviewScreen(
 ) {
     val pageState = rememberPagerState(initialPage = index, pageCount = assets::size)
     val scope = rememberCoroutineScope()
+    val assetInfo = assets[pageState.currentPage]
 
     Scaffold(
         topBar = {
@@ -81,7 +82,7 @@ fun AssetPreviewScreen(
                 title = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = if (assets[pageState.currentPage].isImage()) {
+                            text = if (assetInfo.isImage()) {
                                 stringResource(id = R.string.preview_title_image)
                             } else {
                                 stringResource(id = R.string.preview_title_video)
@@ -89,7 +90,7 @@ fun AssetPreviewScreen(
                             style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp, color = Color.White)
                         )
                         Text(
-                            text = assets[pageState.currentPage].dateString,
+                            text = assetInfo.dateString,
                             style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
                         )
                     }
@@ -112,10 +113,7 @@ fun AssetPreviewScreen(
             )
         },
         bottomBar = {
-            SelectorBottomBar(
-                selectedList = selectedList,
-                assetInfo = assets[pageState.currentPage],
-            ) {
+            SelectorBottomBar(selectedList = selectedList, assetInfo = assetInfo) {
                 navigateUp()
                 if (selectedList.isEmpty()) selectedList.add(it)
             }
@@ -130,7 +128,6 @@ fun AssetPreviewScreen(
             AssetPreview(assets = assets, pagerState = pageState)
 
             if (selectedList.isNotEmpty()) {
-                val assetInfo = assets[pageState.currentPage]
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()

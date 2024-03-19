@@ -115,13 +115,13 @@ private fun DisplayTopAppBar(
         modifier = Modifier.statusBarsPadding(),
         navigationIcon = {
             IconButton(onClick = { navigateUp(selectedList) }) {
-                Icon(Icons.Filled.Close, contentDescription = "")
+                Icon(imageVector = Icons.Filled.Close, contentDescription = "")
             }
         },
         title = {
             Row(modifier = Modifier.clickable { navigateToDropDown(directory) }) {
-                Text(directory, fontSize = 18.sp)
-                Icon(Icons.Default.KeyboardArrowDown, contentDescription = "")
+                Text(text = directory, fontSize = 18.sp)
+                Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "")
             }
         },
     )
