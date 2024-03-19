@@ -6,14 +6,12 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.huhx.picker.AssetRoute
 import com.huhx.picker.model.AssetDirectory
 import com.huhx.picker.model.AssetInfo
 import com.huhx.picker.model.RequestType
 import com.huhx.picker.provider.AssetPickerRepository
-import kotlinx.coroutines.launch
 
 const val init_directory = "Photos/Videos"
 
@@ -31,18 +29,16 @@ internal class AssetViewModel(
     val selectedList = mutableStateListOf<AssetInfo>()
     var directory by mutableStateOf(init_directory)
 
-    fun initDirectories() {
-        viewModelScope.launch {
-            initAssets(RequestType.COMMON)
-            val directoryList = assets.groupBy {
-                it.directory
-            }.map {
-                AssetDirectory(directory = it.key, assets = it.value)
-            }
-            _directoryGroup.clear()
-            _directoryGroup.add(AssetDirectory(directory = init_directory, assets = assets))
-            _directoryGroup.addAll(directoryList)
+    suspend fun initDirectories() {
+        initAssets(RequestType.COMMON)
+        val directoryList = assets.groupBy {
+            it.directory
+        }.map {
+            AssetDirectory(directory = it.key, assets = it.value)
         }
+        _directoryGroup.clear()
+        _directoryGroup.add(AssetDirectory(directory = init_directory, assets = assets))
+        _directoryGroup.addAll(directoryList)
     }
 
     private suspend fun initAssets(requestType: RequestType) {
@@ -106,7 +102,7 @@ internal class AssetViewModel(
         selectedList -= resources.toSet()
     }
 
-    fun selectAll(resources: List<AssetInfo>, maxAssets: Int) : Boolean{
+    fun selectAll(resources: List<AssetInfo>, maxAssets: Int): Boolean {
         val selectedIds = selectedList.map { it.id }
         val newSelectedList = resources.filterNot { selectedIds.contains(it.id) }
 

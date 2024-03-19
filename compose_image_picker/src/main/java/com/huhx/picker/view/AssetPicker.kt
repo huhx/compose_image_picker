@@ -23,6 +23,7 @@ fun AssetPicker(
     assetPickerConfig: AssetPickerConfig,
     onPicked: (List<AssetInfo>) -> Unit,
     onClose: (List<AssetInfo>) -> Unit,
+    onLoading: @Composable (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val navController = rememberNavController()
@@ -40,7 +41,7 @@ fun AssetPicker(
     }
 
     if (isLoading.value) {
-        CircularProgressIndicator()
+        onLoading?.invoke() ?: CircularProgressIndicator()
     } else {
         CompositionLocalProvider(LocalAssetConfig provides assetPickerConfig) {
             AssetPickerRoute(

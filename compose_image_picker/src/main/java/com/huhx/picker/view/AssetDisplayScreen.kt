@@ -130,10 +130,11 @@ private fun DisplayTopAppBar(
 @Composable
 private fun DisplayBottomBar(viewModel: AssetViewModel, onPicked: (List<AssetInfo>) -> Unit) {
     var cameraUri: Uri? by remember { mutableStateOf(null) }
+    val scope = rememberCoroutineScope()
 
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
-            cameraUri?.let { viewModel.initDirectories() }
+            cameraUri?.let { scope.launch { viewModel.initDirectories() } }
         } else {
             viewModel.deleteImage(cameraUri)
         }
@@ -295,7 +296,7 @@ private fun AssetImage(
             navigateToPreview = navigateToPreview,
             onLongClick = {
                 val selectResult = !selected
-                if (!selectResult || selectedList.size < maxAssets) {
+                if (selected || selectedList.size < maxAssets) {
                     onLongClick(selectResult)
                 } else {
                     Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
