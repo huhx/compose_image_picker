@@ -86,6 +86,13 @@ internal class AssetViewModel(
         return selectedIds.containsAll(ids)
     }
 
+    fun hasSelected(assets: List<AssetInfo>): Boolean {
+        val selectedIds = selectedList.map { it.id }
+        val ids = assets.map { it.id }
+
+        return selectedIds.any { ids.contains(it) }
+    }
+
     fun navigateToPreview(index: Int, dateString: String, requestType: RequestType) {
         navController.navigate(AssetRoute.preview(index, dateString, requestType))
     }

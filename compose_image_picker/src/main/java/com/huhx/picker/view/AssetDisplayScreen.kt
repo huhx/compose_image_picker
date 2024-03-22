@@ -217,6 +217,9 @@ private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
     LazyColumn {
         assets.forEach { (dateString, resources) ->
             val allSelected = viewModel.isAllSelected(resources)
+            val isAlreadyFull = viewModel.selectedList.size == maxAssets
+            val hasSelected = viewModel.hasSelected(resources)
+
             item {
                 Row(
                     modifier = Modifier
@@ -231,7 +234,7 @@ private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
                     )
 
                     TextButton(onClick = {
-                        if (allSelected) {
+                        if (allSelected || (isAlreadyFull && hasSelected)) {
                             viewModel.unSelectAll(resources)
                         } else {
                             if (viewModel.selectAll(resources, maxAssets)) {
@@ -240,7 +243,7 @@ private fun AssetContent(viewModel: AssetViewModel, requestType: RequestType) {
                         }
                     }) {
                         Text(
-                            text = if (allSelected) {
+                            text = if (allSelected || (isAlreadyFull && hasSelected)) {
                                 stringResource(id = R.string.text_deselect_all)
                             } else {
                                 stringResource(id = R.string.text_select_all)
