@@ -1,6 +1,11 @@
 package com.huhx.picker
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -23,7 +28,7 @@ internal fun AssetPickerRoute(
     onClose: (List<AssetInfo>) -> Unit,
 ) {
     NavHost(navController = navController, startDestination = AssetRoute.display) {
-        composable(AssetRoute.display) {
+        composable(route = AssetRoute.display) {
             AssetDisplayScreen(
                 viewModel = viewModel,
                 navigateToDropDown = { navController.navigate(AssetRoute.selector(it)) },
@@ -33,7 +38,7 @@ internal fun AssetPickerRoute(
         }
 
         composable(
-            AssetRoute.selector,
+            route = AssetRoute.selector,
             arguments = listOf(navArgument("directory") { type = NavType.StringType })
         ) {
             val directory = it.arguments!!.getString("directory")!!
@@ -50,7 +55,7 @@ internal fun AssetPickerRoute(
         }
 
         composable(
-            AssetRoute.preview,
+            route = AssetRoute.preview,
             arguments = listOf(
                 navArgument("index") { type = NavType.IntType },
                 navArgument("dateString") { type = NavType.StringType },
@@ -58,16 +63,31 @@ internal fun AssetPickerRoute(
             )
         ) {
             val arguments = it.arguments!!
-            val index = arguments.getInt("index")
             val requestType = arguments.getString("requestType")
-            val dateString = arguments.getString("dateString")
             val assets = viewModel.getGroupedAssets(RequestType.valueOf(requestType!!))
+
+            var dateString by remember {
+                mutableStateOf(arguments.getString("dateString"))
+            }
+
+            var index by remember {
+                mutableIntStateOf(arguments.getInt("index"))
+            }
+
+            var assetList by remember {
+                mutableStateOf(assets.getOrDefault(dateString, listOf()))
+            }
 
             AssetPreviewScreen(
                 index = index,
-                assets = assets.getOrDefault(dateString, listOf()),
+                assets = assetList,
                 selectedList = viewModel.selectedList,
                 navigateUp = { navController.navigateUp() },
+                onSelectChanged = { assetInfo ->
+                    dateString = assetInfo.dateString
+                    assetList = assets.getOrDefault(dateString, listOf())
+                    index = assetList.indexOf(assetInfo)
+                }
             )
         }
     }

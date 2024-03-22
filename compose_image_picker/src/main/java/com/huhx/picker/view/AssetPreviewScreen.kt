@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -62,6 +63,7 @@ import coil.request.ImageRequest
 import com.huhx.picker.R
 import com.huhx.picker.component.SelectedAssetImageItem
 import com.huhx.picker.model.AssetInfo
+import com.huhx.picker.util.vibration
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,8 +74,12 @@ fun AssetPreviewScreen(
     assets: List<AssetInfo>,
     navigateUp: () -> Unit,
     selectedList: SnapshotStateList<AssetInfo>,
+    onSelectChanged: (AssetInfo) -> Unit,
 ) {
-    val pageState = rememberPagerState(initialPage = index, pageCount = assets::size)
+    val pageState = key(assets) {
+        rememberPagerState(initialPage = index, pageCount = assets::size)
+    }
+
     val scope = rememberCoroutineScope()
     val assetInfo = assets[pageState.currentPage]
 
@@ -121,6 +127,8 @@ fun AssetPreviewScreen(
             }
         }
     ) {
+        val context = LocalContext.current
+
         Box(
             modifier = Modifier
                 .padding(it)
@@ -145,6 +153,13 @@ fun AssetPreviewScreen(
                             modifier = Modifier.size(64.dp),
                             onClick = { asset ->
                                 val selectedIndex = assets.indexOfFirst { item -> item.id == asset.id }
+                                // 如果index == -1，说明该asset 是存在于别的时间
+                                if (selectedIndex == -1) {
+                                    onSelectChanged(asset)
+                                    context.vibration(50L)
+                                    return@SelectedAssetImageItem
+                                }
+
                                 scope.launch {
                                     pageState.animateScrollToPage(selectedIndex)
                                 }
