@@ -64,4 +64,13 @@ class AssetInfoTest {
         assertEquals(info.randomName, info.randomName)
         assertNotEquals(info.randomName, info2.randomName)
     }
+
+    @Test
+    fun `should return same random string`() {
+        val info = assetInfo.copy()
+        val info2 = assetInfo.copy(filename = "aa.maimai.aa.jpg")
+
+        println(info.randomName)
+        println(info2.randomName)
+    }
 }

@@ -48,7 +48,7 @@ data class AssetInfo(
     val randomName: String = run {
         val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
         val dateTimeString = LocalDateTime.now().format(formatter)
-        val fileExtension = filename.split(".")[1]
+        val fileExtension = filename.split(".").last()
         val randomString = StringUtil.randomNumeric(6)
 
         "${dateTimeString}$randomString.$fileExtension"

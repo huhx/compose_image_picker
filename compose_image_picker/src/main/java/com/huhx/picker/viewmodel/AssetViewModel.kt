@@ -41,29 +41,16 @@ internal class AssetViewModel(
         _directoryGroup.addAll(directoryList)
     }
 
-    private suspend fun initAssets(requestType: RequestType) {
-        assets.clear()
-        assets.addAll(assetPickerRepository.getAssets(requestType))
-    }
-
     fun clear() {
         selectedList.clear()
     }
 
     fun toggleSelect(selected: Boolean, assetInfo: AssetInfo) {
         if (selected) {
-            select(assetInfo)
+            selectedList += assetInfo
         } else {
-            unSelect(assetInfo)
+            selectedList -= assetInfo
         }
-    }
-
-    private fun select(assetInfo: AssetInfo) {
-        selectedList += assetInfo
-    }
-
-    private fun unSelect(assetInfo: AssetInfo) {
-        selectedList -= assetInfo
     }
 
     fun getGroupedAssets(requestType: RequestType): Map<String, List<AssetInfo>> {
@@ -115,5 +102,10 @@ internal class AssetViewModel(
 
         selectedList += newSelectedList.subList(0, minOf(maxAssets - selectedIds.size, newSelectedList.size))
         return maxAssets - selectedIds.size < newSelectedList.size
+    }
+
+    private suspend fun initAssets(requestType: RequestType) {
+        assets.clear()
+        assets.addAll(assetPickerRepository.getAssets(requestType))
     }
 }
