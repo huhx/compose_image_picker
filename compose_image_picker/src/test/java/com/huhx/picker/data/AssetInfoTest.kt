@@ -1,5 +1,6 @@
 package com.huhx.picker.data
 
+import android.provider.MediaStore.Files.FileColumns
 import com.huhx.picker.model.AssetInfo
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -22,7 +23,7 @@ class AssetInfoTest {
 
     @Test
     fun `should return true when call isVideo given media type 3`() {
-        val info = assetInfo.copy(mediaType = 3)
+        val info = assetInfo.copy(mediaType = FileColumns.MEDIA_TYPE_VIDEO)
 
         val result = info.isVideo()
 
@@ -30,8 +31,8 @@ class AssetInfoTest {
     }
 
     @Test
-    fun `should return true when call isImage given media type 3`() {
-        val info = assetInfo.copy(mediaType = 1)
+    fun `should return true when call isImage given media type 1`() {
+        val info = assetInfo.copy(mediaType = FileColumns.MEDIA_TYPE_IMAGE)
 
         val result = info.isImage()
 

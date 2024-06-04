@@ -101,24 +101,24 @@ signing {
 dependencies {
     implementation 'androidx.core:core-ktx:1.13.1'
 
-    implementation platform('dev.chrisbanes.compose:compose-bom:2024.05.00-alpha01')
+    implementation platform('dev.chrisbanes.compose:compose-bom:2024.09.00-alpha01')
     implementation 'androidx.compose.material3:material3'
     implementation "androidx.compose.ui:ui"
 
-    implementation "com.google.accompanist:accompanist-permissions:0.35.0-alpha"
+    implementation "com.google.accompanist:accompanist-permissions:0.36.0"
 
-    implementation 'androidx.navigation:navigation-compose:2.7.7'
+    implementation 'androidx.navigation:navigation-compose:2.8.0'
 
-    def coil_version = '2.6.0'
+    def coil_version = '2.7.0'
     implementation "io.coil-kt:coil-compose:$coil_version"
     implementation "io.coil-kt:coil-video:$coil_version"
     implementation "io.coil-kt:coil-gif:$coil_version"
 
-    def media3_version = '1.4.0-alpha01'
+    def media3_version = '1.4.1'
     implementation "androidx.media3:media3-exoplayer:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }

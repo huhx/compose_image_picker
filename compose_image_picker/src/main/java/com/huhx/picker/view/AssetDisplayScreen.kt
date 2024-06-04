@@ -150,7 +150,7 @@ private fun DisplayBottomBar(viewModel: AssetViewModel, onPicked: (List<AssetInf
             TextButton(
                 onClick = {
                     cameraUri = viewModel.getUri()
-                    cameraLauncher.launch(cameraUri)
+                    cameraLauncher.launch(cameraUri!!)
                 },
                 content = { Text(text = stringResource(R.string.label_camera), fontSize = 16.sp, color = Color.Gray) }
             )
